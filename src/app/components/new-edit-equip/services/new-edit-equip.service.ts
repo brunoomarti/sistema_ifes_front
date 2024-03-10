@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Equipamento } from '../../../models/Equipamento';
-import { delay, first, tap } from 'rxjs/operators';
+import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'

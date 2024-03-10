@@ -12,14 +12,12 @@ import { Equipamento } from '../../models/Equipamento';
   styleUrls: ['./new-edit-equip.component.css']
 })
 export class NewEditEquipComponent implements OnInit {
+  form: FormGroup;
   nomeEquipamento: string = '';
   equipamentos: any[] = [];
-  form: FormGroup;
 
   mensagemSnackbarAcerto: string = 'Titulo cadastrado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar titulo.';
-  
-  
 
   constructor(public dialogRef: MatDialogRef<NewEditEquipComponent>,
     private formBuilder: FormBuilder,
@@ -28,18 +26,17 @@ export class NewEditEquipComponent implements OnInit {
     private route: ActivatedRoute) {
       this.form = this.formBuilder.group({
         id: [0],
-        nome: ''
+        name: ''
       });
     }
 
-  ngOnInit(): void {
-    const equip: Equipamento = this.route.snapshot.data['equipment'];
-    this.form.setValue({
-      id: equip._id,
-      nome: equip.name
-    })
-
-  }
+    ngOnInit(): void {
+      const equip: Equipamento = this.route.snapshot.data['equipment'];
+      this.form.setValue({
+        id: equip._id,
+        name: equip.name
+      })
+    }
 
   onSubmit() {
     console.log(this.form.value);
@@ -53,14 +50,14 @@ export class NewEditEquipComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  editar(equipamento: { nome: string }): void {
-    const novoNome = prompt('Digite o novo nome:', equipamento.nome);
+  editar(equipamento: { name: string }): void {
+    const novoNome = prompt('Digite o novo nome:', equipamento.name);
     if (novoNome !== null) {
-      equipamento.nome = novoNome;
+      this.form.patchValue({ name: novoNome });
     }
   }
 
-  excluir(equipamento: { nome: string }): void {
+  excluir(equipamento: { name: string }): void {
     const confirmacao = confirm('Tem certeza que deseja excluir este equipamento?');
     if (confirmacao) {
       const index = this.equipamentos.indexOf(equipamento);

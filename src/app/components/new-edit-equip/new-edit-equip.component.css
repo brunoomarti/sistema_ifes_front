@@ -11,12 +11,13 @@
 
 .dialog-container {
   width: 400px;
+  margin: 0;
+  padding: var(--content-pading);
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
-  padding: 20px;
   z-index: 10000;
   border-radius: var(--primary-boxes-radius);
   display: flex;
