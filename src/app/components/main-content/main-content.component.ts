@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { NewEditEquipComponent } from '../new-edit-equip/new-edit-equip.component';
-import { MatDialog } from '@angular/material/dialog';
-
+import { MatDialog } from '@angular/material/dialog'; 
+import { EquipmentService } from '../new-edit-equip/services/new-edit-equip.service';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-main-content',
   standalone: true,
@@ -11,7 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class MainContentComponent {
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private service: EquipmentService, private http: HttpClient) {}
 
   novoEquipamento(): void {
     const dialogRef = this.dialog.open(NewEditEquipComponent, {

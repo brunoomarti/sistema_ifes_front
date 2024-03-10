@@ -7,8 +7,8 @@
     </div>
 
     <div class="buttonGroupForm">
-      <button class="button two" (click)="cancelar()">Cancelar</button>
-      <button class="button one" (click)="cadastrar()">Cadastrar</button>
+      <button class="button two" (click)="onCancel()">Cancelar</button>
+      <button class="button one" (click)="onSubmit()">Cadastrar</button>
     </div>
 
     <br>
@@ -23,7 +23,7 @@
       </thead>
       <tbody>
         <tr *ngFor="let equipamento of equipamentos">
-          <td>{{ equipamento.nome }}</td>
+          <td>{{ equipamento.name }}</td>
           <td>
             <button (click)="editar(equipamento)">Editar</button>
             <button (click)="excluir(equipamento)">Excluir</button>

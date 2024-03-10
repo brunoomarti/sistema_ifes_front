@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { EquipmentService } from './services/new-edit-equip.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Equipamento } from '../../models/Equipamento';
 
 @Component({
   selector: 'app-new-edit-equip',
@@ -9,19 +14,42 @@ import { MatDialogRef } from '@angular/material/dialog';
 export class NewEditEquipComponent implements OnInit {
   nomeEquipamento: string = '';
   equipamentos: any[] = [];
+  form: FormGroup;
 
-  constructor(public dialogRef: MatDialogRef<NewEditEquipComponent>) {}
+  mensagemSnackbarAcerto: string = 'Titulo cadastrado com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao cadastrar titulo.';
+  
+  
+
+  constructor(public dialogRef: MatDialogRef<NewEditEquipComponent>,
+    private formBuilder: FormBuilder,
+    private service: EquipmentService,
+    private snackBar: MatSnackBar,
+    private route: ActivatedRoute) {
+      this.form = this.formBuilder.group({
+        id: [0],
+        nome: ''
+      });
+    }
 
   ngOnInit(): void {
+    const equip: Equipamento = this.route.snapshot.data['equipment'];
+    this.form.setValue({
+      id: equip._id,
+      nome: equip.name
+    })
 
   }
 
-  cadastrar(): void {
-    this.equipamentos.push({ nome: this.nomeEquipamento });
-    this.nomeEquipamento = '';
+  onSubmit() {
+    console.log(this.form.value);
+    this.service.save(this.form.value).subscribe(
+      result => this.onSucess(),
+      error => this.onFailed()
+    );
   }
 
-  cancelar(): void {
+  onCancel(): void {
     this.dialogRef.close();
   }
 
@@ -38,6 +66,15 @@ export class NewEditEquipComponent implements OnInit {
       const index = this.equipamentos.indexOf(equipamento);
       this.equipamentos.splice(index, 1);
     }
+  }
+
+  onFailed() {
+    this.snackBar.open(this.mensagemSnackbarErro, '', { duration: 5000, panelClass: ['errorSnackbar'] });
+  }
+
+  onSucess() {
+    this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
+    this.dialogRef.close();
   }
 
 }
