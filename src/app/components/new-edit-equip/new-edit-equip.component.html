@@ -1,0 +1,35 @@
+<div class="backdrop">
+  <div class="dialog-container">
+
+    <div class="newInput">
+      <label>Novo equipamento:</label>
+      <input type="text" name="nome" placeholder="Nome do equipamento" required>
+    </div>
+
+    <div class="buttonGroupForm">
+      <button class="button two" (click)="onCancel()">Cancelar</button>
+      <button class="button one" (click)="onSubmit()">Cadastrar</button>
+    </div>
+
+    <br>
+    <p class="pageTitle">Equipamentos cadastrados:</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome do Equipamento</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let equipamento of equipamentos">
+          <td>{{ equipamento.nome }}</td>
+          <td>
+            <button (click)="editar(equipamento)">Editar</button>
+            <button (click)="excluir(equipamento)">Excluir</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

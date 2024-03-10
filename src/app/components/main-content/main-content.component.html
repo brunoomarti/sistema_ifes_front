@@ -8,12 +8,12 @@
 
       <div class="newInput">
         <label for="nome">Nome:</label>
-        <input type="text" name="nome" placeholder="Nome da sala" required>
+        <input type="text" name="nome" placeholder="Nome do local" required>
       </div>
 
       <div class="newInput">
         <label for="capacidade">Capacidade:</label>
-        <input type="number" name="capacidade" placeholder="Capacidade da sala" required>
+        <input type="number" name="capacidade" placeholder="Capacidade do local" required>
       </div>
 
       <div class="equipamento">
@@ -30,7 +30,7 @@
         </div>
 
         <div class="buttonGroupEquip">
-          <button class="button two" type="button" onclick="novoEquipamento()">Novo equip.</button>
+          <button class="button two" type="button" (click)="novoEquipamento()">Novo equip.</button>
           <button class="button one" type="button" onclick="inserirEquipamento()">Inserir</button>
         </div>
       </div>

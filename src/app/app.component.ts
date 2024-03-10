@@ -15,3 +15,5 @@ import { GuidePanelComponent } from './components/guide-panel/guide-panel.compon
 export class AppComponent {
   title = 'sistema_ifes_front';
 }
+
+

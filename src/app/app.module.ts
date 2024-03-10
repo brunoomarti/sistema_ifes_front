@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [],
@@ -14,7 +16,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     RouterModule,
     AppComponent,
     MenuComponent,
-    MatDialogModule
+    MatDialogModule,
+    FormsModule,
+    HttpClientModule
   ]
 })
 export class AppModule { }
