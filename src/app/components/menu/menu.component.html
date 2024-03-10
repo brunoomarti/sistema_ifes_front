@@ -1,0 +1,32 @@
+<div class="menuBox">
+
+  <div class="menuBoxContent">
+    <div class="menuSection1">
+      <div class="userbox">
+        <img src="../../../assets/images/user.jpg" class="userImage" alt="">
+        <div>
+          <p class="userName">Igor Pulini</p>
+          <p class="userOccupation">Coordenador de curso</p>
+        </div>
+      </div>
+      <div class="menuButtonGroup">
+        <button class="menuButton" [class.clicked]="selectedButton === 1" (click)="toggleClicked(1)">
+          <span class="material-symbols-outlined">home</span>Página inicial</button>
+        <button class="menuButton" [class.clicked]="selectedButton === 2" (click)="toggleClicked(2)">
+          <span class="material-symbols-outlined">person_add</span>Cadastro / gerência</button>
+        <button class="menuButton" [class.clicked]="selectedButton === 3" (click)="toggleClicked(3)">
+          <span class="material-symbols-outlined">database</span>Importar dados</button>
+        <button class="menuButton" [class.clicked]="selectedButton === 4" (click)="toggleClicked(4)">
+          <span class="material-symbols-outlined">school</span>Alocar local</button>
+        <button class="menuButton" [class.clicked]="selectedButton === 5" (click)="toggleClicked(5)">
+          <span class="material-symbols-outlined">schedule</span>Horários</button>
+        <button class="menuButton" id="logout"><span class="material-symbols-outlined" id="logout">logout</span>Sair</button>
+      </div>
+    </div>
+    <div class="logoIfesBox">
+      <img src="./../../../assets/images/logo-ifes-branco.png" alt="" class="logoIfes">
+    </div>
+
+  </div>
+
+</div>

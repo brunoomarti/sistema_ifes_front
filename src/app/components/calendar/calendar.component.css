@@ -1,0 +1,8 @@
+.boxSize {
+  width: 100%;
+  height: fit-content;
+  padding: var(--content-pading);
+  background-color: white;
+  border-radius: var(--primary-boxes-radius);
+  box-sizing: border-box;
+}

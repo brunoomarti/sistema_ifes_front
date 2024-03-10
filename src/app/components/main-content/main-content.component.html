@@ -1,0 +1,49 @@
+<div class="componentContent">
+
+  <p class="pageTitle">Cadastar Local</p>
+
+  <div class="boxSize">
+
+    <form action="/criar-sala" method="post">
+
+      <div class="newInput">
+        <label for="nome">Nome:</label>
+        <input type="text" name="nome" placeholder="Nome da sala" required>
+      </div>
+
+      <div class="newInput">
+        <label for="capacidade">Capacidade:</label>
+        <input type="number" name="capacidade" placeholder="Capacidade da sala" required>
+      </div>
+
+      <div class="equipamento">
+        <div class="newInput">
+          <label for="equipamento_id">Equipamento Disponível:</label>
+          <select name="equipamento_id" required>
+            <option value="">Selecione um equipamento</option>
+          </select>
+        </div>
+
+        <div class="newInput">
+          <label for="quantidade">Quantidade:</label>
+          <input type="number" name="quantidade" placeholder="Quantidade" required>
+        </div>
+
+        <div class="buttonGroupEquip">
+          <button class="button two" type="button" onclick="novoEquipamento()">Novo equip.</button>
+          <button class="button one" type="button" onclick="inserirEquipamento()">Inserir</button>
+        </div>
+      </div>
+
+      <br>
+
+      <div class="buttonGroupForm">
+        <button class="button two" type="button" onclick="cancelar()">Cancelar</button>
+        <button class="button one" type="submit">Criar Local</button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

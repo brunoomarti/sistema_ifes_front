@@ -1,1 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --primary-color: #359830;
+  --secondary-color: #296626;
+  --tertiary-color: #e7e7e7;
+  --primary-boxes-radius: 15px;
+  --secondary-boxes-radius: 5px;
+  --content-pading: 25px;
+  --big-font-size: 26px;
+  --normal-font-size: 14px;
+  --small-font-size: 12px;
+  --dark-gray: #393939;
+  --medium-gray: #666666;
+  --light-gray: #D4D4D4;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: var(--tertiary-color);
+  font-family: "Inter", sans-serif;
+}
+
+.page {
+  width: 100%;
+  height: 100vh;
+}
