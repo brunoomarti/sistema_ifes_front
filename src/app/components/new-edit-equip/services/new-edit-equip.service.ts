@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Equipamento } from '../../../models/Equipamento';
-import { first } from 'rxjs/operators';
+import { first, tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +20,13 @@ export class EquipmentService {
     return this.create(record);
   }
 
+  listar() {
+    return this.httpClient.get<Equipamento[]>(this.API)
+      .pipe(
+        first(),
+        tap(equipamentos => console.log()))
+  }
+
   loadById(id: string) {
     return this.httpClient.get<Equipamento>(`${this.API}/${id}`);
   }
@@ -30,6 +37,10 @@ export class EquipmentService {
 
   private update(record: Partial<Equipamento>) {
     return this.httpClient.put<Equipamento>(`${this.API}/${record._id}`, record).pipe(first());
+  }
+
+  remove(_id: number) {
+    return this.httpClient.delete(`${this.API}/${_id}`);
   }
 
 }

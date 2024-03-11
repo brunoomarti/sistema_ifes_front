@@ -20,7 +20,7 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
     MatDialogModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   providers: [
     provideHttpClient(withFetch())

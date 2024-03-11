@@ -20,7 +20,7 @@
         <div class="newInput">
           <label for="equipamento_id">Equipamento Disponível:</label>
           <select name="equipamento_id" required>
-            <option value="">Selecione um equipamento</option>
+            <option *ngFor="let equipamento of equipamentos" [value]="equipamento">{{equipamento.name}}</option>
           </select>
         </div>
 

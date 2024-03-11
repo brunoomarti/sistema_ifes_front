@@ -16,22 +16,24 @@
     <br>
     <p class="pageTitle">Equipamentos cadastrados:</p>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Nome do Equipamento</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let equipamento of equipamentos">
-          <td>{{ equipamento.name }}</td>
-          <td>
-            <button (click)="editar(equipamento)">Editar</button>
-            <button (click)="excluir(equipamento)">Excluir</button>
-          </td>
-        </tr>
-      </tbody>
+    <table mat-table [dataSource]="equipamentos">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nome do Equipamento</th>
+        <td mat-cell *matCellDef="let equipamento"> {{ equipamento.name }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
+          <button mat-button (click)="editar(equipamento)" class="button 2">Editar</button>
+          <button mat-button (click)="excluir(equipamento)" class="button 2">Excluir</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['name', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'actions']"></tr>
     </table>
+
   </div>
 </div>
