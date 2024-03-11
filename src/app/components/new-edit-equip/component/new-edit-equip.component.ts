@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
-import { EquipmentService } from './services/new-edit-equip.service';
+import { EquipmentService } from '../services/new-edit-equip.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Equipamento } from '../../models/Equipamento';
+import { Equipamento } from '../../../models/Equipamento';
 
 @Component({
   selector: 'app-new-edit-equip',
@@ -12,38 +12,41 @@ import { Equipamento } from '../../models/Equipamento';
   styleUrls: ['./new-edit-equip.component.css']
 })
 export class NewEditEquipComponent implements OnInit {
+
   form: FormGroup;
-  nomeEquipamento: string = '';
   equipamentos: any[] = [];
 
   mensagemSnackbarAcerto: string = 'Titulo cadastrado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar titulo.';
 
   constructor(public dialogRef: MatDialogRef<NewEditEquipComponent>,
-    private formBuilder: FormBuilder,
-    private service: EquipmentService,
-    private snackBar: MatSnackBar,
-    private route: ActivatedRoute) {
-      this.form = this.formBuilder.group({
-        id: [0],
-        name: ''
-      });
+              private formBuilder: FormBuilder,
+              private service: EquipmentService,
+              private snackBar: MatSnackBar,
+              private route: ActivatedRoute,
+    )
+
+    {
+
     }
 
     ngOnInit(): void {
+
+      this.form = this.formBuilder.group({
+        id: [null],
+        name: [null]
+      });
+
       const equip: Equipamento = this.route.snapshot.data['equipment'];
-      this.form.setValue({
-        id: equip._id,
-        name: equip.name
-      })
+      // this.form.setValue({
+      //   id: equip._id,
+      //   name: equip.name
+      // })
     }
 
   onSubmit() {
     console.log(this.form.value);
-    this.service.save(this.form.value).subscribe(
-      result => this.onSucess(),
-      error => this.onFailed()
-    );
+    this.service.save(this.form.value);//.subscribe(result => this.onSucess(), error => this.onFailed());
   }
 
   onCancel(): void {

@@ -5,8 +5,9 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http';
 
 @NgModule({
   declarations: [],
@@ -18,7 +19,11 @@ import { HttpClientModule } from '@angular/common/http';
     MenuComponent,
     MatDialogModule,
     FormsModule,
-    HttpClientModule
-  ]
+    HttpClientModule,
+    ReactiveFormsModule,
+  ],
+  providers: [
+    provideHttpClient(withFetch())
+  ],
 })
 export class AppModule { }

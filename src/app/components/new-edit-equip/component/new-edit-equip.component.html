@@ -1,7 +1,7 @@
 <div class="backdrop">
   <div class="dialog-container">
 
-    <form>
+    <form [formGroup]="form">
       <div class="newInput">
         <label>Novo equipamento:</label>
         <input type="text" formControlName="name" placeholder="Nome" required>
