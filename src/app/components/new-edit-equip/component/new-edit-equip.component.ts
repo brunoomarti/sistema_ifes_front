@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Equipamento } from '../../../models/Equipamento';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
-import { MatIcon } from '@angular/material/icon';
+import { MatIcon } from '@angular/material/icon'; 
 
 
 @Component({
@@ -15,7 +15,7 @@ import { MatIcon } from '@angular/material/icon';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    CommonModule,
+    CommonModule, 
     MatTableModule,
     MatIcon
   ],
@@ -46,7 +46,7 @@ export class NewEditEquipComponent implements OnInit {
       });
     }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
       const equip: Equipamento = this.route.snapshot.data['equipamento'];
       if (equip) {
         this.form.setValue({
@@ -57,7 +57,7 @@ export class NewEditEquipComponent implements OnInit {
 
       this.service.listar().subscribe(equipamentos => this.equipamentos = equipamentos);
 
-    }
+  }
 
   onSubmit() {
     console.log(this.form.value);
@@ -70,9 +70,13 @@ export class NewEditEquipComponent implements OnInit {
 
   editar(equipamento: { name: string }): void {
     const novoNome = prompt('Digite o novo nome:', equipamento.name);
+
     if (novoNome !== null) {
-      this.form.patchValue({ name: novoNome });
+      this.form.patchValue({ name: novoNome }); 
+      equipamento.name = novoNome;
+      this.service.save(equipamento).subscribe(result => this.onSucess(), error => this.onFailed());
     }
+    
   }
 
   excluir(equipamento: Equipamento): void {
@@ -90,12 +94,12 @@ export class NewEditEquipComponent implements OnInit {
 
 
   onFailed() {
-    // this.snackBar.open(this.mensagemSnackbarErro, '', { duration: 5000, panelClass: ['errorSnackbar'] });
+    this.snackBar.open(this.mensagemSnackbarErro, '', { duration: 5000, panelClass: ['errorSnackbar'] });
     this.dialogRef.close();
   }
 
   onSucess() {
-    // this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
+    this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
     this.dialogRef.close();
     window.location.reload();
   }

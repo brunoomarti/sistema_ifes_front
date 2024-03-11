@@ -36,7 +36,7 @@ export class EquipmentService {
   }
 
   private update(record: Partial<Equipamento>) {
-    return this.httpClient.put<Equipamento>(`${this.API}/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Equipamento>(`${this.API}/edit/${record._id}`, record).pipe(first());
   }
 
   remove(_id: number) {
