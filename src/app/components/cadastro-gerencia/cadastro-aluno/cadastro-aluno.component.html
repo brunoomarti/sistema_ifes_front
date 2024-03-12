@@ -1,0 +1,26 @@
+<div class="componentContent">
+
+  <p class="pageTitle">Cadastar Aluno(a)</p>
+
+  <div class="boxSize">
+
+    <form action="/criar-aluno" method="post">
+
+      <div class="newInput">
+        <label for="nome">Nome:</label>
+        <input type="text" name="nome" placeholder="Nome do(a) aluno(a)" required>
+      </div>
+
+      <div class="newInput">
+        <label for="barcode">Código (gerado automaticamente):</label>
+        <input type="text" name="barcode" placeholder="Código automático" class="disabledInput" required disabled>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" type="button" onclick="cancelar()">Cancelar</button>
+        <button class="button one" type="submit">Criar Aluno(a)</button>
+      </div>
+
+    </form>
+  </div>
+</div>
