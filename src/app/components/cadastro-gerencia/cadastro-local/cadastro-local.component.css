@@ -16,14 +16,6 @@ form {
   box-sizing: border-box;
 }
 
-.componentContent {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  height: fit-content;
-}
-
 .equipamento {
   width: 100%;
   display: flex;

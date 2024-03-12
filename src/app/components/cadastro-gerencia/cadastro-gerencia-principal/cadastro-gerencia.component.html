@@ -1,0 +1,41 @@
+<div class="componentContent">
+
+  <div class="backdrop" *ngIf="subMenuOpenCadastro || subMenuOpenGerenciar" (click)="toggleSubMenu('cadastro')"></div>
+
+  <p class="pageTitle">Cadastro, gerenciamento e visualização</p>
+
+  <div class="subMenuButtonGroup">
+    <div class="subMenuButtonGroupSpace">
+      <!-- Botão "Cadastrar" -->
+      <div class="buttonContainer">
+        <button #cadastroButton class="subMenuButton" (click)="toggleSubMenu('cadastro')" [ngClass]="{ 'active': subMenuOpenCadastro }">
+          <span class="material-symbols-outlined">add</span><div class="subMenuButtonText">Cadastrar</div>
+        </button>
+      </div>
+      <!-- Botão "Gerenciar/Visualizar" -->
+      <!-- <div class="buttonContainer">
+        <button #gerenciarButton class="subMenuButton" (click)="toggleSubMenu('gerenciar')" [ngClass]="{ 'active': subMenuOpenGerenciar }">
+          <span class="material-symbols-outlined">check_circle</span><div class="subMenuButtonText">Gerenciar / Visualizar</div>
+        </button>
+      </div> -->
+    </div>
+    <!-- Opções do leque - Cadastro -->
+    <div class="subMenuOptionsCadastro" *ngIf="subMenuOpenCadastro && cadastroButton"
+     [style.top.px]="cadastroButtonTop"
+     [style.left.px]="cadastroButtonLeft">
+      <button class="subMenuOption button three" style="border-radius: var(--primary-boxes-radius) var(--primary-boxes-radius) 0 0;">Turma</button>
+      <button class="subMenuOption button three" style="border-radius: 0;">Coordenador</button>
+      <button class="subMenuOption button three" style="border-radius: 0;">Disciplina</button>
+      <button class="subMenuOption button three" style="border-radius: 0 0 var(--primary-boxes-radius) var(--primary-boxes-radius);">Aluno</button>
+    </div>
+    <!-- Opções do leque - Gerenciar/Visualizar -->
+    <!-- <div class="subMenuOptionsGerenciar" *ngIf="subMenuOpenGerenciar && gerenciarButton"
+     [style.top.px]="gerenciarButtonTop"
+     [style.left.px]="gerenciarButtonLeft">
+      <button class="subMenuOption button three" style="border-radius: var(--primary-boxes-radius) var(--primary-boxes-radius) 0 0;">Opção 1</button>
+      <button class="subMenuOption button three" style="border-radius: 0;">Opção 2</button>
+      <button class="subMenuOption button three" style="border-radius: 0;">Opção 3</button>
+      <button class="subMenuOption button three" style="border-radius: 0 0 var(--primary-boxes-radius) var(--primary-boxes-radius);">Opção 4</button>
+    </div> -->
+  </div>
+</div>
