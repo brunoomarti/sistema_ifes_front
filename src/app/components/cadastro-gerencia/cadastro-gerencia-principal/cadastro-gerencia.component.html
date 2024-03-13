@@ -17,11 +17,27 @@
 
         <!-- Opções do leque - Cadastro -->
         <div class="subMenuOptionsCadastro" *ngIf="subMenuOpenCadastro && cadastroButton">
-          <button class="subMenuOption button three" style="border-radius: var(--primary-boxes-radius) var(--primary-boxes-radius) 0 0;" routerLink="/cadastto-local">Local</button>
-          <button class="subMenuOption button three" style="border-radius: 0;">Turma</button>
-          <button class="subMenuOption button three" style="border-radius: 0;">Coordenador</button>
-          <button class="subMenuOption button three" style="border-radius: 0;">Disciplina</button>
-          <button class="subMenuOption button three" style="border-radius: 0 0 var(--primary-boxes-radius) var(--primary-boxes-radius);">Aluno</button>
+          <button class="subMenuOption button three" style="border-radius: var(--primary-boxes-radius) var(--primary-boxes-radius) 0 0;" 
+          routerLink="/cadastro-local">
+          Local
+        </button>
+          <button class="subMenuOption button three" style="border-radius: 0;" 
+          routerLink="/cadastro-turma" >
+          Turma
+        </button>
+          <button class="subMenuOption button three" style="border-radius: 0;" 
+          routerLink="/cadastro-coordenador">
+          Coordenador
+        </button>
+          <button class="subMenuOption button three" style="border-radius: 0;" 
+          routerLink="/"
+          >
+          Disciplina
+        </button>
+          <button class="subMenuOption button three" style="border-radius: 0 0 var(--primary-boxes-radius) var(--primary-boxes-radius);" 
+          routerLink="/" >
+          Aluno
+        </button>
         </div>
 
       </div>

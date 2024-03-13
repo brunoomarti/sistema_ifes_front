@@ -12,8 +12,8 @@
       <div class="menuButtonGroup">
         <button class="menuButton" [class.clicked]="selectedButton === 1" (click)="toggleClicked(1)">
           <span class="material-symbols-outlined">home</span>Página inicial</button>
-        <button class="menuButton" [class.clicked]="selectedButton === 2" (click)="toggleClicked(2)">
-          <span class="material-symbols-outlined">person_add</span>Cadastro / gerência</button>
+        <button class="menuButton" [class.clicked]="selectedButton === 2" (click)="toggleClicked(2)" routerLink="/cadastro-gerencia">
+          <span class="material-symbols-outlined" >person_add</span>Cadastro / gerência</button>
         <button class="menuButton" [class.clicked]="selectedButton === 3" (click)="toggleClicked(3)">
           <span class="material-symbols-outlined">database</span>Importar dados</button>
         <button class="menuButton" [class.clicked]="selectedButton === 4" (click)="toggleClicked(4)">
