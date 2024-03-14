@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { ReloadService } from '../../../shared-services/reload.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cadastro-local',
@@ -24,7 +25,8 @@ export class CadastroLocalComponent implements OnInit {
   constructor(public dialog: MatDialog,
               private service: EquipmentService,
               private http: HttpClient,
-              private reloadService: ReloadService
+              private reloadService: ReloadService,
+              private router: Router
               ) {}
 
   ngOnInit(): void {
@@ -40,6 +42,12 @@ export class CadastroLocalComponent implements OnInit {
       disableClose: true,
       backdropClass: 'backdrop',
     });
+  }
+
+  cancelar() {
+    if (confirm('Tem certeza que deseja cancelar?')) {
+      this.router.navigate(['/cadastro-gerencia']);
+    }
   }
 
 }

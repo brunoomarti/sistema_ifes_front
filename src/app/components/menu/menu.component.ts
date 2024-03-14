@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -14,26 +15,33 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   styleUrls: ['./menu.component.css', '/src/styles.css']
 })
 export class MenuComponent implements OnInit {
+  selectedButton: number | null = null;
+
+  constructor(private router: Router) {}
 
   ngOnInit() {
-    this.toggleClicked(2);
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+      )
+      .subscribe((event: NavigationEnd) => {
+        this.updateSelectedButton(event.url);
+      });
   }
 
-  selectedButton: number | null = null;
-  showCadastroGerencia: boolean = false;
-
-  toggleClicked(buttonNumber: number) {
-    if (this.selectedButton === buttonNumber) {
-      this.selectedButton = null;
+  updateSelectedButton(url: string) {
+    if (url.includes('/home')) {
+      this.selectedButton = 1;
+    } else if (url.includes('/cadastro-gerencia')) {
+      this.selectedButton = 2;
+    } else if (url.includes('/importar-dados')) {
+      this.selectedButton = 3;
+    } else if (url.includes('/alocar-local')) {
+      this.selectedButton = 4;
+    } else if (url.includes('/horarios')) {
+      this.selectedButton = 5;
     } else {
-      this.selectedButton = buttonNumber;
-      if (buttonNumber === 2) {
-        this.showCadastroGerencia = true;
-      } else {
-        this.showCadastroGerencia = false;
-      }
+      this.selectedButton = null;
     }
   }
-
-
 }

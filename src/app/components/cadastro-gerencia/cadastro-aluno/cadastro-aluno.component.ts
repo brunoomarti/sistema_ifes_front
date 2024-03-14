@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cadastro-aluno',
@@ -8,5 +9,15 @@ import { Component } from '@angular/core';
   styleUrl: './cadastro-aluno.component.css'
 })
 export class CadastroAlunoComponent {
+
+  constructor(
+    private router: Router
+    ) {}
+
+  cancelar() {
+    if (confirm('Tem certeza que deseja cancelar?')) {
+      this.router.navigate(['/cadastro-gerencia']);
+    }
+  }
 
 }
