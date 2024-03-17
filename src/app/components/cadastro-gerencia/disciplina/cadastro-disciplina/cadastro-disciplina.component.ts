@@ -1,52 +1,50 @@
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Coordenador } from '../../../../models/Coordenador';
-import { CoordenadorService } from '../service/coordenador.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { DisciplinaService } from '../service/disciplina.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Disciplina } from '../../../../models/Disciplina';
 
 @Component({
-  selector: 'app-cadastro-coordenador',
+  selector: 'app-cadastro-disciplina',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatTableModule
   ],
-  templateUrl: './cadastro-coordenador.component.html',
-  styleUrl: './cadastro-coordenador.component.css'
+  templateUrl: './cadastro-disciplina.component.html',
+  styleUrl: './cadastro-disciplina.component.css'
 })
-export class CadastroCoordenadorComponent {
+export class CadastroDisciplinaComponent implements OnInit {
 
   form: FormGroup;
-  mensagemSnackbarAcerto: string = 'Coordenador cadastrado com sucesso.';
-  mensagemSnackbarErro: string = 'Erro ao cadastrar coordenador.';
+  mensagemSnackbarAcerto: string = 'Disciplina cadastrada com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao cadastrar disciplina.';
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private service: CoordenadorService,
+    private service: DisciplinaService,
     private snackBar: MatSnackBar,
   )
 
   {
     this.form = this.formBuilder.group({
       id: [0],
-      name: '',
-      shift: 'Matutino',
+      name: ''
     });
   }
 
   ngOnInit(): void {
-    const coord: Coordenador = this.route.snapshot.data['coordenador'];
-    if (coord) {
+    const obj: Disciplina = this.route.snapshot.data['disciplina'];
+    if (obj) {
       this.form.setValue({
-        id: coord._id,
-        name: coord.name,
-        shift: coord.shift
+        id: obj._id,
+        name: obj.name
       });
     }
   }

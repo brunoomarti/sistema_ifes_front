@@ -1,5 +1,5 @@
-import { CadastroAlunoComponent } from './components/cadastro-gerencia/aluno/cadastro-aluno.component';
-import { CadastroDisciplinaComponent } from './components/cadastro-gerencia/disciplina/cadastro-disciplina.component';
+import { CadastroAlunoComponent } from './components/cadastro-gerencia/aluno/cadastro-aluno/cadastro-aluno.component';
+import { CadastroDisciplinaComponent } from './components/cadastro-gerencia/disciplina/cadastro-disciplina/cadastro-disciplina.component';
 import { CadastroCoordenadorComponent } from './components/cadastro-gerencia/coordenador/cadastro-coordenador/cadastro-coordenador.component';
 import { CadastroTurmaComponent } from './components/cadastro-gerencia/turma/cadastro-turma/cadastro-turma.component';
 import { CadastroLocalComponent } from './components/cadastro-gerencia/local/cadastro-local.component';

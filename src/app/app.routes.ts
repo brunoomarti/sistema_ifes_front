@@ -2,7 +2,7 @@ import { GerenciaCoordenadorComponent } from './components/cadastro-gerencia/coo
 import { CadastroCoordenadorComponent } from './components/cadastro-gerencia/coordenador/cadastro-coordenador/cadastro-coordenador.component';
 import { CadastroLocalComponent } from './components/cadastro-gerencia/local/cadastro-local.component';
 import { CadastroTurmaComponent } from './components/cadastro-gerencia/turma/cadastro-turma/cadastro-turma.component';
-import { CadastroAlunoComponent } from './components/cadastro-gerencia/aluno/cadastro-aluno.component';
+import { CadastroAlunoComponent } from './components/cadastro-gerencia/aluno/cadastro-aluno/cadastro-aluno.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CadastroGerenciaComponent } from './components/cadastro-gerencia/cadastro-gerencia-principal/cadastro-gerencia.component';
@@ -10,7 +10,7 @@ import { HomeComponent } from './components/home/home.component';
 import { ImportDataComponent } from './components/import-data/import-data.component';
 import { AllocateLocationComponent } from './components/allocate-location/allocate-location.component';
 import { SchedulesComponent } from './components/schedules/schedules.component';
-import { CadastroDisciplinaComponent } from './components/cadastro-gerencia/disciplina/cadastro-disciplina.component';
+import { CadastroDisciplinaComponent } from './components/cadastro-gerencia/disciplina/cadastro-disciplina/cadastro-disciplina.component';
 import { EdicaoCoordenadorComponent } from './components/cadastro-gerencia/coordenador/edicao-coordenador/edicao-coordenador/edicao-coordenador.component';
 
 export const routes: Routes = [
