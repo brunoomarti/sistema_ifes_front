@@ -1,7 +1,7 @@
 import { GerenciaCoordenadorComponent } from './components/cadastro-gerencia/coordenador/gerencia-coordenador/gerencia-coordenador/gerencia-coordenador.component';
 import { CadastroCoordenadorComponent } from './components/cadastro-gerencia/coordenador/cadastro-coordenador/cadastro-coordenador.component';
 import { CadastroLocalComponent } from './components/cadastro-gerencia/local/cadastro-local.component';
-import { CadastroTurmaComponent } from './components/cadastro-gerencia/turma/cadastro-turma.component';
+import { CadastroTurmaComponent } from './components/cadastro-gerencia/turma/cadastro-turma/cadastro-turma.component';
 import { CadastroAlunoComponent } from './components/cadastro-gerencia/aluno/cadastro-aluno.component';
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
