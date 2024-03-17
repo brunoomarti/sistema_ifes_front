@@ -38,8 +38,6 @@ export class GerenciaCoordenadorComponent implements OnInit {
     private service: CoordenadorService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private reloadService: ReloadService,
     public dialog: MatDialog,
   ) { }
 
@@ -60,6 +58,10 @@ export class GerenciaCoordenadorComponent implements OnInit {
       disableClose: true,
       backdropClass: 'backdrop',
       data: { coordenador }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.atualizaTabela();
     });
   }
 

@@ -26,7 +26,6 @@ export const routes: Routes = [
   { path: 'cadastro-gerencia/gerencia-turma', data: { title: 'SIFES | Gerenciar Turma' }, component: GerenciaTurmaComponent },
   { path: 'cadastro-gerencia/cadastro-coordenador', data: { title: 'SIFES | Cadastrar Coordenador' }, component: CadastroCoordenadorComponent },
   { path: 'cadastro-gerencia/gerencia-coordenador', data: { title: 'SIFES | Gerenciar Coordenador' }, component: GerenciaCoordenadorComponent },
-  { path: 'cadastro-gerencia/gerencia-coordenador/:id', component: EdicaoCoordenadorComponent },
   { path: 'cadastro-gerencia/cadastro-disciplina', data: { title: 'SIFES | Cadastrar Disciplina' }, component: CadastroDisciplinaComponent },
   { path: 'cadastro-gerencia/gerencia-disciplina', data: { title: 'SIFES | Gerenciar Disciplina' }, component: GerenciaDisciplinaComponent },
   { path: 'cadastro-gerencia/cadastro-aluno', data: { title: 'SIFES | Cadastrar Aluno' }, component: CadastroAlunoComponent },
