@@ -34,7 +34,7 @@ export class CadastroTurmaComponent implements OnInit {
 
   {
     this.form = this.formBuilder.group({
-      _id: [0],
+      id: [0],
       name: ''
     });
   }
@@ -43,7 +43,7 @@ export class CadastroTurmaComponent implements OnInit {
     const obj: Turma = this.route.snapshot.data['turma'];
     if (obj) {
       this.form.setValue({
-        _id: obj._id,
+        id: obj._id,
         name: obj.name
       });
     }

@@ -34,7 +34,7 @@ export class CadastroDisciplinaComponent implements OnInit {
 
   {
     this.form = this.formBuilder.group({
-      _id: [0],
+      id: [0],
       name: ''
     });
   }
@@ -43,7 +43,7 @@ export class CadastroDisciplinaComponent implements OnInit {
     const obj: Disciplina = this.route.snapshot.data['disciplina'];
     if (obj) {
       this.form.setValue({
-        _id: obj._id,
+        id: obj._id,
         name: obj.name
       });
     }

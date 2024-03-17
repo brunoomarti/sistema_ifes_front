@@ -43,7 +43,7 @@ export class NewEditEquipComponent implements OnInit {
 
     {
       this.form = this.formBuilder.group({
-        _id: [0],
+        id: [0],
         name: ''
       });
     }
@@ -52,7 +52,7 @@ export class NewEditEquipComponent implements OnInit {
       const equip: Equipamento = this.route.snapshot.data['equipamento'];
       if (equip) {
         this.form.setValue({
-          _id: equip._id,
+          id: equip._id,
           name: equip.name
         });
       }
