@@ -11,7 +11,6 @@ import { ImportDataComponent } from './components/import-data/import-data.compon
 import { AllocateLocationComponent } from './components/allocate-location/allocate-location.component';
 import { SchedulesComponent } from './components/schedules/schedules.component';
 import { CadastroDisciplinaComponent } from './components/cadastro-gerencia/disciplina/cadastro-disciplina/cadastro-disciplina.component';
-import { EdicaoCoordenadorComponent } from './components/cadastro-gerencia/coordenador/edicao-coordenador/edicao-coordenador/edicao-coordenador.component';
 import { GerenciaTurmaComponent } from './components/cadastro-gerencia/turma/gerencia-turma/gerencia-turma/gerencia-turma.component';
 import { GerenciaDisciplinaComponent } from './components/cadastro-gerencia/disciplina/gerencia-disciplina/gerencia-disciplina/gerencia-disciplina.component';
 import { GerenciaAlunoComponent } from './components/cadastro-gerencia/aluno/gerencia-aluno/gerencia-aluno/gerencia-aluno.component';

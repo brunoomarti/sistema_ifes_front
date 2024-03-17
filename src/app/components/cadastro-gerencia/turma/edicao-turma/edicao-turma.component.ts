@@ -32,7 +32,6 @@ export class EdicaoTurmaComponent implements OnInit {
     private formBuilder: FormBuilder,
     private service: TurmaService,
     private snackBar: MatSnackBar,
-    private router: Router,
     @Inject(MAT_DIALOG_DATA) public data: any,
   )
 
