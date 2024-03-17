@@ -39,7 +39,7 @@ export class EdicaoDisciplinaComponent implements OnInit {
 
   {
     this.form = this.formBuilder.group({
-      id: 0,
+      _id: 0,
       name: ''
     });
   }
@@ -48,7 +48,7 @@ export class EdicaoDisciplinaComponent implements OnInit {
     const obj: Disciplina = this.data.disciplina;;
     if (obj) {
       this.form.setValue({
-        id: obj._id,
+        _id: obj._id,
         name: obj.name
       });
     }

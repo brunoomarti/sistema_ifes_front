@@ -34,7 +34,7 @@ export class CadastroAlunoComponent implements OnInit {
 
   {
     this.form = this.formBuilder.group({
-      id: [0],
+      _id: [0],
       name: '',
       studentCode: ['']
     });
@@ -46,7 +46,7 @@ export class CadastroAlunoComponent implements OnInit {
     const obj: Aluno = this.route.snapshot.data['aluno'];
     if (obj) {
       this.form.setValue({
-        id: obj._id,
+        _id: obj._id,
         name: obj.name,
         barcode: obj.studentCode
       });

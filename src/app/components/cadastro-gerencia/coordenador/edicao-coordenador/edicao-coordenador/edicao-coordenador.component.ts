@@ -39,7 +39,7 @@ export class EdicaoCoordenadorComponent implements OnInit {
 
   {
     this.form = this.formBuilder.group({
-      id: 0,
+      _id: 0,
       name: '',
       shift: ''
     });
@@ -49,7 +49,7 @@ export class EdicaoCoordenadorComponent implements OnInit {
     const coord: Coordenador = this.data.coordenador;
     if (coord) {
       this.form.setValue({
-        id: coord._id,
+        _id: coord._id,
         name: coord.name,
         shift: coord.shift
       });
@@ -59,6 +59,7 @@ export class EdicaoCoordenadorComponent implements OnInit {
   onSubmit() {
     console.log(this.form.value);
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+    window.location.reload();
   }
 
   onCancel(): void {

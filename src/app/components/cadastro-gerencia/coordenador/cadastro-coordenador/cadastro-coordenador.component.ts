@@ -34,7 +34,7 @@ export class CadastroCoordenadorComponent {
 
   {
     this.form = this.formBuilder.group({
-      id: [0],
+      _id: [0],
       name: '',
       shift: 'Matutino',
     });
@@ -44,7 +44,7 @@ export class CadastroCoordenadorComponent {
     const coord: Coordenador = this.route.snapshot.data['coordenador'];
     if (coord) {
       this.form.setValue({
-        id: coord._id,
+        _id: coord._id,
         name: coord.name,
         shift: coord.shift
       });
