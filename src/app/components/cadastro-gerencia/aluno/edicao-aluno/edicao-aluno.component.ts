@@ -38,7 +38,7 @@ export class EdicaoAlunoComponent implements OnInit {
 
   {
     this.form = this.formBuilder.group({
-      _id: 0,
+      id: 0,
       name: '',
       studentCode: ''
     });
@@ -48,7 +48,7 @@ export class EdicaoAlunoComponent implements OnInit {
     const obj: Aluno = this.data.aluno;
     if (obj) {
       this.form.setValue({
-        _id: obj._id,
+        id: obj._id,
         name: obj.name,
         studentCode: obj.studentCode
       });
@@ -67,7 +67,6 @@ export class EdicaoAlunoComponent implements OnInit {
   onSucess() {
     this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
     this.dialogRef.close();
-    this.reloadService.triggerReload();
   }
 
   onFailed() {

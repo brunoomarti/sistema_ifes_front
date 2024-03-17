@@ -59,10 +59,6 @@ export class GerenciaDisciplinaComponent implements OnInit {
       backdropClass: 'backdrop',
       data: { disciplina }
     });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.atualizaTabela();
-    });
   }
 
   excluir(disciplina: Disciplina): void {

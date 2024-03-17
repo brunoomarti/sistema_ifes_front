@@ -5,7 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { TurmaService } from '../service/turma.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Turma } from '../../../../models/Turma';
@@ -32,13 +32,14 @@ export class EdicaoTurmaComponent implements OnInit {
     private formBuilder: FormBuilder,
     private service: TurmaService,
     private snackBar: MatSnackBar,
-    private router: Router,
+    private route: ActivatedRoute,
+    private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   )
 
   {
     this.form = this.formBuilder.group({
-      _id: 0,
+      id: 0,
       name: ''
     });
   }
@@ -47,7 +48,7 @@ export class EdicaoTurmaComponent implements OnInit {
     const obj: Turma = this.data.turma;;
     if (obj) {
       this.form.setValue({
-        _id: obj._id,
+        id: obj._id,
         name: obj.name
       });
     }

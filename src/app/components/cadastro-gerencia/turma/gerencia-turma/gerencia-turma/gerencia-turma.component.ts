@@ -61,10 +61,6 @@ export class GerenciaTurmaComponent implements OnInit {
       backdropClass: 'backdrop',
       data: { turma }
     });
-
-    dialogRef.afterClosed().subscribe(() => {
-      this.atualizaTabela();
-    });
   }
 
   excluir(turma: Turma): void {
