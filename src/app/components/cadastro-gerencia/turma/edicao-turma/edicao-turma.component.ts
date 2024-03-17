@@ -56,6 +56,7 @@ export class EdicaoTurmaComponent implements OnInit {
   onSubmit() {
     console.log(this.form.value);
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+    window.location.reload();
   }
 
   onCancel(): void {
