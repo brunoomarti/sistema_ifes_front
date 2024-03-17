@@ -36,8 +36,6 @@ export class GerenciaAlunoComponent implements OnInit {
     private service: AlunoService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private reloadService: ReloadService,
     public dialog: MatDialog,
   ) { }
 
@@ -58,6 +56,10 @@ export class GerenciaAlunoComponent implements OnInit {
       disableClose: true,
       backdropClass: 'backdrop',
       data: { aluno }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.atualizaTabela();
     });
   }
 
