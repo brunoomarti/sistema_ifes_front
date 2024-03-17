@@ -1,36 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { CoordenadorService } from '../../service/coordenador.service';
+import { AlunoService } from '../service/aluno.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { ReloadService } from '../../../../../shared-services/reload.service';
-import { Coordenador } from '../../../../../models/Coordenador';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ReloadService } from '../../../../shared-services/reload.service';
+import { Aluno } from '../../../../models/Aluno';
 
 @Component({
-  selector: 'app-edicao-coordenador',
+  selector: 'app-edicao-aluno',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatIcon
   ],
-  templateUrl: './edicao-coordenador.component.html',
-  styleUrl: './edicao-coordenador.component.css'
+  templateUrl: './edicao-aluno.component.html',
+  styleUrl: './edicao-aluno.component.css'
 })
-export class EdicaoCoordenadorComponent implements OnInit {
+export class EdicaoAlunoComponent implements OnInit {
 
   form: FormGroup;
-  mensagemSnackbarAcerto: string = 'Coordenador editado com sucesso.';
-  mensagemSnackbarErro: string = 'Erro ao editar coordenador.';
+  mensagemSnackbarAcerto: string = 'Aluno editado com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao editar aluno.';
 
   constructor(
-    public dialogRef: MatDialogRef<EdicaoCoordenadorComponent>,
+    public dialogRef: MatDialogRef<EdicaoAlunoComponent>,
     private formBuilder: FormBuilder,
-    private service: CoordenadorService,
+    private service: AlunoService,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private reloadService: ReloadService,
@@ -41,17 +40,17 @@ export class EdicaoCoordenadorComponent implements OnInit {
     this.form = this.formBuilder.group({
       id: 0,
       name: '',
-      shift: ''
+      studentCode: ''
     });
   }
 
   ngOnInit(): void {
-    const coord: Coordenador = this.data.coordenador;
-    if (coord) {
+    const obj: Aluno = this.data.aluno;
+    if (obj) {
       this.form.setValue({
-        id: coord._id,
-        name: coord.name,
-        shift: coord.shift
+        id: obj._id,
+        name: obj.name,
+        studentCode: obj.studentCode
       });
     }
   }

@@ -55,7 +55,7 @@ export class GerenciaCoordenadorComponent implements OnInit {
     });
   }
 
-  editar(coordenador: { name: string}): void {
+  editar(coordenador: { name: string }): void {
     const dialogRef = this.dialog.open(EdicaoCoordenadorComponent, {
       disableClose: true,
       backdropClass: 'backdrop',

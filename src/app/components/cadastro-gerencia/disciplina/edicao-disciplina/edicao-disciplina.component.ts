@@ -3,34 +3,34 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { CoordenadorService } from '../../service/coordenador.service';
+import { DisciplinaService } from '../service/disciplina.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
-import { ReloadService } from '../../../../../shared-services/reload.service';
-import { Coordenador } from '../../../../../models/Coordenador';
+import { ReloadService } from '../../../../shared-services/reload.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Disciplina } from '../../../../models/Disciplina';
 
 @Component({
-  selector: 'app-edicao-coordenador',
+  selector: 'app-edicao-disciplina',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatIcon
   ],
-  templateUrl: './edicao-coordenador.component.html',
-  styleUrl: './edicao-coordenador.component.css'
+  templateUrl: './edicao-disciplina.component.html',
+  styleUrl: './edicao-disciplina.component.css'
 })
-export class EdicaoCoordenadorComponent implements OnInit {
+export class EdicaoDisciplinaComponent implements OnInit {
 
   form: FormGroup;
-  mensagemSnackbarAcerto: string = 'Coordenador editado com sucesso.';
-  mensagemSnackbarErro: string = 'Erro ao editar coordenador.';
+  mensagemSnackbarAcerto: string = 'Disciplina editada com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao editar disciplina.';
 
   constructor(
-    public dialogRef: MatDialogRef<EdicaoCoordenadorComponent>,
+    public dialogRef: MatDialogRef<EdicaoDisciplinaComponent>,
     private formBuilder: FormBuilder,
-    private service: CoordenadorService,
+    private service: DisciplinaService,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private reloadService: ReloadService,
@@ -40,18 +40,16 @@ export class EdicaoCoordenadorComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       id: 0,
-      name: '',
-      shift: ''
+      name: ''
     });
   }
 
   ngOnInit(): void {
-    const coord: Coordenador = this.data.coordenador;
-    if (coord) {
+    const obj: Disciplina = this.data.disciplina;;
+    if (obj) {
       this.form.setValue({
-        id: coord._id,
-        name: coord.name,
-        shift: coord.shift
+        id: obj._id,
+        name: obj.name
       });
     }
   }
