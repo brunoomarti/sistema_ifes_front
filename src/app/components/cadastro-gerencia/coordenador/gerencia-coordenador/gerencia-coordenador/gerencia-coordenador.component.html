@@ -1,0 +1,46 @@
+<div class="componentContent">
+
+  <div class="backTitle">
+    <p class="pageTitle">Coordenadores cadastrados</p>
+    <button class="backPage" (click)="backPage()">
+      <span class="material-symbols-outlined">arrow_back</span>
+      <p class="pageTitle">Voltar</p>
+    </button>
+  </div>
+
+  <div class="boxSize">
+
+    <table mat-table [dataSource]="coordenadores">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let coordenador"> {{ coordenador.name }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="shift">
+        <th mat-header-cell *matHeaderCellDef>Turno</th>
+        <td mat-cell *matCellDef="let coordenador"> {{ coordenador.shift }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
+          <button mat-button (click)="editar(equipamento)" class="button 2">
+            <span class="material-symbols-outlined table-button-icon">edit</span>
+            Editar
+          </button>
+          <button mat-button (click)="excluir(equipamento)" class="button 2 delete-button">
+            <span class="material-symbols-outlined table-button-icon">delete</span>
+            Excluir
+          </button>
+        </td>
+      </ng-container>
+
+      <tr class="header-row" mat-header-row *matHeaderRowDef="['name', 'shift', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'shift', 'actions']"></tr>
+    </table>
+
+    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
+
+  </div>
+</div>

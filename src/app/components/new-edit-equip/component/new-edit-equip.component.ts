@@ -78,7 +78,6 @@ export class NewEditEquipComponent implements OnInit {
       equipamento.name = novoNome;
       this.service.save(equipamento).subscribe(result => this.onSucess(), error => this.onFailed());
     }
-
   }
 
   excluir(equipamento: Equipamento): void {

@@ -56,6 +56,22 @@ form {
   backdrop-filter: blur(2px);
 }
 
+.dialog-container {
+  width: 400px;
+  margin: 0;
+  padding: var(--content-pading);
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  z-index: 10000;
+  border-radius: var(--primary-boxes-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .button {
   width: 100%;
   padding: 8px;
@@ -64,6 +80,10 @@ form {
   border: 0;
   transition: background-color 0.15s ease-in-out;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 .subMenuButton {
@@ -136,6 +156,7 @@ form {
 .button:hover, .subMenuButton:hover {
   color: white;
   background-color: var(--secondary-color);
+  cursor: pointer;
 }
 
 .button:active, .subMenuButton:active {
@@ -219,4 +240,46 @@ select {
   gap: 10px;
   width: 100%;
   height: fit-content;
+}
+
+.backTitle {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: fit-content;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.backPage {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
+  height: fit-content;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffff00;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.backPage:hover p.pageTitle {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+mat-table {
+  padding: 0;
+  margin: 0;
+}
+
+::ng-deep .mat-mdc-paginator-container {
+  padding: 10px 0;
+}
+
+::ng-deep .mat-mdc-paginator-outer-container {
+  background-color: var(--primary-color);
+  border-radius: var(--secondary-boxes-radius);
+  color: white;
 }

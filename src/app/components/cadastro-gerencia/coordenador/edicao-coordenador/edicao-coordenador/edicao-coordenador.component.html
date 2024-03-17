@@ -1,0 +1,29 @@
+<div class="backdrop">
+  <div class="dialog-container">
+
+    <p class="pageTitle">Você está editando: {{ data.coordenador.name }}</p>
+
+    <form [formGroup]="form">
+
+      <div class="newInput">
+        <label for="name">Nome:</label>
+        <input type="text" formControlName="name" placeholder="Nome do coordenador" required>
+      </div>
+
+      <div class="newInput">
+        <label for="shift">Turno:</label>
+        <select formControlName="shift" required>
+          <option>Matutino</option>
+          <option>Vespertino</option>
+          <option>Noturno</option>
+        </select>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Salvar edição</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -50,16 +50,6 @@
   max-height: 500px;
 }
 
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 200,
-  'GRAD' 0,
-  'opsz' 20;
-  padding: 0 6px 0 0;
-  font-size: 22px;
-}
-
 .userbox {
   width: 100%;
   height: fit-content;
@@ -123,3 +113,12 @@
   box-sizing: border-box;
 }
 
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 200,
+  'GRAD' 0,
+  'opsz' 20;
+  padding: 0 6px 0 0;
+  font-size: 22px;
+}

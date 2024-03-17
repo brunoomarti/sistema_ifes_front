@@ -17,27 +17,36 @@
 
         <!-- Opções do leque - Cadastro -->
         <div class="subMenuOptionsCadastro" *ngIf="subMenuOpenCadastro && cadastroButton">
-          <button class="subMenuOption button three" style="border-radius: var(--primary-boxes-radius) var(--primary-boxes-radius) 0 0;"
-          routerLink="/cadastro-gerencia/cadastro-local">
-          Local
-        </button>
-          <button class="subMenuOption button three" style="border-radius: 0;"
-          routerLink="/cadastro-gerencia/cadastro-turma" >
-          Turma
-        </button>
-          <button class="subMenuOption button three" style="border-radius: 0;"
-          routerLink="/cadastro-gerencia/cadastro-coordenador">
-          Coordenador
-        </button>
-          <button class="subMenuOption button three" style="border-radius: 0;"
-          routerLink="/cadastro-gerencia/cadastro-disciplina"
-          >
-          Disciplina
-        </button>
-          <button class="subMenuOption button three" style="border-radius: 0 0 var(--primary-boxes-radius) var(--primary-boxes-radius);"
-          routerLink="/cadastro-gerencia/cadastro-aluno" >
-          Aluno
-        </button>
+          <button
+            class="subMenuOption button three"
+            style="border-radius: var(--primary-boxes-radius) var(--primary-boxes-radius) 0 0;"
+            routerLink="/cadastro-gerencia/cadastro-local">
+            Local
+          </button>
+          <button
+            class="subMenuOption button three"
+            style="border-radius: 0;"
+            routerLink="/cadastro-gerencia/cadastro-turma" >
+            Turma
+          </button>
+          <button
+            class="subMenuOption button three"
+            style="border-radius: 0;"
+            routerLink="/cadastro-gerencia/cadastro-coordenador">
+            Coordenador
+          </button>
+          <button
+            class="subMenuOption button three"
+            style="border-radius: 0;"
+            routerLink="/cadastro-gerencia/cadastro-disciplina">
+            Disciplina
+          </button>
+          <button
+            class="subMenuOption button three"
+            style="border-radius: 0 0 var(--primary-boxes-radius) var(--primary-boxes-radius);"
+            routerLink="/cadastro-gerencia/cadastro-aluno" >
+            Aluno
+          </button>
         </div>
 
       </div>
@@ -55,7 +64,12 @@
         <div class="subMenuOptionsGerenciar" *ngIf="subMenuOpenGerenciar && gerenciarButton">
           <button class="subMenuOption button three" style="border-radius: var(--primary-boxes-radius) var(--primary-boxes-radius) 0 0;">Local</button>
           <button class="subMenuOption button three" style="border-radius: 0;">Turma</button>
-          <button class="subMenuOption button three" style="border-radius: 0;">Coordenador</button>
+          <button
+            class="subMenuOption button three"
+            style="border-radius: 0;"
+            routerLink="/cadastro-gerencia/gerencia-coordenador">
+            Coordenador
+          </button>
           <button class="subMenuOption button three" style="border-radius: 0;">Disciplina</button>
           <button class="subMenuOption button three" style="border-radius: 0 0 var(--primary-boxes-radius) var(--primary-boxes-radius);">Aluno</button>
         </div>
