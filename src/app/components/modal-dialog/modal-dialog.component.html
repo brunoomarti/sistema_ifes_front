@@ -1,0 +1,13 @@
+<div>
+  <div class="dialog-container">
+
+    <p class="pageTitle">{{ data.title }}</p>
+    <p class="pageBody">{{ data.message }}</p>
+
+    <div class="buttonGroupForm">
+      <button class="button two" (click)="onButtonClick('cadastrarNovo')">{{ data.buttons.cadastrarNovo }}</button>
+      <button class="button one" mat-button (click)="onButtonClick('irParaGerencia')">{{ data.buttons.irParaGerencia }}</button>
+    </div>
+
+  </div>
+</div>

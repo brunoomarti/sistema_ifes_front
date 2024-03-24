@@ -283,3 +283,9 @@ mat-table {
   border-radius: var(--secondary-boxes-radius);
   color: white;
 }
+
+.pageBody {
+  font-size: 12px;
+  padding: 5px 0;
+  margin: 0;
+}

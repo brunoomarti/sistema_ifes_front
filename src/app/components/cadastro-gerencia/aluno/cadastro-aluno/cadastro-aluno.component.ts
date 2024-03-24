@@ -6,6 +6,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Aluno } from '../../../../models/Aluno';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-cadastro-aluno',
@@ -30,15 +32,15 @@ export class CadastroAlunoComponent implements OnInit {
     private route: ActivatedRoute,
     private service: AlunoService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog
   )
 
   {
     this.form = this.formBuilder.group({
       id: [0],
-      name: '',
+      name: null,
       studentCode: ['']
     });
-
     this.form.get('studentCode')?.setValue(this.gerarCodigo());
   }
 
@@ -54,11 +56,22 @@ export class CadastroAlunoComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form.value);
-    this.service.save(this.form.value).subscribe(result => {
-      this.onSucess();
-      this.router.navigate(['/cadastro-gerencia']);
-    }, error => this.onFailed());
+    this.service.save(this.form.value).subscribe(
+      result => {
+        const dialogData = {
+          title: 'Aluno Cadastrado',
+          message: `O aluno ${result.name} foi cadastrado.`,
+          buttons: {
+            cadastrarNovo: 'Cadastrar Novo Aluno',
+            irParaGerencia: 'Ver Alunos Cadastrados'
+          }
+        };
+        this.openDialog(dialogData);
+      },
+      error => {
+        this.onFailed();
+      }
+    );
   }
 
   onCancel() {
@@ -103,5 +116,20 @@ export class CadastroAlunoComponent implements OnInit {
       return digitoVerificador.toString();
   }
 
+  openDialog(data: any): void {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      data: data,
+      disableClose: true,
+      backdropClass: 'backdrop'
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'cadastrarNovo') {
+        this.form.get('name')?.setValue('');
+        this.form.get('studentCode')?.setValue(this.gerarCodigo());
+      } else {
+        this.router.navigate(['/cadastro-gerencia/gerencia-aluno']);
+      }
+    });
+  }
 }

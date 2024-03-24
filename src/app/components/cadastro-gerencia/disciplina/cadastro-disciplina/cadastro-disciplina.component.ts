@@ -6,6 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DisciplinaService } from '../service/disciplina.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Disciplina } from '../../../../models/Disciplina';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-cadastro-disciplina',
@@ -30,6 +32,7 @@ export class CadastroDisciplinaComponent implements OnInit {
     private route: ActivatedRoute,
     private service: DisciplinaService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog
   )
 
   {
@@ -50,11 +53,22 @@ export class CadastroDisciplinaComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form.value);
-    this.service.save(this.form.value).subscribe(result => {
-      this.onSucess();
-      this.router.navigate(['/cadastro-gerencia']);
-    }, error => this.onFailed());
+    this.service.save(this.form.value).subscribe(
+      result => {
+        const dialogData = {
+          title: 'Disciplina Cadastrada',
+          message: `A disciplina ${result.name} foi cadastrada.`,
+          buttons: {
+            cadastrarNovo: 'Cadastrar Nova Disciplina',
+            irParaGerencia: 'Ver Disciplinas Cadastradas'
+          }
+        };
+        this.openDialog(dialogData);
+      },
+      error => {
+        this.onFailed();
+      }
+    );
   }
 
   onCancel() {
@@ -71,4 +85,19 @@ export class CadastroDisciplinaComponent implements OnInit {
     this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
   }
 
+  openDialog(data: any): void {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      data: data,
+      disableClose: true,
+      backdropClass: 'backdrop'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'cadastrarNovo') {
+        this.form.get('name')?.setValue('');
+      } else {
+        this.router.navigate(['/cadastro-gerencia/gerencia-disciplina']);
+      }
+    });
+  }
 }

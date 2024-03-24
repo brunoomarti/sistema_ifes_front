@@ -6,6 +6,8 @@ import { CoordenadorService } from '../service/coordenador.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
+import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-cadastro-coordenador',
@@ -30,6 +32,7 @@ export class CadastroCoordenadorComponent {
     private route: ActivatedRoute,
     private service: CoordenadorService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog
   )
 
   {
@@ -52,11 +55,22 @@ export class CadastroCoordenadorComponent {
   }
 
   onSubmit() {
-    console.log(this.form.value);
-    this.service.save(this.form.value).subscribe(result => {
-      this.onSucess();
-      this.router.navigate(['/cadastro-gerencia']);
-    }, error => this.onFailed());
+    this.service.save(this.form.value).subscribe(
+      result => {
+        const dialogData = {
+          title: 'Coordenador Cadastrado',
+          message: `O coordenador ${result.name} foi cadastrado.`,
+          buttons: {
+            cadastrarNovo: 'Cadastrar Novo Coordenador',
+            irParaGerencia: 'Ver Coordenadores Cadastrados'
+          }
+        };
+        this.openDialog(dialogData);
+      },
+      error => {
+        this.onFailed();
+      }
+    );
   }
 
   onCancel() {
@@ -71,6 +85,23 @@ export class CadastroCoordenadorComponent {
 
   onSucess() {
     this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
+  }
+
+  openDialog(data: any): void {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      data: data,
+      disableClose: true,
+      backdropClass: 'backdrop'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'cadastrarNovo') {
+        this.form.get('name')?.setValue('');
+        this.form.get('shift')?.setValue('Matutino');
+      } else {
+        this.router.navigate(['/cadastro-gerencia/gerencia-coordenador']);
+      }
+    });
   }
 
 }
