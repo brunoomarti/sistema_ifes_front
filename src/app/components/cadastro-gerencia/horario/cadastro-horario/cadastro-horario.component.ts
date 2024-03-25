@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
@@ -33,11 +33,10 @@ export class CadastroHorarioComponent implements OnInit {
     private service: HorarioService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  )
-
+    )
   {
     this.form = this.formBuilder.group({
-      id: [0],
+      _id: [0],
       startTime: [''],
       endTime: ['']
     });
@@ -47,27 +46,47 @@ export class CadastroHorarioComponent implements OnInit {
     const obj: Horario = this.route.snapshot.data['horario'];
     if (obj) {
       this.form.setValue({
-        id: obj._id,
+        _id: obj._id,
         startTime: obj.startTime,
         endTime: obj.endTime
       });
     }
   }
 
+  converterParaDate(hora: string){
+    const [horas, minutos] = hora.split(":");
+
+    const horasInt: number = parseInt(horas, 10);
+    const minutosInt: number = parseInt(minutos, 10);
+
+    const currentDateTime = new Date(); 
+
+    currentDateTime.setHours(horasInt);
+    currentDateTime.setMinutes(minutosInt);
+
+    return currentDateTime;
+  }
+
   onSubmit() {
+    this.form.value.startTime = this.converterParaDate(this.form.value.startTime);
+    this.form.value.endTime = this.converterParaDate(this.form.value.endTime);
+
+    const horaInicio = this.form.value.startTime.getHours() ;
+    const horaFim = this.form.value.endTime.getHours();
+
+    const minutoInicio = this.form.value.endTime.getHours();
+    const minutoFim = this.form.value.endTime.getMinutes();
+
     this.service.save(this.form.value).subscribe(
       result => {
-
-        const startTime = result.startTime;
-        const endTime = result.endTime;
-        const formattedTimeRange = `${startTime} ~ ${endTime}`;
+        const formattedTimeRange = `${horaInicio}:${minutoInicio} ~ ${horaFim}:${minutoFim} `;
 
         const dialogData = {
           title: 'Horário Cadastrado',
           message: `O horário ${formattedTimeRange} foi cadastrado.`,
           buttons: {
-            cadastrarNovo: 'Cadastrar Novo Aluno',
-            irParaGerencia: 'Ver Alunos Cadastrados'
+            cadastrarNovo: 'Cadastrar Novo Horário',
+            irParaGerencia: 'Ver Horários Cadastrados'
           }
         };
         this.openDialog(dialogData);

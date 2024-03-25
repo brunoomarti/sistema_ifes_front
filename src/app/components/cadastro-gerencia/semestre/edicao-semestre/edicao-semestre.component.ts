@@ -48,11 +48,12 @@ export class EdicaoSemestreComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    
     const obj: Semestre = this.data.semestre;
     if (obj) {
       const [year, partition] = obj.semester.split('/');
       this.form.setValue({
-        id: obj._id,
+        _id: obj._id,
         semesterYear: parseInt(year, 10),
         semesterPartition: parseInt(partition, 10),
         startDate: obj.startDate,

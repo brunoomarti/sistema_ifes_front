@@ -53,8 +53,24 @@ export class EdicaoHorarioComponent implements OnInit {
     }
   }
 
+  converterParaDate(hora: string){
+    const [horas, minutos] = hora.split(":");
+
+    const horasInt: number = parseInt(horas, 10);
+    const minutosInt: number = parseInt(minutos, 10);
+
+    const currentDateTime = new Date(); 
+
+    currentDateTime.setHours(horasInt);
+    currentDateTime.setMinutes(minutosInt);
+
+    return currentDateTime;
+  }
+
   onSubmit() {
-    console.log(this.form.value);
+    this.form.value.startTime = this.converterParaDate(this.form.value.startTime);
+    this.form.value.endTime = this.converterParaDate(this.form.value.endTime);
+    
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 

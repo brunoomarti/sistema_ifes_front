@@ -1,7 +1,7 @@
 <div>
   <div class="dialog-container">
 
-    <p class="pageTitle">Você está editando: {{ data.horario.startTime | date: 'dd/MM/yyyy HH:mm'}} ~ {{ data.horario.endTime | date: 'dd/MM/yyyy HH:mm'}}</p>
+    <p class="pageTitle">Você está editando: {{ data.horario.startTime | date: 'HH:mm'}} ~ {{ data.horario.endTime | date: 'HH:mm'}}</p>
 
     <form [formGroup]="form">
 
