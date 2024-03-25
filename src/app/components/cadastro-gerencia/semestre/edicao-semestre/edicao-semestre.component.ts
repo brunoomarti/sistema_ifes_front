@@ -38,12 +38,12 @@ export class EdicaoSemestreComponent implements OnInit {
   {
     this.anoMaximo = new Date().getFullYear();
     this.form = this.formBuilder.group({
-      _id: [0],
-      semesterYear: [new Date().getFullYear()],
-      semesterPartition: '1',
+      _id: 0,
+      semesterYear: '',
+      semesterPartition: '',
       semester: null,
-      startDate: [''],
-      endDate: ['']
+      startDate: '',
+      endDate: ''
     });
   }
 
@@ -52,10 +52,12 @@ export class EdicaoSemestreComponent implements OnInit {
     const obj: Semestre = this.data.semestre;
     if (obj) {
       const [year, partition] = obj.semester.split('/');
+      console.log(obj);
       this.form.setValue({
         _id: obj._id,
         semesterYear: parseInt(year, 10),
         semesterPartition: parseInt(partition, 10),
+        semester: null,
         startDate: obj.startDate,
         endDate: obj.endDate
       });
@@ -67,7 +69,7 @@ export class EdicaoSemestreComponent implements OnInit {
     const semesterPartition = this.form.get('semesterPartition')?.value;
     const semester = `${semesterYear}/${semesterPartition}`;
     this.form.patchValue({ semester: semester });
-    
+
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 
@@ -85,7 +87,4 @@ export class EdicaoSemestreComponent implements OnInit {
     this.snackBar.open(this.mensagemSnackbarErro, '', { duration: 5000, panelClass: ['errorSnackbar'] });
     this.dialogRef.close();
   }
-
-
-
 }

@@ -32,7 +32,6 @@ export class EdicaoCoordenadorComponent implements OnInit {
     private formBuilder: FormBuilder,
     private service: CoordenadorService,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
     private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   )
