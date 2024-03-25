@@ -64,9 +64,9 @@ export class CadastroSemestreComponent implements OnInit {
 
   onSubmit() {
 
-    const semesterYear = this.form.get('semesterYear');
-    const semesterPartition = this.form.get('semesterPartition');
-    const semester = `${semesterYear}/${semesterPartition}`;
+    const semesterYear = this.form.get('semesterYear')?.value;
+    const semesterPartition = this.form.get('semesterPartition')?.value;
+    const semester = `${semesterYear}/${semesterPartition}`; 
     this.form.patchValue({ semester: semester });
 
     this.service.save(this.form.value).subscribe(

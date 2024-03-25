@@ -47,10 +47,10 @@ export class EdicaoCoordenadoriaComponent implements OnInit {
     const obj: Coordenadoria = this.data.coordenadoria;
     if (obj) {
       this.form.setValue({
-        _id: [0],
-        name: [''],
-        acronym: [''],
-        description: ['']
+        _id: obj._id,
+        name: obj.name,
+        acronym: obj.acronym,
+        description: obj.description
       });
     }
   }

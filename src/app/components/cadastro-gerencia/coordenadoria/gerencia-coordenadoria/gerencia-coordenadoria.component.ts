@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Coordenadoria } from '../../../../models/Coordenadoria';
 import { EdicaoCoordenadoriaComponent } from '../edicao-coordenadoria/edicao-coordenadoria.component';
+import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-gerencia-coordenadoria',
@@ -92,7 +93,24 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
   }
 
   verDescricao(coordenadoria: Coordenadoria): void {
+    const dialogData = {
+      title: 'Descrição',
+      message: `${coordenadoria.description}`,
+      viewButton: false
+    };
+    this.openDialog(dialogData);
+  }
 
+  openDialog(data: any): void {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      data: data,
+      disableClose: false,
+      backdropClass: 'backdrop'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.atualizaTabela();
+    });
   }
 
 }
