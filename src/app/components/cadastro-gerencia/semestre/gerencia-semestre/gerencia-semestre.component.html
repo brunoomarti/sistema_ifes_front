@@ -1,1 +1,51 @@
-<p>gerencia-semestre works!</p>
+<div class="componentContent">
+
+  <div class="backTitle">
+    <p class="pageTitle">Semestres cadastrados</p>
+    <button class="backPage" (click)="backPage()">
+      <span class="material-symbols-outlined">arrow_back</span>
+      <p class="pageTitle">Voltar</p>
+    </button>
+  </div>
+
+  <div class="boxSize">
+
+    <table mat-table [dataSource]="semestres">
+
+      <ng-container matColumnDef="semester">
+        <th mat-header-cell *matHeaderCellDef>Semestre</th>
+        <td mat-cell *matCellDef="let semestre"> {{ semestre.semester }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="startDate">
+        <th mat-header-cell *matHeaderCellDef>Data de Início</th>
+        <td mat-cell *matCellDef="let semestre"> {{ semestre.startDate }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="endDate">
+        <th mat-header-cell *matHeaderCellDef>Data de Término</th>
+        <td mat-cell *matCellDef="let semestre"> {{ semestre.endDate }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let aluno" class="buttonGroupForm">
+          <button mat-button (click)="editar(aluno)" class="button 2">
+            <span class="material-symbols-outlined table-button-icon">edit</span>
+            Editar
+          </button>
+          <button mat-button (click)="excluir(aluno)" class="button 2 delete-button">
+            <span class="material-symbols-outlined table-button-icon">delete</span>
+            Excluir
+          </button>
+        </td>
+      </ng-container>
+
+      <tr class="header-row" mat-header-row *matHeaderRowDef="['semester', 'startDate', 'endDate', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['semester', 'startDate', 'endDate', 'actions']"></tr>
+    </table>
+
+    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
+
+  </div>
+</div>

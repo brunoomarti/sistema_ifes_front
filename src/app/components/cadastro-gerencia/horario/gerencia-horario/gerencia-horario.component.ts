@@ -3,15 +3,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { SemestreService } from '../service/semestre.service';
+import { HorarioService } from '../service/horario.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { Semestre } from '../../../../models/Semestre';
-import { EdicaoSemestreComponent } from '../edicao-semestre/edicao-semestre.component';
+import { Horario } from '../../../../models/Horario';
+import { EdicaoHorarioComponent } from '../edicao-horario/edicao-horario.component';
 
 @Component({
-  selector: 'app-gerencia-semestre',
+  selector: 'app-gerencia-horario',
   standalone: true,
   imports: [
     CommonModule,
@@ -19,20 +19,20 @@ import { EdicaoSemestreComponent } from '../edicao-semestre/edicao-semestre.comp
     MatIcon,
     MatPaginator
   ],
-  templateUrl: './gerencia-semestre.component.html',
-  styleUrl: './gerencia-semestre.component.css'
+  templateUrl: './gerencia-horario.component.html',
+  styleUrl: './gerencia-horario.component.css'
 })
-export class GerenciaSemestreComponent implements OnInit {
+export class GerenciaHorarioComponent implements OnInit {
 
-  semestres: any[] = [];
+  horarios: any[] = [];
   dataSource: any;
-  mensagemSnackbarAcerto: string = 'Semestre excluído com sucesso.';
-  mensagemSnackbarErro: string = 'Erro ao excluir semestre.';
+  mensagemSnackbarAcerto: string = 'Horário excluído com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao excluir horário.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
-    private service: SemestreService,
+    private service: HorarioService,
     private router: Router,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
@@ -43,18 +43,18 @@ export class GerenciaSemestreComponent implements OnInit {
   }
 
   atualizaTabela() {
-    this.service.listar().subscribe(semestres => {
-      this.semestres = semestres;
-      this.dataSource = new MatTableDataSource<Semestre>(this.semestres);
+    this.service.listar().subscribe(horarios => {
+      this.horarios = horarios;
+      this.dataSource = new MatTableDataSource<Horario>(this.horarios);
       this.dataSource.paginator = this.paginator;
     });
   }
 
-  editar(semestre: { semester: string }): void {
-    const dialogRef = this.dialog.open(EdicaoSemestreComponent, {
+  editar(horario: { startTime: string, endTime: string }): void {
+    const dialogRef = this.dialog.open(EdicaoHorarioComponent, {
       disableClose: true,
       backdropClass: 'backdrop',
-      data: { semestre }
+      data: { horario }
     });
 
     dialogRef.afterClosed().subscribe(() => {
@@ -62,11 +62,11 @@ export class GerenciaSemestreComponent implements OnInit {
     });
   }
 
-  excluir(semestre: Semestre): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir este semestre?');
+  excluir(horario: Horario): void {
+    const confirmacao = confirm('Tem certeza que deseja excluir este horário?');
     if (confirmacao) {
-      this.service.remove(semestre._id).subscribe(() => {
-        this.semestres = this.semestres.filter(e => e._id !== semestre._id);
+      this.service.remove(horario._id).subscribe(() => {
+        this.horarios = this.horarios.filter(e => e._id !== horario._id);
         this.onSucess(true);
       }, error => {
         this.onFailed();
@@ -80,7 +80,7 @@ export class GerenciaSemestreComponent implements OnInit {
 
   onSucess(excluir: boolean = false) {
     if (excluir) {
-      this.snackBar.open('Semestre excluído com sucesso', '', { duration: 5000, panelClass: ['successSnackbar'] });
+      this.snackBar.open('Horário excluído com sucesso', '', { duration: 5000, panelClass: ['successSnackbar'] });
       this.atualizaTabela();
     } else {
       this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });

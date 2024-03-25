@@ -1,1 +1,31 @@
-<p>cadastro-coordenadoria works!</p>
+<div class="componentContent">
+
+  <p class="pageTitle">Cadastrar Coordenadoria</p>
+
+  <div class="boxSize">
+
+    <form [formGroup]="form">
+
+      <div class="newInput">
+        <label for="name">Nome:</label>
+        <input type="text" formControlName="name" placeholder="Nome da coordenadoria" required>
+      </div>
+
+      <div class="newInput">
+        <label for="acronym">Sigla:</label>
+        <input type="text" formControlName="acronym" placeholder="Sigla da coordenadoria" required>
+      </div>
+
+      <div class="newInput">
+        <label for="description">Descrição:</label>
+        <textarea type="text" formControlName="description" placeholder="Escreva uma descrição" required></textarea>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Criar Coordenadoria</button>
+      </div>
+
+    </form>
+  </div>
+</div>

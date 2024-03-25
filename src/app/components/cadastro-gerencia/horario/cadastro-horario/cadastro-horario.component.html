@@ -1,19 +1,19 @@
 <div class="componentContent">
 
-  <p class="pageTitle">Cadastrar Aluno(a)</p>
+  <p class="pageTitle">Cadastrar Horário</p>
 
   <div class="boxSize">
 
     <form [formGroup]="form">
 
       <div class="newInput">
-        <label for="name">Nome:</label>
-        <input type="text" formControlName="name" placeholder="Nome do(a) aluno(a)" required>
+        <label for="startTime">Início:</label>
+        <input type="time" formControlName="startTime" placeholder="Horário de início da aula" required>
       </div>
 
       <div class="newInput">
-        <label for="barcode">Código (gerado automaticamente):</label>
-        <input type="text" formControlName="studentCode" placeholder="Código automático" class="disabledInput" required>
+        <label for="endTime">Fim:</label>
+        <input type="time" formControlName="endTime" placeholder="Horário de término da aula" required>
       </div>
 
       <div class="buttonGroupForm">

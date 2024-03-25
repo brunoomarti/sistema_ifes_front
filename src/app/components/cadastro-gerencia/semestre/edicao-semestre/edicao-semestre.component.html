@@ -1,1 +1,42 @@
-<p>edicao-semestre works!</p>
+<div>
+  <div class="dialog-container">
+
+    <p class="pageTitle">Você está editando: {{ data.semestre.semester }}</p>
+
+    <form [formGroup]="form">
+
+      <div class="buttonGroupForm">
+        <div class="newInput">
+          <label for="semesterYear">Ano do semestre:</label>
+          <input type="number" formControlName="semesterYear" placeholder="Indique o ano do semestre" required min="2000" [max]="anoMaximo">
+        </div>
+
+        <div class="newInput">
+          <label for="semesterPartition">Partição:</label>
+          <select formControlName="semesterPartition" required>
+            <option>1</option>
+            <option>2</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="buttonGroupForm">
+        <div class="newInput">
+          <label for="initialDate">Data de início:</label>
+          <input type="date" formControlName="startDate" placeholder="Indique a data inicial do semestre" required>
+        </div>
+
+        <div class="newInput">
+          <label for="endDate">Data de finalização:</label>
+          <input type="date" formControlName="endDate" placeholder="Indique a data final do semestre" required>
+        </div>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Salvar edição</button>
+      </div>
+
+    </form>
+  </div>
+</div>

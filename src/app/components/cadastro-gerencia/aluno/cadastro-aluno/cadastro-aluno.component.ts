@@ -38,7 +38,7 @@ export class CadastroAlunoComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       id: [0],
-      name: null,
+      name: [''],
       studentCode: ['']
     });
     this.form.get('studentCode')?.setValue(this.gerarCodigo());

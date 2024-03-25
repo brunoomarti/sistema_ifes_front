@@ -1,0 +1,46 @@
+<div class="componentContent">
+
+  <div class="backTitle">
+    <p class="pageTitle">Horários cadastrados</p>
+    <button class="backPage" (click)="backPage()">
+      <span class="material-symbols-outlined">arrow_back</span>
+      <p class="pageTitle">Voltar</p>
+    </button>
+  </div>
+
+  <div class="boxSize">
+
+    <table mat-table [dataSource]="horarios">
+
+      <ng-container matColumnDef="startTime">
+        <th mat-header-cell *matHeaderCellDef>Horário de Início</th>
+        <td mat-cell *matCellDef="let horario"> {{ horario.startTime }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="endTime">
+        <th mat-header-cell *matHeaderCellDef>Horário de Término</th>
+        <td mat-cell *matCellDef="let horario"> {{ horario.endTime }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let horario" class="buttonGroupForm">
+          <button mat-button (click)="editar(horario)" class="button 2">
+            <span class="material-symbols-outlined table-button-icon">edit</span>
+            Editar
+          </button>
+          <button mat-button (click)="excluir(horario)" class="button 2 delete-button">
+            <span class="material-symbols-outlined table-button-icon">delete</span>
+            Excluir
+          </button>
+        </td>
+      </ng-container>
+
+      <tr class="header-row" mat-header-row *matHeaderRowDef="['startTime', 'endTime', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['startTime', 'endTime', 'actions']"></tr>
+    </table>
+
+    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
+
+  </div>
+</div>

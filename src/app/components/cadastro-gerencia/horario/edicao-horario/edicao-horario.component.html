@@ -1,0 +1,25 @@
+<div>
+  <div class="dialog-container">
+
+    <p class="pageTitle">Você está editando: {{ data.horario.startTime }} ~ {{ data.horario.endTime }}</p>
+
+    <form [formGroup]="form">
+
+      <div class="newInput">
+        <label for="startTime">Início:</label>
+        <input type="time" formControlName="startTime" placeholder="Horário de início da aula" required>
+      </div>
+
+      <div class="newInput">
+        <label for="endTime">Fim:</label>
+        <input type="time" formControlName="endTime" placeholder="Horário de término da aula" required>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Salvar edição</button>
+      </div>
+
+    </form>
+  </div>
+</div>

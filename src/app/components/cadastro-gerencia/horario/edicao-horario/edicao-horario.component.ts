@@ -3,32 +3,32 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
-import { AlunoService } from '../service/aluno.service';
+import { HorarioService } from '../service/horario.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReloadService } from '../../../../shared-services/reload.service';
-import { Aluno } from '../../../../models/Aluno';
+import { Horario } from '../../../../models/Horario';
 
 @Component({
-  selector: 'app-edicao-aluno',
+  selector: 'app-edicao-horario',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatIcon
   ],
-  templateUrl: './edicao-aluno.component.html',
-  styleUrl: './edicao-aluno.component.css'
+  templateUrl: './edicao-horario.component.html',
+  styleUrl: './edicao-horario.component.css'
 })
-export class EdicaoAlunoComponent implements OnInit {
+export class EdicaoHorarioComponent implements OnInit {
 
   form: FormGroup;
-  mensagemSnackbarAcerto: string = 'Aluno editado com sucesso.';
-  mensagemSnackbarErro: string = 'Erro ao editar aluno.';
+  mensagemSnackbarAcerto: string = 'Horário editado com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao editar horário.';
 
   constructor(
-    public dialogRef: MatDialogRef<EdicaoAlunoComponent>,
+    public dialogRef: MatDialogRef<EdicaoHorarioComponent>,
     private formBuilder: FormBuilder,
-    private service: AlunoService,
+    private service: HorarioService,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -37,18 +37,18 @@ export class EdicaoAlunoComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       _id: 0,
-      name: '',
-      studentCode: ''
+      startTime: '',
+      endTime: ''
     });
   }
 
   ngOnInit(): void {
-    const obj: Aluno = this.data.aluno;
+    const obj: Horario = this.data.horario;
     if (obj) {
       this.form.setValue({
         _id: obj._id,
-        name: obj.name,
-        studentCode: obj.studentCode
+        startTime: obj.startTime,
+        endTime: obj.endTime
       });
     }
   }

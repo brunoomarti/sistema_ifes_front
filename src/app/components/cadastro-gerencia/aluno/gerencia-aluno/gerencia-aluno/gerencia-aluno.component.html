@@ -24,12 +24,12 @@
 
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>Ações</th>
-        <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
-          <button mat-button (click)="editar(equipamento)" class="button 2">
+        <td mat-cell *matCellDef="let aluno" class="buttonGroupForm">
+          <button mat-button (click)="editar(aluno)" class="button 2">
             <span class="material-symbols-outlined table-button-icon">edit</span>
             Editar
           </button>
-          <button mat-button (click)="excluir(equipamento)" class="button 2 delete-button">
+          <button mat-button (click)="excluir(aluno)" class="button 2 delete-button">
             <span class="material-symbols-outlined table-button-icon">delete</span>
             Excluir
           </button>

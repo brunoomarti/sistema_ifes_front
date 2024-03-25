@@ -4,9 +4,8 @@ import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { AlunoService } from '../../service/aluno.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReloadService } from '../../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Aluno } from '../../../../../models/Aluno';
 import { EdicaoAlunoComponent } from '../../edicao-aluno/edicao-aluno.component';
@@ -70,7 +69,6 @@ export class GerenciaAlunoComponent implements OnInit {
         this.alunos = this.alunos.filter(e => e._id !== aluno._id);
         this.onSucess(true);
       }, error => {
-        console.error('Erro ao excluir equipamento:', error);
         this.onFailed();
       });
     }

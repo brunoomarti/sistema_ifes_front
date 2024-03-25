@@ -3,34 +3,34 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HorarioService } from '../service/horario.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-import { Coordenadoria } from '../../../../models/Coordenadoria';
+import { Horario } from '../../../../models/Horario';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
-import { CoordenadoriaService } from '../service/coordenadoria.service';
 
 @Component({
-  selector: 'app-cadastro-coordenadoria',
+  selector: 'app-cadastro-horario',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatTableModule
   ],
-  templateUrl: './cadastro-coordenadoria.component.html',
-  styleUrl: './cadastro-coordenadoria.component.css'
+  templateUrl: './cadastro-horario.component.html',
+  styleUrl: './cadastro-horario.component.css'
 })
-export class CadastroCoordenadoriaComponent implements OnInit {
+export class CadastroHorarioComponent implements OnInit {
 
   form: FormGroup;
-  mensagemSnackbarAcerto: string = 'Coordenadoria cadastrada com sucesso.';
-  mensagemSnackbarErro: string = 'Erro ao cadastrar coordenadoria.';
+  mensagemSnackbarAcerto: string = 'Horário cadastrado com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao cadastrar horário.';
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private service: CoordenadoriaService,
+    private service: HorarioService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   )
@@ -38,20 +38,18 @@ export class CadastroCoordenadoriaComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       id: [0],
-      name: [''],
-      acronym: [''],
-      description: ['']
+      startTime: [''],
+      endTime: ['']
     });
   }
 
   ngOnInit(): void {
-    const obj: Coordenadoria = this.route.snapshot.data['coordenadoria'];
+    const obj: Horario = this.route.snapshot.data['horario'];
     if (obj) {
       this.form.setValue({
         id: obj._id,
-        name: obj.name,
-        acronym: obj.acronym,
-        description: obj.description
+        startTime: obj.startTime,
+        endTime: obj.endTime
       });
     }
   }
@@ -59,12 +57,17 @@ export class CadastroCoordenadoriaComponent implements OnInit {
   onSubmit() {
     this.service.save(this.form.value).subscribe(
       result => {
+
+        const startTime = result.startTime;
+        const endTime = result.endTime;
+        const formattedTimeRange = `${startTime} ~ ${endTime}`;
+
         const dialogData = {
-          title: 'Coordenadoria Cadastrada',
-          message: `A coordenadoria ${result.name} foi cadastrada.`,
+          title: 'Horário Cadastrado',
+          message: `O horário ${formattedTimeRange} foi cadastrado.`,
           buttons: {
-            cadastrarNovo: 'Cadastrar Nova Coordenadoria',
-            irParaGerencia: 'Ver Coordenadorias Cadastradas'
+            cadastrarNovo: 'Cadastrar Novo Aluno',
+            irParaGerencia: 'Ver Alunos Cadastrados'
           }
         };
         this.openDialog(dialogData);
@@ -98,11 +101,10 @@ export class CadastroCoordenadoriaComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'cadastrarNovo') {
-        this.form.get('name')?.setValue('');
-        this.form.get('acronym')?.setValue('');
-        this.form.get('description')?.setValue('');
+        this.form.get('startTime')?.setValue('');
+        this.form.get('endTime')?.setValue('');
       } else {
-        this.router.navigate(['/cadastro-gerencia/gerencia-coordenadoria']);
+        this.router.navigate(['/cadastro-gerencia/gerencia-horario']);
       }
     });
   }

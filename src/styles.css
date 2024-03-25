@@ -201,10 +201,14 @@ label {
   font-weight: 600;
 }
 
-input, select {
+input, select, textarea {
   padding: 6px;
   border-radius: var(--secondary-boxes-radius);
   border: 2px solid var(--light-gray);
+}
+
+textarea {
+  resize: vertical;
 }
 
 select {
@@ -223,15 +227,20 @@ select {
   --mdc-snackbar-container-color: var(--primary-color);
   --mdc-snackbar-supporting-text-color: white;
   --mdc-snackbar-supporting-text-weight: 500;
-  top: auto !important;
-  bottom: 50px !important;
+  z-index: 10000;
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+
 }
 
 .errorSnackbar {
   --mdc-snackbar-container-color: var(--primary-color);
   --mdc-snackbar-supporting-text-color: white;
-  top: auto !important;
-  bottom: 50px !important;
+  z-index: 10000;
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
 }
 
 .componentContent {
@@ -240,6 +249,7 @@ select {
   gap: 10px;
   width: 100%;
   height: fit-content;
+  margin: 0 0 30px 0;
 }
 
 .backTitle {
