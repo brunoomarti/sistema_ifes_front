@@ -5,7 +5,7 @@ export interface Professor {
   name: String,
   educationLevel: String,
   specialty: String,
-  coordinator: boolean,
+  isCoordinator: boolean,
   coordination: Coordenadoria
   teacherCode: String
 }

@@ -43,7 +43,7 @@ export class EdicaoProfessorComponent implements OnInit {
       name: '',
       educationLevel: 'Licenciatura',
       specialty: '',
-      coordinator: '',
+      isCoordinator: '',
       coordination: '',
       teacherCode: ''
     });
@@ -57,7 +57,7 @@ export class EdicaoProfessorComponent implements OnInit {
         name: obj.name,
         educationLevel: obj.educationLevel,
         specialty: obj.educationLevel,
-        coordinator: obj.coordinator,
+        isCoordinator: obj.isCoordinator,
         coordination: obj.coordination,
         teacherCode: obj.teacherCode
       });
