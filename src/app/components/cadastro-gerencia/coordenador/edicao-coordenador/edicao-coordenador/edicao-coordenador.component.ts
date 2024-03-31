@@ -9,6 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ReloadService } from '../../../../../shared-services/reload.service';
 import { Coordenador } from '../../../../../models/Coordenador';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CoordenadoriaService } from '../../../coordenadoria/service/coordenadoria.service';
 
 @Component({
   selector: 'app-edicao-coordenador',
@@ -26,11 +27,13 @@ export class EdicaoCoordenadorComponent implements OnInit {
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Coordenador editado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao editar coordenador.';
+  coordenadorias: any[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<EdicaoCoordenadorComponent>,
     private formBuilder: FormBuilder,
     private service: CoordenadorService,
+    private coordinationService: CoordenadoriaService,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -40,17 +43,19 @@ export class EdicaoCoordenadorComponent implements OnInit {
     this.form = this.formBuilder.group({
       _id: 0,
       name: '',
-      shift: ''
+      coordination: ''
     });
   }
 
   ngOnInit(): void {
+    this.coordinationService.listar().subscribe(coordenadorias => this.coordenadorias)
+
     const coord: Coordenador = this.data.coordenador;
     if (coord) {
       this.form.setValue({
         _id: coord._id,
         name: coord.name,
-        shift: coord.shift
+        coordination: coord.coordination
       });
     }
   }

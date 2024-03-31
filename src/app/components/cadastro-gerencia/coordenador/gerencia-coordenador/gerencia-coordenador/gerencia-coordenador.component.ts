@@ -25,7 +25,7 @@ import { MatPaginator } from '@angular/material/paginator';
 })
 export class GerenciaCoordenadorComponent implements OnInit {
 
-  readonly displayedColumns = ['name', 'shift', 'actions'];
+  readonly displayedColumns = ['name', 'coordination', 'actions'];
 
   coordenadores: any[] = [];
   dataSource: any;
@@ -72,7 +72,7 @@ export class GerenciaCoordenadorComponent implements OnInit {
         this.coordenadores = this.coordenadores.filter(e => e._id !== coordenador._id);
         this.onSucess(true);
       }, error => {
-        console.error('Erro ao excluir equipamento:', error);
+        console.error('Erro ao excluir coordenador.', error);
         this.onFailed();
       });
     }

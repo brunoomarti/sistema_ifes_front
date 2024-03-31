@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CoordenadoriaService } from '../../coordenadoria/service/coordenadoria.service';
 
 @Component({
   selector: 'app-cadastro-coordenador',
@@ -25,12 +26,14 @@ export class CadastroCoordenadorComponent {
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Coordenador cadastrado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar coordenador.';
+  coordenadorias: any[] = [];
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private service: CoordenadorService,
+    private coordinationService: CoordenadoriaService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   )
@@ -39,17 +42,19 @@ export class CadastroCoordenadorComponent {
     this.form = this.formBuilder.group({
       id: [0],
       name: '',
-      shift: 'Matutino',
+      coordination: ''
     });
   }
 
   ngOnInit(): void {
+    this.coordinationService.listar().subscribe(coordenadorias => this.coordenadorias)
+
     const coord: Coordenador = this.route.snapshot.data['coordenador'];
     if (coord) {
       this.form.setValue({
         id: coord._id,
         name: coord.name,
-        shift: coord.shift
+        coordination: coord.coordination
       });
     }
   }

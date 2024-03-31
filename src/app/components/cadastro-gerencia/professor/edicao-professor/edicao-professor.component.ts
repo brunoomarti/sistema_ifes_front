@@ -50,7 +50,7 @@ export class EdicaoProfessorComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const obj: Professor = this.data.professor;;
+    const obj: Professor = this.data.professor;
     if (obj) {
       this.form.setValue({
         _id: obj._id,

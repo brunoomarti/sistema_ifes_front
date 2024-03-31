@@ -11,11 +11,9 @@
       </div>
 
       <div class="newInput">
-        <label for="shift">Turno:</label>
-        <select formControlName="shift" required>
-          <option>Matutino</option>
-          <option>Vespertino</option>
-          <option>Noturno</option>
+        <label for="coordination">Coordenadoria:</label>
+        <select formControlName="coordination" required>
+          <option *ngFor="let coordenadoria of coordenadorias" [value]="coordenadoria">{{coordenadoria.name}}</option>
         </select>
       </div>
 

@@ -25,6 +25,8 @@ import { EdicaoProfessorComponent } from '../edicao-professor/edicao-professor.c
 })
 export class GerenciaProfessorComponent implements OnInit {
 
+  readonly displayedColumns = ['name', 'educationLevel', 'specialty', 'coordinator', 'coordination', 'teacherCode', 'actions'];
+
   professores: any[] = [];
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Professor excluído com sucesso.';
