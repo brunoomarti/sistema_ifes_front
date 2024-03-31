@@ -1,36 +1,36 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AlunoService } from '../service/aluno.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Aluno } from '../../../../models/Aluno';
-import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ProfessorService } from '../service/professor.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
+import { Professor } from '../../../../models/Professor';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 
 @Component({
-  selector: 'app-cadastro-aluno',
+  selector: 'app-cadastro-professor',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatTableModule
   ],
-  templateUrl: './cadastro-aluno.component.html',
-  styleUrl: './cadastro-aluno.component.css'
+  templateUrl: './cadastro-professor.component.html',
+  styleUrl: './cadastro-professor.component.css'
 })
-export class CadastroAlunoComponent implements OnInit {
+export class CadastroProfessorComponent implements OnInit {
 
   form: FormGroup;
-  mensagemSnackbarAcerto: string = 'Aluno(a) cadastrado(a) com sucesso.';
-  mensagemSnackbarErro: string = 'Erro ao cadastrar aluno(a).';
+  mensagemSnackbarAcerto: string = 'Professor cadastrado com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao cadastrar professor.';
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private service: AlunoService,
+    private service: ProfessorService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   )
@@ -38,19 +38,27 @@ export class CadastroAlunoComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       id: [0],
-      name: [''],
-      studentCode: ['']
+      name: '',
+      educationLevel: 'Licenciatura',
+      specialty: '',
+      coordinator: '',
+      coordination: '',
+      teacherCode: ''
     });
-    this.form.get('studentCode')?.setValue(this.gerarCodigo());
+    this.form.get('teacherCode')?.setValue(this.gerarCodigo());
   }
 
   ngOnInit(): void {
-    const obj: Aluno = this.route.snapshot.data['aluno'];
+    const obj: Professor = this.route.snapshot.data['professor'];
     if (obj) {
       this.form.setValue({
         id: obj._id,
         name: obj.name,
-        barcode: obj.studentCode
+        educationLevel: obj.educationLevel,
+        specialty: obj.educationLevel,
+        coordinator: obj.coordinator,
+        coordination: obj.coordination,
+        teacherCode: obj.teacherCode
       });
     }
   }
@@ -59,11 +67,11 @@ export class CadastroAlunoComponent implements OnInit {
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {
-          title: 'Aluno Cadastrado',
-          message: `O aluno ${result.name} foi cadastrado.`,
+          title: 'Professor Cadastrado',
+          message: `O professor ${result.name} foi cadastrado.`,
           buttons: {
-            cadastrarNovo: 'Cadastrar Novo Aluno',
-            irParaGerencia: 'Ver Alunos Cadastrados'
+            cadastrarNovo: 'Cadastrar Novo Professor',
+            irParaGerencia: 'Ver Professores Cadastrados'
           }
         };
         this.openDialog(dialogData);
@@ -126,10 +134,15 @@ export class CadastroAlunoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'cadastrarNovo') {
         this.form.get('name')?.setValue('');
-        this.form.get('studentCode')?.setValue(this.gerarCodigo());
+        this.form.get('educationLevel')?.setValue('Licenciatura');
+        this.form.get('specialty')?.setValue('');
+        this.form.get('coordinator')?.setValue('');
+        this.form.get('coordination')?.setValue('');
+        this.form.get('teacherCode')?.setValue(this.gerarCodigo());
       } else {
         this.router.navigate(['/cadastro-gerencia/gerencia-aluno']);
       }
     });
   }
+
 }

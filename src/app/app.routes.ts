@@ -20,6 +20,8 @@ import { GerenciaSemestreComponent } from './components/cadastro-gerencia/semest
 import { CadastroSemestreComponent } from './components/cadastro-gerencia/semestre/cadastro-semestre/cadastro-semestre.component';
 import { CadastroHorarioComponent } from './components/cadastro-gerencia/horario/cadastro-horario/cadastro-horario.component';
 import { GerenciaHorarioComponent } from './components/cadastro-gerencia/horario/gerencia-horario/gerencia-horario.component';
+import { CadastroProfessorComponent } from './components/cadastro-gerencia/professor/cadastro-professor/cadastro-professor.component';
+import { GerenciaProfessorComponent } from './components/cadastro-gerencia/professor/gerencia-professor/gerencia-professor.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -27,6 +29,7 @@ export const routes: Routes = [
 
   { path: 'cadastro-gerencia', component: CadastroGerenciaComponent },
   { path: 'cadastro-gerencia/cadastro-local', data: { title: 'SIFES | Cadastrar Local' }, component: CadastroLocalComponent },
+  
   { path: 'cadastro-gerencia/cadastro-turma', data: { title: 'SIFES | Cadastrar Turma' }, component: CadastroTurmaComponent },
   { path: 'cadastro-gerencia/gerencia-turma', data: { title: 'SIFES | Gerenciar Turma' }, component: GerenciaTurmaComponent },
   { path: 'cadastro-gerencia/cadastro-coordenador', data: { title: 'SIFES | Cadastrar Coordenador' }, component: CadastroCoordenadorComponent },
@@ -41,6 +44,8 @@ export const routes: Routes = [
   { path: 'cadastro-gerencia/gerencia-semestre', data: { title: 'SIFES | Gerenciar Semestre' }, component: GerenciaSemestreComponent },
   { path: 'cadastro-gerencia/cadastro-horario', data: { title: 'SIFES | Cadastrar Horário' }, component: CadastroHorarioComponent },
   { path: 'cadastro-gerencia/gerencia-horario', data: { title: 'SIFES | Gerenciar Horário' }, component: GerenciaHorarioComponent },
+  { path: 'cadastro-gerencia/cadastro-professor', data: { title: 'SIFES | Cadastrar Professor' }, component: CadastroProfessorComponent },
+  { path: 'cadastro-gerencia/gerencia-professor', data: { title: 'SIFES | Gerenciar Professor' }, component: GerenciaProfessorComponent },
 
   { path: 'importar-dados', component: ImportDataComponent },
   { path: 'alocar-local', component: AllocateLocationComponent },

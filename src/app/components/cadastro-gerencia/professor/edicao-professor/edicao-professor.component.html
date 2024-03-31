@@ -1,0 +1,51 @@
+<div>
+  <div class="dialog-container">
+
+    <p class="pageTitle">Você está editando: {{ data.professor.name }}</p>
+
+    <form [formGroup]="form">
+
+      <div class="newInput">
+        <label for="name">Nome:</label>
+        <input type="text" formControlName="name" placeholder="Nome do professor" required>
+      </div>
+
+      <div class="newInput">
+        <label for="educationLevel">Grau Acadêmico:</label>
+        <select formControlName="educationLevel" required>
+          <option>Licenciatura</option>
+          <option>Mestrado</option>
+          <option>Doutorado</option>
+        </select>
+      </div>
+
+      <div class="newInput">
+        <label for="specialty">Especialidade:</label>
+        <input type="text" formControlName="specialty" placeholder="Especialidade do professor" required>
+      </div>
+
+      <div class="newInput">
+        <label for="coordinator">Coordenador de curso?</label>
+          <div>
+              <input type="radio" id="coordinatorYes" value="sim" formControlName="coordinator">
+              <label for="coordinatorYes">Sim</label>
+          </div>
+          <div>
+              <input type="radio" id="coordinatorNo" value="nao" formControlName="coordinator">
+              <label for="coordinatorNo">Não</label>
+          </div>
+      </div>
+
+      <div class="newInput">
+        <label for="teacherCode">Código (gerado automaticamente):</label>
+        <input type="text" formControlName="teacherCode" placeholder="Código automático" class="disabledInput" required>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Salvar edição</button>
+      </div>
+
+    </form>
+  </div>
+</div>

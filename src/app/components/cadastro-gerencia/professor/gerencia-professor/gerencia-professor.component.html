@@ -1,0 +1,66 @@
+<div class="componentContent">
+
+  <div class="backTitle">
+    <p class="pageTitle">Professores cadastrados</p>
+    <button class="backPage" (click)="backPage()">
+      <span class="material-symbols-outlined">arrow_back</span>
+      <p class="pageTitle">Voltar</p>
+    </button>
+  </div>
+
+  <div class="boxSize">
+
+    <table mat-table [dataSource]="professores">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let disciplina"> {{ disciplina.name }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="educationLevel">
+        <th mat-header-cell *matHeaderCellDef>Grau de Formação</th>
+        <td mat-cell *matCellDef="let disciplina"> {{ disciplina.educationLevel }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="specialty">
+        <th mat-header-cell *matHeaderCellDef>Especialidade</th>
+        <td mat-cell *matCellDef="let disciplina"> {{ disciplina.specialty }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="coordinator">
+        <th mat-header-cell *matHeaderCellDef>Coordenador</th>
+        <td mat-cell *matCellDef="let disciplina"> {{ disciplina.coordinator }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="coordination">
+        <th mat-header-cell *matHeaderCellDef>Coordenação</th>
+        <td mat-cell *matCellDef="let disciplina"> {{ disciplina.coordination }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="teacherCode">
+        <th mat-header-cell *matHeaderCellDef>Código</th>
+        <td mat-cell *matCellDef="let disciplina"> {{ disciplina.teacherCode }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let professor" class="buttonGroupForm">
+          <button mat-button (click)="editar(professor)" class="button 2">
+            <span class="material-symbols-outlined table-button-icon">edit</span>
+            Editar
+          </button>
+          <button mat-button (click)="excluir(professor)" class="button 2 delete-button">
+            <span class="material-symbols-outlined table-button-icon">delete</span>
+            Excluir
+          </button>
+        </td>
+      </ng-container>
+
+      <tr class="header-row" mat-header-row *matHeaderRowDef="['name', 'educationLevel', 'specialty', 'coordinator', 'coordination', 'teacherCode', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'educationLevel', 'specialty', 'coordinator', 'coordination', 'teacherCode', 'actions']"></tr>
+    </table>
+
+    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
+
+  </div>
+</div>
