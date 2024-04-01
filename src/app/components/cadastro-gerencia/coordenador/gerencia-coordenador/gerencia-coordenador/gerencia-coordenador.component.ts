@@ -43,6 +43,7 @@ export class GerenciaCoordenadorComponent implements OnInit {
 
   ngOnInit(): void {
     this.atualizaTabela();
+    console.log(this.coordenadores)
   }
 
   atualizaTabela() {

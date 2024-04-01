@@ -27,6 +27,7 @@ export class EdicaoProfessorComponent implements OnInit {
   mensagemSnackbarAcerto: string = 'Professor editado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao editar professor.';
 
+
   constructor(
     public dialogRef: MatDialogRef<EdicaoProfessorComponent>,
     private formBuilder: FormBuilder,
@@ -39,9 +40,9 @@ export class EdicaoProfessorComponent implements OnInit {
 
   {
     this.form = this.formBuilder.group({
-      _id: [0],
+      _id: 0,
       name: '',
-      educationLevel: 'Licenciatura',
+      educationLevel: '',
       specialty: '',
       isCoordinator: false,
       coordination: '',
@@ -49,9 +50,11 @@ export class EdicaoProfessorComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
+
     const obj: Professor = this.data.professor;
     if (obj) {
+      console.log(obj)
       this.form.setValue({
         _id: obj._id,
         name: obj.name,
@@ -65,7 +68,7 @@ export class EdicaoProfessorComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form.value.isCoordinator)
+    console.log(this.form.value)
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 

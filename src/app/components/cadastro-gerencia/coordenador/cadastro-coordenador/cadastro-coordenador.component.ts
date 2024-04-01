@@ -41,7 +41,7 @@ export class CadastroCoordenadorComponent {
 
   {
     this.form = this.formBuilder.group({
-      id: [0],
+      _id: [0],
       name: '',
       coordination: new FormControl('')
     });
@@ -55,8 +55,9 @@ export class CadastroCoordenadorComponent {
     const coord: Coordenador = this.route.snapshot.data['coordenador'];
  
     if (coord) { 
+      
       this.form.setValue({
-        id: coord._id,
+        _id: coord._id,
         name: coord.name,
         coordination: coord.coordination
       });
@@ -64,17 +65,11 @@ export class CadastroCoordenadorComponent {
   }
 
   onSubmit() { 
-    
     const selectedCoordination = this.coordenadorias.find(coord => coord._id == this.form.value.coordination);
-
-   // console.log(selectedCoordination)
-
+ 
     if (selectedCoordination) {
         this.form.patchValue({ coordination: selectedCoordination });
     }
-
-    this.form.value.login = "eaeaeaeae";
-    this.form.value.password = "123456";
 
     console.log(this.form.value)
 

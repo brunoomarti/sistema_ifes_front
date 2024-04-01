@@ -64,10 +64,6 @@ export class CadastroProfessorComponent implements OnInit {
   }
 
   onSubmit() { 
-    console.log(this.form.value.isCoordinator)
-    this.form.value.login = "eaeaeaeae";
-    this.form.value.password = "123456";
-    console.log(this.form.value); 
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {
