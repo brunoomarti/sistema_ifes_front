@@ -27,7 +27,7 @@ export class GerenciaProfessorComponent implements OnInit {
 
   readonly displayedColumns = ['name', 'educationLevel', 'specialty', 'coordinator', 'coordination', 'teacherCode', 'actions'];
 
-  professores: any[] = [];
+  professores: Professor[] = [];
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Professor excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir professor.';
@@ -45,6 +45,7 @@ export class GerenciaProfessorComponent implements OnInit {
 
   ngOnInit(): void {
     this.atualizaTabela();
+    console.log(this.professores.length)
   }
 
   atualizaTabela() {

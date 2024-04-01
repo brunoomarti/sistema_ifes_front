@@ -43,7 +43,7 @@ export class EdicaoProfessorComponent implements OnInit {
       name: '',
       educationLevel: 'Licenciatura',
       specialty: '',
-      isCoordinator: '',
+      isCoordinator: false,
       coordination: '',
       teacherCode: ''
     });
@@ -56,7 +56,7 @@ export class EdicaoProfessorComponent implements OnInit {
         _id: obj._id,
         name: obj.name,
         educationLevel: obj.educationLevel,
-        specialty: obj.educationLevel,
+        specialty: obj.specialty,
         isCoordinator: obj.isCoordinator,
         coordination: obj.coordination,
         teacherCode: obj.teacherCode
@@ -65,7 +65,7 @@ export class EdicaoProfessorComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form.value);
+    console.log(this.form.value.isCoordinator)
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 

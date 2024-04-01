@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Coordenador } from '../../../../models/Coordenador';
 import { CoordenadorService } from '../service/coordenador.service';
@@ -9,6 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CoordenadoriaService } from '../../coordenadoria/service/coordenadoria.service';
+import { Coordenadoria } from '../../../../models/Coordenadoria';
 
 @Component({
   selector: 'app-cadastro-coordenador',
@@ -26,7 +27,7 @@ export class CadastroCoordenadorComponent {
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Coordenador cadastrado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar coordenador.';
-  coordenadorias: any[] = [];
+  coordenadorias: Coordenadoria[] = [];
 
   constructor(
     private router: Router,
@@ -42,15 +43,18 @@ export class CadastroCoordenadorComponent {
     this.form = this.formBuilder.group({
       id: [0],
       name: '',
-      coordination: ''
+      coordination: new FormControl('')
     });
   }
 
   ngOnInit(): void {
-    this.coordinationService.listar().subscribe(coordenadorias => this.coordenadorias)
+    this.coordinationService.listar().subscribe(coordenadorias => {
+      this.coordenadorias = coordenadorias;
+    }); 
 
     const coord: Coordenador = this.route.snapshot.data['coordenador'];
-    if (coord) {
+ 
+    if (coord) { 
       this.form.setValue({
         id: coord._id,
         name: coord.name,
@@ -59,7 +63,21 @@ export class CadastroCoordenadorComponent {
     }
   }
 
-  onSubmit() {
+  onSubmit() { 
+    
+    const selectedCoordination = this.coordenadorias.find(coord => coord._id == this.form.value.coordination);
+
+   // console.log(selectedCoordination)
+
+    if (selectedCoordination) {
+        this.form.patchValue({ coordination: selectedCoordination });
+    }
+
+    this.form.value.login = "eaeaeaeae";
+    this.form.value.password = "123456";
+
+    console.log(this.form.value)
+
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {

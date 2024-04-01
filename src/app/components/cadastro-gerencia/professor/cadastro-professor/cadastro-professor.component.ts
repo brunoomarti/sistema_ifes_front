@@ -37,12 +37,12 @@ export class CadastroProfessorComponent implements OnInit {
 
   {
     this.form = this.formBuilder.group({
-      id: [0],
+      _id: [0],
       name: '',
       educationLevel: 'Licenciatura',
       specialty: '',
-      isCoordinator: '',
-      coordination: '',
+      isCoordinator: false,
+      coordination: null,
       teacherCode: ''
     });
     this.form.get('teacherCode')?.setValue(this.gerarCodigo());
@@ -52,10 +52,10 @@ export class CadastroProfessorComponent implements OnInit {
     const obj: Professor = this.route.snapshot.data['professor'];
     if (obj) {
       this.form.setValue({
-        id: obj._id,
+        _id: obj._id,
         name: obj.name,
         educationLevel: obj.educationLevel,
-        specialty: obj.educationLevel,
+        specialty: obj.specialty,
         isCoordinator: obj.isCoordinator,
         coordination: obj.coordination,
         teacherCode: obj.teacherCode
@@ -63,7 +63,11 @@ export class CadastroProfessorComponent implements OnInit {
     }
   }
 
-  onSubmit() {
+  onSubmit() { 
+    console.log(this.form.value.isCoordinator)
+    this.form.value.login = "eaeaeaeae";
+    this.form.value.password = "123456";
+    console.log(this.form.value); 
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {
@@ -140,7 +144,7 @@ export class CadastroProfessorComponent implements OnInit {
         this.form.get('coordination')?.setValue('');
         this.form.get('teacherCode')?.setValue(this.gerarCodigo());
       } else {
-        this.router.navigate(['/cadastro-gerencia/gerencia-aluno']);
+        this.router.navigate(['/cadastro-gerencia/gerencia-professor']);
       }
     });
   }

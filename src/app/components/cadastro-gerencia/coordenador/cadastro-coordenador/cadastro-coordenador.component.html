@@ -12,9 +12,9 @@
       </div>
 
       <div class="newInput">
-        <label for="coordination">Coordenadoria:</label>
+        <label >Coordenadoria:</label>
         <select formControlName="coordination" required>
-          <option *ngFor="let coordenadoria of coordenadorias" [value]="coordenadoria">{{coordenadoria.name}}</option>
+          <option *ngFor="let coordenadoria of coordenadorias" [value]="coordenadoria._id">{{coordenadoria.name}}</option>
         </select>
       </div>
 

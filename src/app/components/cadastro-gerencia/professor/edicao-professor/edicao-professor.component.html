@@ -27,11 +27,11 @@
       <div class="newInput">
         <label for="isCoordinator">Coordenador de curso?</label>
           <div>
-              <input type="radio" id="coordinatorYes" value="sim" formControlName="isCoordinator">
+              <input type="radio" id="coordinatorYes" [value]="true" formControlName="isCoordinator">
               <label for="coordinatorYes">Sim</label>
           </div>
           <div>
-              <input type="radio" id="coordinatorNo" value="nao" formControlName="isCoordinator">
+              <input type="radio" id="coordinatorNo" [value]="false" formControlName="isCoordinator">
               <label for="coordinatorNo">Não</label>
           </div>
       </div>
