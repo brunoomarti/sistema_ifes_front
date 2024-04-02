@@ -41,7 +41,7 @@ export class CadastroProfessorComponent implements OnInit {
       name: '',
       educationLevel: 'Licenciatura',
       specialty: '',
-      isCoordinator: false,
+      coordinator: false,
       coordination: null,
       teacherCode: ''
     });
@@ -56,7 +56,7 @@ export class CadastroProfessorComponent implements OnInit {
         name: obj.name,
         educationLevel: obj.educationLevel,
         specialty: obj.specialty,
-        isCoordinator: obj.isCoordinator,
+        coordinator: obj.coordinator,
         coordination: obj.coordination,
         teacherCode: obj.teacherCode
       });
