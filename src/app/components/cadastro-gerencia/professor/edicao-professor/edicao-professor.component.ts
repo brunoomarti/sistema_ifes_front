@@ -9,6 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Professor } from '../../../../models/Professor';
+import { CoordenadoriaService } from '../../coordenadoria/service/coordenadoria.service';
+import { Coordenadoria } from '../../../../models/Coordenadoria';
 
 @Component({
   selector: 'app-edicao-professor',
@@ -26,12 +28,13 @@ export class EdicaoProfessorComponent implements OnInit {
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Professor editado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao editar professor.';
-
+  coordenadorias: Coordenadoria[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<EdicaoProfessorComponent>,
     private formBuilder: FormBuilder,
     private service: ProfessorService,
+    private coordinationService: CoordenadoriaService,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
     private reloadService: ReloadService,
@@ -51,7 +54,10 @@ export class EdicaoProfessorComponent implements OnInit {
   }
 
   ngOnInit(): void { 
-
+    this.coordinationService.listar().subscribe(coordenadorias => {
+      this.coordenadorias = coordenadorias;
+    }); 
+    
     const obj: Professor = this.data.professor;
     if (obj) {
       console.log(obj)
@@ -68,6 +74,12 @@ export class EdicaoProfessorComponent implements OnInit {
   }
 
   onSubmit() {
+    const selectedCoordination = this.coordenadorias.find(coord => coord._id == this.form.value.coordination);
+ 
+    if (selectedCoordination) {
+        this.form.patchValue({ coordination: selectedCoordination });
+    }
+
     console.log(this.form.value)
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }

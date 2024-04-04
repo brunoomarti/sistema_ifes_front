@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfessorService } from '../service/professor.service';
@@ -8,6 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Professor } from '../../../../models/Professor';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
+import { Coordenadoria } from '../../../../models/Coordenadoria';
+import { CoordenadoriaService } from '../../coordenadoria/service/coordenadoria.service';
 
 @Component({
   selector: 'app-cadastro-professor',
@@ -25,12 +27,14 @@ export class CadastroProfessorComponent implements OnInit {
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Professor cadastrado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar professor.';
-
+  coordenadorias: Coordenadoria[] = [];
+  
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
     private service: ProfessorService,
+    private coordinationService: CoordenadoriaService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   )
@@ -42,13 +46,17 @@ export class CadastroProfessorComponent implements OnInit {
       educationLevel: 'Licenciatura',
       specialty: '',
       coordinator: false,
-      coordination: null,
+      coordination: '',
       teacherCode: ''
     });
     this.form.get('teacherCode')?.setValue(this.gerarCodigo());
   }
 
   ngOnInit(): void {
+    this.coordinationService.listar().subscribe(coordenadorias => {
+      this.coordenadorias = coordenadorias;
+    }); 
+
     const obj: Professor = this.route.snapshot.data['professor'];
     if (obj) {
       this.form.setValue({
@@ -64,6 +72,12 @@ export class CadastroProfessorComponent implements OnInit {
   }
 
   onSubmit() { 
+    const selectedCoordination = this.coordenadorias.find(coord => coord._id == this.form.value.coordination);
+ 
+    if (selectedCoordination) {
+        this.form.patchValue({ coordination: selectedCoordination });
+    }
+    
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {

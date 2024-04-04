@@ -37,7 +37,7 @@
       <ng-container matColumnDef="coordination">
         <th mat-header-cell *matHeaderCellDef>Coordenação</th>
         <td mat-cell *matCellDef="let professor"> 
-          {{ professor.coordination ? 'professor.coordination.name' : 'Sem Coordenação'}} 
+          {{ professor.coordination ? professor.coordination.name : 'Sem Coordenação'}} 
         <td>
       </ng-container>
 

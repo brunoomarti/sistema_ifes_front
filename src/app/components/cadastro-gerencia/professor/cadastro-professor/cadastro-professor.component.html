@@ -42,6 +42,13 @@
         <input type="text" formControlName="teacherCode" placeholder="Código automático" class="disabledInput" required>
       </div>
 
+      <div class="newInput">
+        <label >Coordenadoria:</label>
+        <select formControlName="coordination" required>
+          <option *ngFor="let coordenadoria of coordenadorias" [value]="coordenadoria._id">{{coordenadoria.name}}</option>
+        </select>
+      </div>
+
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>
         <button class="button one" (click)="onSubmit()">Criar Professor</button>
