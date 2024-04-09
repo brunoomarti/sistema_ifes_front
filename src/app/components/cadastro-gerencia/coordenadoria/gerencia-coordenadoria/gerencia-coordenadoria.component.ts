@@ -113,4 +113,8 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
     });
   }
 
+  cadastrar() {
+    this.router.navigate(['/cadastro-gerencia/cadastro-coordenadoria']);
+  }
+
 }

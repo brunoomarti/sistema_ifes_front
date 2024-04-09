@@ -26,6 +26,13 @@
       </div>
 
       <div class="newInput">
+        <label >Coordenadoria:</label>
+        <select formControlName="coordination" required>
+          <option *ngFor="let coordenadoria of coordenadorias" [value]="coordenadoria._id">{{coordenadoria.name}}</option>
+        </select>
+      </div>
+
+      <div class="newInput">
         <label for="coordinator">Coordenador de curso?</label>
           <div>
               <input type="radio" id="coordinatorYes" [value]="true" formControlName="coordinator">
@@ -40,13 +47,6 @@
       <div class="newInput">
         <label for="teacherCode">Código (gerado automaticamente):</label>
         <input type="text" formControlName="teacherCode" placeholder="Código automático" class="disabledInput" required>
-      </div>
-
-      <div class="newInput">
-        <label >Coordenadoria:</label>
-        <select formControlName="coordination" required>
-          <option *ngFor="let coordenadoria of coordenadorias" [value]="coordenadoria._id">{{coordenadoria.name}}</option>
-        </select>
       </div>
 
       <div class="buttonGroupForm">

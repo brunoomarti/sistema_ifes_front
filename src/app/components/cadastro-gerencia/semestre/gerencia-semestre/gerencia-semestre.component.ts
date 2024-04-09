@@ -91,4 +91,8 @@ export class GerenciaSemestreComponent implements OnInit {
     this.router.navigate(['/cadastro-gerencia']);
   }
 
+  cadastrar() {
+    this.router.navigate(['/cadastro-gerencia/cadastro-semestre']);
+  }
+
 }

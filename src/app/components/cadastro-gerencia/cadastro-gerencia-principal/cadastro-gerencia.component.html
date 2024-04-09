@@ -1,21 +1,123 @@
 <div class="componentContent">
+  <!-- <div
+    class="backdrop"
+    *ngIf="subMenuOpenCadastro || subMenuOpenGerenciar"
+    (click)="toggleSubMenu('fechar')"
+  ></div> -->
 
-  <div class="backdrop" *ngIf="subMenuOpenCadastro || subMenuOpenGerenciar" (click)="toggleSubMenu('fechar')"></div>
+  <div class="allButtonsGroup">
+    <p class="pageTitle">Usuários e papéis</p>
 
-  <p class="pageTitle">Cadastro, gerenciamento e visualização</p>
+    <div class="subMenuButtonGroup">
+      <div class="subMenuButtonGroupSpace">
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/cadastro-gerencia/gerencia-coordenador"
+          >
+            <span class="material-symbols-outlined">person_add</span>
+            <div class="subMenuButtonText">Coordenador</div>
+          </button>
+        </div>
 
-  <div class="subMenuButtonGroup">
-    <div class="subMenuButtonGroupSpace">
-      <div class="subMenuWithOptions">
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/cadastro-gerencia/gerencia-professor"
+          >
+            <span class="material-symbols-outlined">person_add</span>
+            <div class="subMenuButtonText">Professor</div>
+          </button>
+        </div>
 
-        <!-- Botão "Cadastrar" -->
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/cadastro-gerencia/gerencia-aluno"
+          >
+            <span class="material-symbols-outlined">person_add</span>
+            <div class="subMenuButtonText">Aluno</div>
+          </button>
+        </div>
+
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/cadastro-gerencia/gerencia-turma"
+          >
+            <span class="material-symbols-outlined">groups</span>
+            <div class="subMenuButtonText">Turma</div>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <p class="pageTitle">Estrutura acadêmica</p>
+
+    <div class="subMenuButtonGroup">
+      <div class="subMenuButtonGroupSpace">
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/cadastro-gerencia/gerencia-coordenadoria"
+          >
+            <span class="material-symbols-outlined">door_front</span>
+            <div class="subMenuButtonText">Coordenadoria</div>
+          </button>
+        </div>
+
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/cadastro-gerencia/gerencia-disciplina"
+          >
+            <span class="material-symbols-outlined">school</span>
+            <div class="subMenuButtonText">Disciplina</div>
+          </button>
+        </div>
+
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/cadastro-gerencia/gerencia-semestre"
+          >
+            <span class="material-symbols-outlined">view_cozy</span>
+            <div class="subMenuButtonText">Semestre</div>
+          </button>
+        </div>
+
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/cadastro-gerencia/gerencia-horario"
+          >
+            <span class="material-symbols-outlined">schedule</span>
+            <div class="subMenuButtonText">Horário</div>
+          </button>
+        </div>
+
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/cadastro-gerencia/cadastro-local"
+          >
+            <span class="material-symbols-outlined">nest_multi_room</span>
+            <div class="subMenuButtonText">Local</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="subMenuWithOptions">
+
         <div class="buttonContainer">
           <button #cadastroButton class="subMenuButton" (click)="toggleSubMenu('cadastro')" [ngClass]="{ 'active': subMenuOpenCadastro }">
             <span class="material-symbols-outlined">add</span><div class="subMenuButtonText">Cadastrar</div>
           </button>
         </div>
 
-        <!-- Opções do leque - Cadastro -->
         <div class="subMenuOptionsCadastro" *ngIf="subMenuOpenCadastro && cadastroButton">
           <button
             class="subMenuOption button three"
@@ -77,14 +179,12 @@
 
       <div class="subMenuWithOptions">
 
-        <!-- Botão "Gerenciar/Visualizar" -->
         <div class="buttonContainer">
           <button #gerenciarButton class="subMenuButton" (click)="toggleSubMenu('gerenciar')" [ngClass]="{ 'active': subMenuOpenGerenciar }">
             <span class="material-symbols-outlined">check_circle</span><div class="subMenuButtonText">Gerenciar / Visualizar</div>
           </button>
         </div>
 
-        <!-- Opções do leque - Gerenciar/Visualizar -->
         <div class="subMenuOptionsGerenciar" *ngIf="subMenuOpenGerenciar && gerenciarButton">
           <button
             class="subMenuOption button three"
@@ -140,7 +240,4 @@
             Coordenadoria
           </button>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
+      </div> -->

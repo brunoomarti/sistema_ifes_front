@@ -97,4 +97,8 @@ export class GerenciaProfessorComponent implements OnInit {
     this.router.navigate(['/cadastro-gerencia']);
   }
 
+  cadastrar() {
+    this.router.navigate(['/cadastro-gerencia/cadastro-professor']);
+  }
+
 }

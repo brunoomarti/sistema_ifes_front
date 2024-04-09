@@ -91,7 +91,7 @@ form {
   padding: 18px;
   background-color: white;
   color: var(--dark-gray);
-  width: 160px;
+  width: 100%;
   height: 60px;
   border-radius: var(--primary-boxes-radius);
   border: 0;
@@ -102,6 +102,15 @@ form {
   gap: 5px;
   position: relative;
   z-index: 1001;
+}
+
+.newButton {
+  padding: 6px;
+  width: fit-content;
+  height: fit-content;
+  border-radius: var(--secondary-boxes-radius);
+  margin: 0 8px 0 0;
+  z-index: 997;
 }
 
 .subMenuButtonText {
@@ -132,13 +141,14 @@ form {
 
 .subMenuButtonGroupSpace{
   display: flex;
-  gap: 10px;
-  z-index: 998;
+  flex-wrap: wrap;
+  gap: 13px;
+  margin: 0 0 10px 0;
 }
 
 .buttonContainer {
-  display: inline-block;
-  position: relative;
+  flex-basis: calc(25% - 10px);
+  max-width: 25%;
 }
 
 .subMenuOptionsCadastro.active, .subMenuOptionsGerenciar.active {
@@ -174,6 +184,19 @@ form {
 
 .three {
   background-color: rgba(255, 255, 255, 0);
+}
+
+tr:not(.header-row):hover .button {
+  background-color: white !important;
+}
+
+tr:not(.header-row):hover .button:hover {
+  background-color: var(--secondary-color) !important;
+  color: white;
+}
+
+tr:not(.header-row):hover .delete-button:hover {
+  background-color: darkred !important;
 }
 
 .pageTitle {
@@ -221,6 +244,7 @@ select {
   flex-direction: row;
   justify-content: space-between;
   gap: 10px;
+  margin: 0 8px 0 0;
 }
 
 .successSnackbar {
@@ -279,11 +303,6 @@ select {
   cursor: pointer;
 }
 
-mat-table {
-  padding: 0;
-  margin: 0;
-}
-
 ::ng-deep .mat-mdc-paginator-container {
   padding: 10px 0;
 }
@@ -299,3 +318,39 @@ mat-table {
   padding: 5px 0;
   margin: 0;
 }
+
+.backNew {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.thButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.allButtonsGroup {
+  display: flex;
+  width: 100%;
+  height: fit-content;
+  flex-direction: column;
+  gap: 10px;
+}
+
+td:not(.mat-column-actions), th:not(.mat-column-actions) {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 100px;
+}
+
+tr:not(.header-row):hover {
+  background-color: var(--tertiary-color) !important;
+}
+
+tr:not(.header-row) {
+  transition: background-color 0.2s ease-in-out;
+}
+
+

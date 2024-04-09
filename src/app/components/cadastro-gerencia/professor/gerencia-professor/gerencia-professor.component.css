@@ -9,13 +9,9 @@
 }
 
 .mat-column-actions {
-  width: 200px;
+  width: 100px;
   height: fit-content;
   padding: 10px 0;
-}
-
-.delete-button:hover {
-  background-color: darkred !important;
 }
 
 .table-button-icon {

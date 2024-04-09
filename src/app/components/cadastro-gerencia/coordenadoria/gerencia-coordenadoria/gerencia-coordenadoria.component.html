@@ -25,7 +25,7 @@
       <ng-container matColumnDef="description">
         <th mat-header-cell *matHeaderCellDef>Descrição</th>
         <td mat-cell *matCellDef="let coordenadoria">
-          <button mat-button (click)="verDescricao(coordenadoria)" class="button 2">
+          <button mat-button (click)="verDescricao(coordenadoria)" class="button two">
             <span class="material-symbols-outlined table-button-icon">visibility</span>
             Ver
           </button>
@@ -33,13 +33,20 @@
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="thButton">
+            <div>Ações</div>
+            <button class="subMenuButton newButton" (click)="cadastrar()">
+              <div class="subMenuButtonText">Cadastrar</div>
+            </button>
+          </div>
+        </th>
         <td mat-cell *matCellDef="let coordenadoria" class="buttonGroupForm">
-          <button mat-button (click)="editar(coordenadoria)" class="button 2">
+          <button mat-button (click)="editar(coordenadoria)" class="button two">
             <span class="material-symbols-outlined table-button-icon">edit</span>
             Editar
           </button>
-          <button mat-button (click)="excluir(coordenadoria)" class="button 2 delete-button">
+          <button mat-button (click)="excluir(coordenadoria)" class="button two delete-button">
             <span class="material-symbols-outlined table-button-icon">delete</span>
             Excluir
           </button>
