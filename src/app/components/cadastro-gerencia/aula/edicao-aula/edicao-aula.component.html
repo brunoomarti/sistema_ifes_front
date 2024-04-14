@@ -1,0 +1,36 @@
+<div>
+  <div class="dialog-container">
+
+    <p class="pageTitle">Você está editando: {{ data.aula.name }}</p>
+
+    <form [formGroup]="form">
+
+      <div class="newInput">
+        <label for="discipline">Disciplina:</label>
+        <select formControlName="discipline" required>
+          <option *ngFor="let disciplina of disciplinas" [value]="disciplina._id">{{disciplina.name}}</option>
+        </select>
+      </div>
+
+      <div class="newInput">
+        <label for="teacher">Professor:</label>
+        <select formControlName="teacher" required>
+          <option *ngFor="let professor of professores" [value]="professor._id">{{professor.name}}</option>
+        </select>
+      </div>
+
+      <div class="newInput">
+        <label for="semester">Semestre:</label>
+        <select formControlName="semester" required>
+          <option *ngFor="let semestre of semestres" [value]="semestre._id">{{semestre.semester}}</option>
+        </select>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Salvar edição</button>
+      </div>
+
+    </form>
+  </div>
+</div>

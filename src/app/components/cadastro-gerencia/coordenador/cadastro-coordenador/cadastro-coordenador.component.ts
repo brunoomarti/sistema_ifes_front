@@ -55,7 +55,6 @@ export class CadastroCoordenadorComponent {
     const coord: Coordenador = this.route.snapshot.data['coordenador'];
  
     if (coord) { 
-      
       this.form.setValue({
         _id: coord._id,
         name: coord.name,

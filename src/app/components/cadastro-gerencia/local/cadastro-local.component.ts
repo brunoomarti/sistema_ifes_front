@@ -100,6 +100,7 @@ export class CadastroLocalComponent implements OnInit {
     }
   }
 
+
   excluirItemDaLista(index: number) {
     this.itensInseridos.splice(index, 1);
   }

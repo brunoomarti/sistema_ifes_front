@@ -22,6 +22,8 @@ import { CadastroHorarioComponent } from './components/cadastro-gerencia/horario
 import { GerenciaHorarioComponent } from './components/cadastro-gerencia/horario/gerencia-horario/gerencia-horario.component';
 import { CadastroProfessorComponent } from './components/cadastro-gerencia/professor/cadastro-professor/cadastro-professor.component';
 import { GerenciaProfessorComponent } from './components/cadastro-gerencia/professor/gerencia-professor/gerencia-professor.component';
+import { CadastroAulaComponent } from './components/cadastro-gerencia/aula/cadastro-aula/cadastro-aula.component';
+import { GerenciaAulaComponent } from './components/cadastro-gerencia/aula/gerencia-aula/gerencia-aula.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -46,6 +48,8 @@ export const routes: Routes = [
   { path: 'cadastro-gerencia/gerencia-horario', data: { title: 'SIFES | Gerenciar Horário' }, component: GerenciaHorarioComponent },
   { path: 'cadastro-gerencia/cadastro-professor', data: { title: 'SIFES | Cadastrar Professor' }, component: CadastroProfessorComponent },
   { path: 'cadastro-gerencia/gerencia-professor', data: { title: 'SIFES | Gerenciar Professor' }, component: GerenciaProfessorComponent },
+  { path: 'cadastro-gerencia/cadastro-aula', data: { title: 'SIFES | Cadastrar Aula' }, component: CadastroAulaComponent },
+  { path: 'cadastro-gerencia/gerencia-aula', data: { title: 'SIFES | Gerenciar Aula' }, component: GerenciaAulaComponent },
 
   { path: 'importar-dados', component: ImportDataComponent },
   { path: 'alocar-local', component: AllocateLocationComponent },
