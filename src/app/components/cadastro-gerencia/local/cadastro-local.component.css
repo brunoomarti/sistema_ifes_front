@@ -14,3 +14,42 @@
   justify-content: space-between;
   gap: 10px;
 }
+
+.itemQuantidade{
+  border-radius: 100px;
+  padding: 5px 10px;
+  background-color: var(--tertiary-color);
+  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  height: fit-content;
+  width: fit-content;
+  align-items: center;
+}
+
+.itemNome {
+  font-size: var(--small-font-size);
+  color: var(--dark-grey);
+}
+
+.material-symbols-outlined {
+  font-size: var(--small-font-size);
+  font-weight: 800;
+  margin: 0;
+  padding: 0;
+}
+
+.xItem {
+  cursor: pointer;
+}
+
+.itens {
+  width: 100%;
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+

@@ -4,40 +4,52 @@
 
   <div class="boxSize">
 
-    <form action="/criar-sala" method="post">
+    <form [formGroup]="form">
 
       <div class="newInput">
-        <label for="nome">Nome:</label>
-        <input type="text" name="nome" placeholder="Nome do local" required>
+        <label for="name">Nome:</label>
+        <input type="text" formControlName="name" placeholder="Nome do local" required>
       </div>
 
       <div class="newInput">
-        <label for="capacidade">Capacidade:</label>
-        <input type="number" name="capacidade" placeholder="Capacidade do local" required>
+        <label for="capacity">Capacidade:</label>
+        <input type="number" formControlName="capacity" placeholder="Capacidade do local" required>
       </div>
 
       <div class="equipamento">
         <div class="newInput">
-          <label for="equipamento_id">Equipamento Disponível:</label>
-          <select name="equipamento_id" required>
-            <option *ngFor="let equipamento of equipamentos" [value]="equipamento">{{equipamento.name}}</option>
+          <label for="equipment">Equipamento Disponível:</label>
+          <select formControlName="equipment" required>
+            <option *ngFor="let equipamento of equipamentos; let i = index" [value]="i">{{equipamento.name}}</option>
           </select>
         </div>
 
         <div class="newInput">
-          <label for="quantidade">Quantidade:</label>
-          <input type="number" name="quantidade" placeholder="Quantidade" required>
+          <label for="amount">Quantidade:</label>
+          <input type="number" formControlName="amount" placeholder="Quantidade" required>
         </div>
 
         <div class="buttonGroupEquip">
           <button class="button two" type="button" (click)="novoEquipamento()">Novo equip.</button>
-          <button class="button one" type="button" onclick="inserirEquipamento()">Inserir</button>
+          <button class="button one" type="button" (click)="inserirEquipamento()">Inserir</button>
         </div>
       </div>
 
+      <div class="itens">
+        <div class="itemQuantidade" *ngFor="let item of itensInseridos; let i = index">
+          <div class="itemNome">
+            {{ item.equipamento.name }} - {{ item.quantidade }}
+          </div>
+          <div class="xItem" (click)="excluirItemDaLista(i)">
+            <span class="material-symbols-outlined">close</span>
+          </div>
+        </div>
+      </div>
+
+
       <div class="buttonGroupForm">
-        <button class="button two" type="button" (click)="cancelar()">Cancelar</button>
-        <button class="button one" type="submit">Criar Local</button>
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" >Criar Local</button>
       </div>
 
     </form>
