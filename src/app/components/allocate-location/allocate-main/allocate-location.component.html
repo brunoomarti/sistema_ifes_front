@@ -1,0 +1,118 @@
+<div class="componentContent">
+
+  <div class="allButtonsGroup">
+    <p class="pageTitle">Nova alocação</p>
+
+    <div class="subMenuButtonGroup">
+      <div class="subMenuButtonGroupSpace">
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/alocar-local/gerencia-aula"
+          >
+            <span class="material-symbols-outlined">door_front</span>
+            <div class="subMenuButtonText">Aula</div>
+          </button>
+        </div>
+
+        <div class="buttonContainer">
+          <button
+            class="subMenuButton"
+            routerLink="/alocar-local/gerencia-evento"
+          >
+            <span class="material-symbols-outlined">event_seat</span>
+            <div class="subMenuButtonText">Evento</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="pageTitle">Alocações</p>
+
+  <div class="boxSize">
+    <div class="selectGroup">
+      <div class="selectGroup groupOne">
+        <div class="newInput">
+          <label for="allocateFilter">Filtrar por:</label>
+          <select name="allocateFilter">
+            <option>Aula</option>
+            <option>Evento</option>
+          </select>
+        </div>
+        <div class="newInput">
+          <label for="periodFilter">Período:</label>
+          <select name="periodFilter">
+            <option>Hoje</option>
+            <option>Amanhã</option>
+            <option>Essa semana</option>
+            <option>Sempre</option>
+            <option>Selecionar...</option>
+          </select>
+        </div>
+      </div>
+      <div class="groupTwo">
+        <button class="button two" type="button">Filtrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- <table mat-table [dataSource]="alocacoes">
+
+    <ng-container matColumnDef="classEvent">
+      <th mat-header-cell *matHeaderCellDef>Aula/Evento</th>
+      <td mat-cell *matCellDef="let alocacao"> {{ alocacao.class }} {{ alocacao.event }} <td>
+    </ng-container>
+
+    <ng-container matColumnDef="teacher">
+      <th mat-header-cell *matHeaderCellDef>Professor</th>
+      <td mat-cell *matCellDef="let alocacao"> {{ alocacao.teacher }} <td>
+    </ng-container>
+
+    <ng-container matColumnDef="class">
+      <th mat-header-cell *matHeaderCellDef>Turma</th>
+      <td mat-cell *matCellDef="let alocacao"> {{ alocacao.class }} <td>
+    </ng-container>
+
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef>Local</th>
+      <td mat-cell *matCellDef="let alocacao"> {{ alocacao.location }} <td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Data</th>
+      <td mat-cell *matCellDef="let alocacao"> {{ alocacao.date }} <td>
+    </ng-container>
+
+    <ng-container matColumnDef="schedule">
+      <th mat-header-cell *matHeaderCellDef>Horário</th>
+      <td mat-cell *matCellDef="let alocacao"> {{ alocacao.schedule }} <td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="thButton">
+          <div>Ações</div>
+          <button class="subMenuButton newButton" (click)="cadastrar()">
+            <div class="subMenuButtonText">Cadastrar</div>
+          </button>
+        </div>
+      </th>
+      <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
+        <button mat-button (click)="editar(equipamento)" class="button 2">
+          <span class="material-symbols-outlined table-button-icon">edit</span>
+          Editar
+        </button>
+        <button mat-button (click)="excluir(equipamento)" class="button 2 delete-button">
+          <span class="material-symbols-outlined table-button-icon">delete</span>
+          Excluir
+        </button>
+      </td>
+    </ng-container>
+
+    <tr class="header-row" mat-header-row *matHeaderRowDef="['classEvent', 'teacher', 'class', 'location', 'date', 'schedule', 'actions']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['classEvent', 'teacher', 'class', 'location', 'date', 'schedule', 'actions']"></tr>
+  </table> -->
+
+  <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
+</div>

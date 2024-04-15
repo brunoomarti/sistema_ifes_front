@@ -16,7 +16,7 @@
         <input type="number" formControlName="capacity" placeholder="Capacidade do local" required>
       </div>
 
-      <div class="equipamento">
+      <div class="selectGroup">
         <div class="newInput">
           <label for="equipment">Equipamento Disponível:</label>
           <select formControlName="equipment" required>
@@ -49,7 +49,7 @@
 
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>
-        <button class="button one" >Criar Local</button>
+        <button class="button one" (click)="onSubmit()">Criar Local</button>
       </div>
 
     </form>

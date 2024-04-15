@@ -7,9 +7,9 @@ import { Professor } from '../../../../models/Professor';
 import { Semestre } from '../../../../models/Semestre';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AulaService } from '../service/aula.service';
-import { DisciplinaService } from '../../disciplina/service/disciplina.service';
-import { ProfessorService } from '../../professor/service/professor.service';
-import { SemestreService } from '../../semestre/service/semestre.service';
+import { DisciplinaService } from '../../../cadastro-gerencia/disciplina/service/disciplina.service';
+import { ProfessorService } from '../../../cadastro-gerencia/professor/service/professor.service';
+import { SemestreService } from '../../../cadastro-gerencia/semestre/service/semestre.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Aula } from '../../../../models/Aula';
@@ -117,7 +117,7 @@ export class CadastroAulaComponent {
 
   onCancel() {
     if (confirm('Tem certeza que deseja cancelar?')) {
-      this.router.navigate(['/cadastro-gerencia']);
+      this.router.navigate(['/alocar-local']);
     }
   }
 
@@ -143,7 +143,7 @@ export class CadastroAulaComponent {
         this.form.get('teacher')?.setValue('');
         this.form.get('semester')?.setValue('');
       } else {
-        this.router.navigate(['/cadastro-gerencia/gerencia-aula']);
+        this.router.navigate(['/alocar-local/gerencia-aula']);
       }
     });
   }

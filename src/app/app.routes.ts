@@ -2,7 +2,7 @@ import { GerenciaCoordenadoriaComponent } from './components/cadastro-gerencia/c
 import { CadastroCoordenadoriaComponent } from './components/cadastro-gerencia/coordenadoria/cadastro-coordenadoria/cadastro-coordenadoria.component';
 import { GerenciaCoordenadorComponent } from './components/cadastro-gerencia/coordenador/gerencia-coordenador/gerencia-coordenador/gerencia-coordenador.component';
 import { CadastroCoordenadorComponent } from './components/cadastro-gerencia/coordenador/cadastro-coordenador/cadastro-coordenador.component';
-import { CadastroLocalComponent } from './components/cadastro-gerencia/local/cadastro-local.component';
+import { CadastroLocalComponent } from './components/cadastro-gerencia/local/cadastro-local/cadastro-local.component';
 import { CadastroTurmaComponent } from './components/cadastro-gerencia/turma/cadastro-turma/cadastro-turma.component';
 import { CadastroAlunoComponent } from './components/cadastro-gerencia/aluno/cadastro-aluno/cadastro-aluno.component';
 import { RouterModule, Routes } from '@angular/router';
@@ -10,7 +10,7 @@ import { NgModule } from '@angular/core';
 import { CadastroGerenciaComponent } from './components/cadastro-gerencia/cadastro-gerencia-principal/cadastro-gerencia.component';
 import { HomeComponent } from './components/home/home.component';
 import { ImportDataComponent } from './components/import-data/import-data.component';
-import { AllocateLocationComponent } from './components/allocate-location/allocate-location.component';
+import { AllocateLocationComponent } from './components/allocate-location/allocate-main/allocate-location.component';
 import { SchedulesComponent } from './components/schedules/schedules.component';
 import { CadastroDisciplinaComponent } from './components/cadastro-gerencia/disciplina/cadastro-disciplina/cadastro-disciplina.component';
 import { GerenciaTurmaComponent } from './components/cadastro-gerencia/turma/gerencia-turma/gerencia-turma/gerencia-turma.component';
@@ -22,8 +22,10 @@ import { CadastroHorarioComponent } from './components/cadastro-gerencia/horario
 import { GerenciaHorarioComponent } from './components/cadastro-gerencia/horario/gerencia-horario/gerencia-horario.component';
 import { CadastroProfessorComponent } from './components/cadastro-gerencia/professor/cadastro-professor/cadastro-professor.component';
 import { GerenciaProfessorComponent } from './components/cadastro-gerencia/professor/gerencia-professor/gerencia-professor.component';
-import { CadastroAulaComponent } from './components/cadastro-gerencia/aula/cadastro-aula/cadastro-aula.component';
-import { GerenciaAulaComponent } from './components/cadastro-gerencia/aula/gerencia-aula/gerencia-aula.component';
+import { CadastroAulaComponent } from './components/allocate-location/aula/cadastro-aula/cadastro-aula.component';
+import { GerenciaAulaComponent } from './components/allocate-location/aula/gerencia-aula/gerencia-aula.component';
+import { GerenciaEventoComponent } from './components/allocate-location/evento/gerencia-evento/gerencia-evento.component';
+import { CadastroEventoComponent } from './components/allocate-location/evento/cadastro-evento/cadastro-evento.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -48,11 +50,15 @@ export const routes: Routes = [
   { path: 'cadastro-gerencia/gerencia-horario', data: { title: 'SIFES | Gerenciar Horário' }, component: GerenciaHorarioComponent },
   { path: 'cadastro-gerencia/cadastro-professor', data: { title: 'SIFES | Cadastrar Professor' }, component: CadastroProfessorComponent },
   { path: 'cadastro-gerencia/gerencia-professor', data: { title: 'SIFES | Gerenciar Professor' }, component: GerenciaProfessorComponent },
-  { path: 'cadastro-gerencia/cadastro-aula', data: { title: 'SIFES | Cadastrar Aula' }, component: CadastroAulaComponent },
-  { path: 'cadastro-gerencia/gerencia-aula', data: { title: 'SIFES | Gerenciar Aula' }, component: GerenciaAulaComponent },
 
   { path: 'importar-dados', component: ImportDataComponent },
+
   { path: 'alocar-local', component: AllocateLocationComponent },
+  { path: 'alocar-local/cadastro-evento', data: { title: 'SIFES | Cadastrar Evento' }, component: CadastroEventoComponent },
+  { path: 'alocar-local/gerencia-evento', data: { title: 'SIFES | Gerenciar Evento' }, component: GerenciaEventoComponent },
+  { path: 'alocar-local/cadastro-aula', data: { title: 'SIFES | Cadastrar Aula' }, component: CadastroAulaComponent },
+  { path: 'alocar-local/gerencia-aula', data: { title: 'SIFES | Gerenciar Aula' }, component: GerenciaAulaComponent },
+
   { path: 'horarios', component: SchedulesComponent },
   //{ path: '**',component: PageNotFoundComponent }, -- Caso queira criar uma pagina para NotFound
 ];

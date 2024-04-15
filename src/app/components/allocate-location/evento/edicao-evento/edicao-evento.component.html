@@ -1,0 +1,25 @@
+<div>
+  <div class="dialog-container">
+
+    <p class="pageTitle">Você está editando: {{ data.evento.name }}</p>
+
+    <form [formGroup]="form">
+
+      <div class="newInput">
+        <label for="name">Nome:</label>
+        <input type="text" formControlName="name" placeholder="Nome do evento" required>
+      </div>
+
+      <div class="newInput">
+        <label for="description">Descrição:</label>
+        <textarea type="text" formControlName="description" placeholder="Descrição do evento" required></textarea>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Salvar edição</button>
+      </div>
+
+    </form>
+  </div>
+</div>

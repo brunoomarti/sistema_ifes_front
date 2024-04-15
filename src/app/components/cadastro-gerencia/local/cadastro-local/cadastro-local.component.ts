@@ -1,14 +1,17 @@
-import { Equipamento } from './../../../models/Equipamento';
+import { LocalService } from './../service/local.service';
+import { Equipamento } from '../../../../models/Equipamento';
 import { Component, OnInit } from '@angular/core';
-import { NewEditEquipComponent } from '../../new-edit-equip/component/new-edit-equip.component';
+import { NewEditEquipComponent } from '../../../new-edit-equip/component/new-edit-equip.component';
 import { MatDialog } from '@angular/material/dialog';
-import { EquipmentService } from '../../new-edit-equip/services/new-edit-equip.service';
+import { EquipmentService } from '../../../new-edit-equip/services/new-edit-equip.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, NgFor } from '@angular/common';
-import { ReloadService } from '../../../shared-services/reload.service';
+import { ReloadService } from '../../../../shared-services/reload.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatTableModule } from '@angular/material/table';
-import { Local } from '../../../models/Local';
+import { Local } from '../../../../models/Local';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 
 @Component({
   selector: 'app-cadastro-local',
@@ -35,9 +38,10 @@ export class CadastroLocalComponent implements OnInit {
   constructor(public dialog: MatDialog,
               private formBuilder: FormBuilder,
               private equipmentService: EquipmentService,
-              // private locationService:
+              private localService: LocalService,
               private reloadService: ReloadService,
               private router: Router,
+              private snackBar: MatSnackBar,
               private route: ActivatedRoute,
               )
 
@@ -58,8 +62,7 @@ export class CadastroLocalComponent implements OnInit {
         id: obj._id,
         name: obj.name,
         capacity: obj.capacity,
-        equipment: obj.equipment,
-        amount: obj.amount
+        equipment: obj.equipment
       });
     }
 
@@ -105,30 +108,57 @@ export class CadastroLocalComponent implements OnInit {
     this.itensInseridos.splice(index, 1);
   }
 
-
-  // onSubmit() {
-  //   this.service.save(this.form.value).subscribe(
-  //     result => {
-  //       const dialogData = {
-  //         title: 'Aluno Cadastrado',
-  //         message: `O aluno ${result.name} foi cadastrado.`,
-  //         buttons: {
-  //           cadastrarNovo: 'Cadastrar Novo Aluno',
-  //           irParaGerencia: 'Ver Alunos Cadastrados'
-  //         }
-  //       };
-  //       this.openDialog(dialogData);
-  //     },
-  //     error => {
-  //       this.onFailed();
-  //     }
-  //   );
-  // }
+  onSubmit() {
+    this.localService.save(this.form.value).subscribe(
+      result => {
+        const dialogData = {
+          title: 'Locl Cadastrado',
+          message: `O local ${result.name} foi cadastrado.`,
+          buttons: {
+            cadastrarNovo: 'Cadastrar Novo Local',
+            irParaGerencia: 'Ver Locais Cadastrados'
+          }
+        };
+        this.openDialog(dialogData);
+      },
+      error => {
+        this.onFailed();
+      }
+    );
+  }
 
   onCancel() {
     if (confirm('Tem certeza que deseja cancelar?')) {
       this.router.navigate(['/cadastro-gerencia']);
     }
+  }
+
+  onFailed() {
+    this.snackBar.open(this.mensagemSnackbarErro, '', { duration: 5000, panelClass: ['errorSnackbar'] });
+  }
+
+  onSucess() {
+    this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
+  }
+
+  openDialog(data: any): void {
+    const dialogRef = this.dialog.open(ModalDialogComponent, {
+      data: data,
+      disableClose: true,
+      backdropClass: 'backdrop'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'cadastrarNovo') {
+        this.form.get('name')?.setValue('');
+        this.form.get('capacity')?.setValue('');
+        this.form.get('equipment')?.setValue('');
+        this.form.get('amount')?.setValue('');
+        this.itensInseridos = [];
+      } else {
+        this.router.navigate(['/cadastro-gerencia/gerencia-local']);
+      }
+    });
   }
 
 }

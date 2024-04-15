@@ -3,16 +3,16 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { ProfessorService } from '../service/professor.service';
+import { Evento } from '../../../../models/Evento';
+import { EventoService } from '../service/evento.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
-import { Professor } from '../../../../models/Professor';
-import { EdicaoProfessorComponent } from '../edicao-professor/edicao-professor.component';
+import { EdicaoEventoComponent } from '../edicao-evento/edicao-evento.component';
 
 @Component({
-  selector: 'app-gerencia-professor',
+  selector: 'app-gerencia-evento',
   standalone: true,
   imports: [
     CommonModule,
@@ -20,20 +20,20 @@ import { EdicaoProfessorComponent } from '../edicao-professor/edicao-professor.c
     MatIcon,
     MatPaginator
   ],
-  templateUrl: './gerencia-professor.component.html',
-  styleUrl: './gerencia-professor.component.css'
+  templateUrl: './gerencia-evento.component.html',
+  styleUrl: './gerencia-evento.component.css'
 })
-export class GerenciaProfessorComponent implements OnInit {
+export class GerenciaEventoComponent implements OnInit {
 
-  professores: Professor[] = [];
+  eventos: Evento[] = [];
   dataSource: any;
-  mensagemSnackbarAcerto: string = 'Professor excluído com sucesso.';
-  mensagemSnackbarErro: string = 'Erro ao excluir professor.';
+  mensagemSnackbarAcerto: string = 'Evento excluído com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao excluir evento.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
-    private service: ProfessorService,
+    private service: EventoService,
     private router: Router,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
@@ -46,18 +46,18 @@ export class GerenciaProfessorComponent implements OnInit {
   }
 
   atualizaTabela() {
-    this.service.listar().subscribe(professores => {
-      this.professores = professores;
-      this.dataSource = new MatTableDataSource<Professor>(this.professores);
+    this.service.listar().subscribe(eventos => {
+      this.eventos = eventos;
+      this.dataSource = new MatTableDataSource<Evento>(this.eventos);
       this.dataSource.paginator = this.paginator;
     });
   }
 
-  editar(professor: { name: string }): void {
-    const dialogRef = this.dialog.open(EdicaoProfessorComponent, {
+  editar(evento: { name: string }): void {
+    const dialogRef = this.dialog.open(EdicaoEventoComponent, {
       disableClose: true,
       backdropClass: 'backdrop',
-      data: { professor }
+      data: { evento }
     });
 
     dialogRef.afterClosed().subscribe(() => {
@@ -65,14 +65,14 @@ export class GerenciaProfessorComponent implements OnInit {
     });
   }
 
-  excluir(professor: Professor): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir este professor?');
+  excluir(evento: Evento): void {
+    const confirmacao = confirm('Tem certeza que deseja excluir este evento?');
     if (confirmacao) {
-      this.service.remove(professor._id).subscribe(() => {
-        this.professores = this.professores.filter(e => e._id !== professor._id);
+      this.service.remove(evento._id).subscribe(() => {
+        this.eventos = this.eventos.filter(e => e._id !== evento._id);
         this.onSucess(true);
       }, error => {
-        console.error('Erro ao excluir professor:', error);
+        console.error('Erro ao excluir evento:', error);
         this.onFailed();
       });
     }
@@ -84,7 +84,7 @@ export class GerenciaProfessorComponent implements OnInit {
 
   onSucess(excluir: boolean = false) {
     if (excluir) {
-      this.snackBar.open('Professor excluído com sucesso', '', { duration: 5000, panelClass: ['successSnackbar'] });
+      this.snackBar.open('Evento excluído com sucesso', '', { duration: 5000, panelClass: ['successSnackbar'] });
       this.atualizaTabela();
     } else {
       this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
@@ -92,11 +92,11 @@ export class GerenciaProfessorComponent implements OnInit {
   }
 
   backPage() {
-    this.router.navigate(['/cadastro-gerencia']);
+    this.router.navigate(['/alocar-local']);
   }
 
   cadastrar() {
-    this.router.navigate(['/cadastro-gerencia/cadastro-professor']);
+    this.router.navigate(['/alocar-local/cadastro-evento']);
   }
 
 }

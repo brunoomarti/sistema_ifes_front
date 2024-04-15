@@ -36,8 +36,6 @@ export class GerenciaAulaComponent implements OnInit {
     private service: AulaService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private reloadService: ReloadService,
     public dialog: MatDialog,
   ) { }
 
@@ -92,11 +90,11 @@ export class GerenciaAulaComponent implements OnInit {
   }
 
   backPage() {
-    this.router.navigate(['/cadastro-gerencia']);
+    this.router.navigate(['/alocar-local']);
   }
 
   cadastrar() {
-    this.router.navigate(['/cadastro-gerencia/cadastro-aula']);
+    this.router.navigate(['/alocar-local/cadastro-aula']);
   }
 
 }
