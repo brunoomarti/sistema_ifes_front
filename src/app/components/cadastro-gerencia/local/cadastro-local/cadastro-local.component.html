@@ -26,7 +26,7 @@
 
         <div class="newInput">
           <label for="amount">Quantidade:</label>
-          <input type="number" formControlName="amount" placeholder="Quantidade" required>
+          <input type="number" formControlName="amount" placeholder="Quantidade" min="1" max="99" required>
         </div>
 
         <div class="buttonGroupEquip">
@@ -45,7 +45,6 @@
           </div>
         </div>
       </div>
-
 
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>

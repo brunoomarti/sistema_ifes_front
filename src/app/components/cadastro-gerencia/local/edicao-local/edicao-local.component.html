@@ -1,1 +1,55 @@
-<p>edicao-local works!</p>
+<div>
+  <div class="dialog-container">
+
+    <p class="pageTitle">Você está editando: {{ data.local.name }}</p>
+
+    <form [formGroup]="form">
+
+      <div class="newInput">
+        <label for="name">Nome:</label>
+        <input type="text" formControlName="name" placeholder="Nome do local" required>
+      </div>
+
+      <div class="newInput">
+        <label for="capacity">Capacidade:</label>
+        <input type="number" formControlName="capacity" placeholder="Capacidade do local" required>
+      </div>
+
+      <div class="selectGroup">
+        <div class="newInput">
+          <label for="equipment">Equipamento Disponível:</label>
+          <select formControlName="equipment" required>
+            <option *ngFor="let equipamento of equipamentos; let i = index" [value]="i">{{equipamento.name}}</option>
+          </select>
+        </div>
+
+        <div class="newInput">
+          <label for="amount">Quantidade:</label>
+          <input type="number" formControlName="amount" placeholder="Quantidade" min="1" max="99" required>
+        </div>
+
+        <div class="buttonGroupEquip">
+          <button class="button two" type="button" (click)="novoEquipamento()">Novo equip.</button>
+          <button class="button one" type="button" (click)="inserirEquipamento()">Inserir</button>
+        </div>
+      </div>
+
+      <div class="itens">
+        <div class="itemQuantidade" *ngFor="let item of itensInseridos; let i = index">
+          <div class="itemNome">
+            {{ item.equipamento.name }} - {{ item.quantidade }}
+          </div>
+          <div class="xItem" (click)="excluirItemDaLista(i)">
+            <span class="material-symbols-outlined">close</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Salvar edição</button>
+      </div>
+
+    </form>
+  </div>
+</div>

@@ -26,6 +26,7 @@ import { CadastroAulaComponent } from './components/allocate-location/aula/cadas
 import { GerenciaAulaComponent } from './components/allocate-location/aula/gerencia-aula/gerencia-aula.component';
 import { GerenciaEventoComponent } from './components/allocate-location/evento/gerencia-evento/gerencia-evento.component';
 import { CadastroEventoComponent } from './components/allocate-location/evento/cadastro-evento/cadastro-evento.component';
+import { GerenciaLocalComponent } from './components/cadastro-gerencia/local/gerencia-local/gerencia-local.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -33,7 +34,7 @@ export const routes: Routes = [
 
   { path: 'cadastro-gerencia', component: CadastroGerenciaComponent },
   { path: 'cadastro-gerencia/cadastro-local', data: { title: 'SIFES | Cadastrar Local' }, component: CadastroLocalComponent },
-
+  { path: 'cadastro-gerencia/gerencia-local', data: { title: 'SIFES | Gerenciar Local' }, component: GerenciaLocalComponent },
   { path: 'cadastro-gerencia/cadastro-turma', data: { title: 'SIFES | Cadastrar Turma' }, component: CadastroTurmaComponent },
   { path: 'cadastro-gerencia/gerencia-turma', data: { title: 'SIFES | Gerenciar Turma' }, component: GerenciaTurmaComponent },
   { path: 'cadastro-gerencia/cadastro-coordenador', data: { title: 'SIFES | Cadastrar Coordenador' }, component: CadastroCoordenadorComponent },

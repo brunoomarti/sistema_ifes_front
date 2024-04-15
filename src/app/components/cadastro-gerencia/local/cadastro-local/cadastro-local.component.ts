@@ -112,7 +112,7 @@ export class CadastroLocalComponent implements OnInit {
     this.localService.save(this.form.value).subscribe(
       result => {
         const dialogData = {
-          title: 'Locl Cadastrado',
+          title: 'Local Cadastrado',
           message: `O local ${result.name} foi cadastrado.`,
           buttons: {
             cadastrarNovo: 'Cadastrar Novo Local',

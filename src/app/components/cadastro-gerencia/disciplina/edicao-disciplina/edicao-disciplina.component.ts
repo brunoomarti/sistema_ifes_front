@@ -45,7 +45,7 @@ export class EdicaoDisciplinaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const obj: Disciplina = this.data.disciplina;;
+    const obj: Disciplina = this.data.disciplina;
     if (obj) {
       this.form.setValue({
         _id: obj._id,

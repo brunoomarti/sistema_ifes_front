@@ -1,1 +1,53 @@
-<p>gerencia-local works!</p>
+<div class="componentContent">
+
+  <div class="backTitle">
+    <p class="pageTitle">Locais cadastrados</p>
+    <button class="backPage" (click)="backPage()">
+      <span class="material-symbols-outlined">arrow_back</span>
+      <p class="pageTitle">Voltar</p>
+    </button>
+  </div>
+
+  <div class="boxSize">
+
+    <table mat-table [dataSource]="locais">
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <td mat-cell *matCellDef="let local"> {{ local.name }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="capacity">
+        <th mat-header-cell *matHeaderCellDef>Capacidade</th>
+        <td mat-cell *matCellDef="let local"> {{ local.capacity }} <td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="thButton">
+            <div>Ações</div>
+            <button class="subMenuButton newButton" (click)="cadastrar()">
+              <div class="subMenuButtonText">Cadastrar</div>
+            </button>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let horario" class="buttonGroupForm">
+          <button mat-button (click)="editar(horario)" class="button 2">
+            <span class="material-symbols-outlined table-button-icon">edit</span>
+            Editar
+          </button>
+          <button mat-button (click)="excluir(horario)" class="button 2 delete-button">
+            <span class="material-symbols-outlined table-button-icon">delete</span>
+            Excluir
+          </button>
+        </td>
+      </ng-container>
+
+      <tr class="header-row" mat-header-row *matHeaderRowDef="['name', 'capacity', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'capacity', 'actions']"></tr>
+    </table>
+
+    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
+
+  </div>
+</div>
