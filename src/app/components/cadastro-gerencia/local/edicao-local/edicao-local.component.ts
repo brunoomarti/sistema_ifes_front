@@ -10,6 +10,7 @@ import { Local } from '../../../../models/Local';
 import { Equipamento } from '../../../../models/Equipamento';
 import { EquipmentService } from '../../../new-edit-equip/services/new-edit-equip.service';
 import { NewEditEquipComponent } from '../../../new-edit-equip/component/new-edit-equip.component';
+import { EquipamentoLocal } from '../../../../models/EquipamentoLocal';
 
 @Component({
   selector: 'app-edicao-local',
@@ -25,8 +26,8 @@ import { NewEditEquipComponent } from '../../../new-edit-equip/component/new-edi
 export class EdicaoLocalComponent implements OnInit {
 
   form: FormGroup;
-  equipamentos: any[] = [];
-  itensInseridos: { equipamento: Equipamento, quantidade: number }[] = [];
+  equipamentos: Equipamento[] = [];
+  itensInseridos: EquipamentoLocal[] = [];
   novoItem: { equipamento: Equipamento | undefined, quantidade: number } = { equipamento: undefined, quantidade: 0 };
 
   mensagemSnackbarAcerto: string = 'Local editado com sucesso.';
@@ -88,12 +89,12 @@ export class EdicaoLocalComponent implements OnInit {
     console.log(equipamentoSelecionado);
 
     if (equipamentoSelecionado && quantidade > 0) {
-      const itemExistente = this.itensInseridos.find(item => item.equipamento === equipamentoSelecionado);
+      const itemExistente = this.itensInseridos.find(item => item.equipment === equipamentoSelecionado);
 
       if (itemExistente) {
-        itemExistente.quantidade += quantidade;
+        itemExistente.quantity += quantidade;
       } else {
-        this.itensInseridos.push({ equipamento: equipamentoSelecionado, quantidade: quantidade });
+        this.itensInseridos.push({ _id : 0, equipment: equipamentoSelecionado, quantity: quantidade });
       }
 
       this.novoItem = { equipamento: undefined, quantidade: 0 };

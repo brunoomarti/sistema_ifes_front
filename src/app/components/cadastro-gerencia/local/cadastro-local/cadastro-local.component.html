@@ -18,8 +18,8 @@
 
       <div class="selectGroup">
         <div class="newInput">
-          <label for="equipment">Equipamento Disponível:</label>
-          <select formControlName="equipment" required>
+          <label for="equipments">Equipamento Disponível:</label>
+          <select formControlName="equipments" required>
             <option *ngFor="let equipamento of equipamentos; let i = index" [value]="i">{{equipamento.name}}</option>
           </select>
         </div>
@@ -38,7 +38,7 @@
       <div class="itens">
         <div class="itemQuantidade" *ngFor="let item of itensInseridos; let i = index">
           <div class="itemNome">
-            {{ item.equipamento.name }} - {{ item.quantidade }}
+            {{ item.equipment.name }} - {{ item.quantity }}
           </div>
           <div class="xItem" (click)="excluirItemDaLista(i)">
             <span class="material-symbols-outlined">close</span>

@@ -1,8 +1,8 @@
-import { Equipamento } from "./Equipamento";
+import { EquipamentoLocal } from "./EquipamentoLocal";
 
 export interface Local {
   _id: number,
   name: string,
   capacity: number,
-  equipment: Equipamento
+  equipments: EquipamentoLocal[]
 }

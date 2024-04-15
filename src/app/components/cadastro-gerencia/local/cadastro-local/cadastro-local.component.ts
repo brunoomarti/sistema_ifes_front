@@ -12,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { Local } from '../../../../models/Local';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
+import { EquipamentoLocal } from '../../../../models/EquipamentoLocal';
 
 @Component({
   selector: 'app-cadastro-local',
@@ -28,8 +29,8 @@ import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.compone
 export class CadastroLocalComponent implements OnInit {
 
   form: FormGroup;
-  equipamentos: any[] = [];
-  itensInseridos: { equipamento: Equipamento, quantidade: number }[] = [];
+  equipamentos: Equipamento[] = [];
+  itensInseridos: EquipamentoLocal[] = [];
   novoItem: { equipamento: Equipamento | undefined, quantidade: number } = { equipamento: undefined, quantidade: 0 };
 
   mensagemSnackbarAcerto: string = 'Local cadastrado com sucesso.';
@@ -50,7 +51,7 @@ export class CadastroLocalComponent implements OnInit {
                   id: [0],
                   name: '',
                   capacity: '',
-                  equipment: null,
+                  equipments: null,
                   amount: ''
                 });
               }
@@ -62,7 +63,7 @@ export class CadastroLocalComponent implements OnInit {
         id: obj._id,
         name: obj.name,
         capacity: obj.capacity,
-        equipment: obj.equipment
+        equipments: obj.equipments
       });
     }
 
@@ -71,6 +72,8 @@ export class CadastroLocalComponent implements OnInit {
     this.reloadService.reload$.subscribe(() => {
       this.equipmentService.listar().subscribe(equipamentos => this.equipamentos = equipamentos);
     });
+
+    console.log(this.form.value)
   }
 
   novoEquipamento(): void {
@@ -81,20 +84,21 @@ export class CadastroLocalComponent implements OnInit {
   }
 
   inserirEquipamento() {
-    const equipamentoIndex: number = this.form.get('equipment')?.value;
+    const equipamentoIndex: number = this.form.get('equipments')?.value;
     const quantidade: number = this.form.get('amount')?.value;
 
     const equipamentoSelecionado: Equipamento | undefined = this.equipamentos[equipamentoIndex];
 
-    console.log(equipamentoSelecionado);
+    console.log(equipamentoSelecionado); 
 
     if (equipamentoSelecionado && quantidade > 0) {
-      const itemExistente = this.itensInseridos.find(item => item.equipamento === equipamentoSelecionado);
-
+      console.log(quantidade);
+      const itemExistente = this.itensInseridos.find(item => item.equipment === equipamentoSelecionado);
+      
       if (itemExistente) {
-        itemExistente.quantidade += quantidade;
+        itemExistente.quantity += quantidade;
       } else {
-        this.itensInseridos.push({ equipamento: equipamentoSelecionado, quantidade: quantidade });
+        this.itensInseridos.push({ _id: 0, equipment: equipamentoSelecionado, quantity: quantidade });
       }
 
       this.novoItem = { equipamento: undefined, quantidade: 0 };
@@ -103,12 +107,12 @@ export class CadastroLocalComponent implements OnInit {
     }
   }
 
-
   excluirItemDaLista(index: number) {
     this.itensInseridos.splice(index, 1);
   }
 
-  onSubmit() {
+  onSubmit() { 
+    this.form.patchValue({ equipments: this.itensInseridos }); 
     this.localService.save(this.form.value).subscribe(
       result => {
         const dialogData = {
