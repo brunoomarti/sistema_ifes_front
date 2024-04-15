@@ -50,7 +50,6 @@ export class CadastroAulaComponent {
   {
     this.form = this.formBuilder.group({
       _id: [0],
-      name: '',
       discipline: new FormControl(''),
       teacher: new FormControl(''),
       semester: new FormControl('')
@@ -75,7 +74,6 @@ export class CadastroAulaComponent {
     if (obj) {
       this.form.setValue({
         _id: obj._id,
-        name: obj.name,
         discipline: obj.discipline,
         teacher: obj.teacher,
         semester: obj.semester
@@ -89,9 +87,9 @@ export class CadastroAulaComponent {
     const selectedSemester = this.semestres.find(obj => obj._id == this.form.value.semester);
 
     if (selectedDiscipline && selectedTeacher && selectedSemester) {
-      this.form.patchValue({ coordination: selectedDiscipline });
-      this.form.patchValue({ coordination: selectedTeacher });
-      this.form.patchValue({ coordination: selectedSemester });
+      this.form.patchValue({ discipline: selectedDiscipline });
+      this.form.patchValue({ teacher: selectedTeacher });
+      this.form.patchValue({ semester: selectedSemester });
       this.form.patchValue([selectedDiscipline + ' (' + selectedTeacher.name + ')']);
     }
 
@@ -101,7 +99,7 @@ export class CadastroAulaComponent {
       result => {
         const dialogData = {
           title: 'Aula Cadastrada',
-          message: `A aula ${result.name} foi cadastrada.`,
+          message: `A aula foi cadastrada.`,
           buttons: {
             cadastrarNovo: 'Cadastrar Nova Aula',
             irParaGerencia: 'Ver Aulas Cadastradas'

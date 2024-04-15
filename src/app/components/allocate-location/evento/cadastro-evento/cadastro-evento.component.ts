@@ -105,7 +105,7 @@ export class CadastroEventoComponent {
         this.form.get('description')?.setValue('');
         this.form.get('allocated')?.setValue(false);
       } else {
-        this.router.navigate(['/alocar-local/gerencia-aula']);
+        this.router.navigate(['/alocar-local/gerencia-evento']);
       }
     });
   }

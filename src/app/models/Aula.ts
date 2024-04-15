@@ -4,7 +4,6 @@ import { Semestre } from "./Semestre";
 
 export interface Aula {
   _id: number,
-  name: string,
   discipline: Disciplina,
   teacher: Professor,
   semester: Semestre
