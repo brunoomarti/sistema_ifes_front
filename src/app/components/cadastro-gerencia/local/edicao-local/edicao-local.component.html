@@ -37,7 +37,7 @@
       <div class="itens">
         <div class="itemQuantidade" *ngFor="let item of itensInseridos; let i = index">
           <div class="itemNome">
-            {{ item.equipment.name }} - {{ item.equipment }}
+            {{ item.equipment.name }} - {{ item.quantity }}
           </div>
           <div class="xItem" (click)="excluirItemDaLista(i)">
             <span class="material-symbols-outlined">close</span>

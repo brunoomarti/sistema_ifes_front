@@ -49,8 +49,8 @@ export class EdicaoLocalComponent implements OnInit {
       _id: [0],
       name: '',
       capacity: '',
-      equipment: null,
-      amount: 0
+      equipments: null,
+      amount: ''
     });
   }
 
@@ -61,9 +61,13 @@ export class EdicaoLocalComponent implements OnInit {
         _id: obj._id,
         name: obj.name,
         capacity: obj.capacity,
-        equipment: null,
-        amount: 0
+        equipments: obj.equipments,
+        amount: null
       });
+
+      if (obj.equipments && obj.equipments.length > 0) {
+        this.itensInseridos = obj.equipments;
+      }
     }
 
     this.equipmentService.listar().subscribe(equipamentos => this.equipamentos = equipamentos);
@@ -81,7 +85,7 @@ export class EdicaoLocalComponent implements OnInit {
   }
 
   inserirEquipamento() {
-    const equipamentoIndex: number = this.form.get('equipment')?.value;
+    const equipamentoIndex: number = this.form.get('equipments')?.value;
     const quantidade: number = this.form.get('amount')?.value;
 
     const equipamentoSelecionado: Equipamento | undefined = this.equipamentos[equipamentoIndex];
@@ -89,12 +93,13 @@ export class EdicaoLocalComponent implements OnInit {
     console.log(equipamentoSelecionado);
 
     if (equipamentoSelecionado && quantidade > 0) {
+      console.log(quantidade);
       const itemExistente = this.itensInseridos.find(item => item.equipment === equipamentoSelecionado);
 
       if (itemExistente) {
         itemExistente.quantity += quantidade;
       } else {
-        this.itensInseridos.push({ _id : 0, equipment: equipamentoSelecionado, quantity: quantidade });
+        this.itensInseridos.push({ _id: 0, equipment: equipamentoSelecionado, quantity: quantidade });
       }
 
       this.novoItem = { equipamento: undefined, quantidade: 0 };
@@ -108,6 +113,7 @@ export class EdicaoLocalComponent implements OnInit {
   }
 
   onSubmit() {
+    this.form.patchValue({ equipments: this.itensInseridos });
     console.log(this.form.value);
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }

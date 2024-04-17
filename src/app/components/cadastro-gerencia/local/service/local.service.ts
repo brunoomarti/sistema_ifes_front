@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Local } from '../../../../models/Local';
-import { first, tap } from 'rxjs';
+import { Observable, catchError, first, of, tap } from 'rxjs';
+import { EquipamentoLocal } from '../../../../models/EquipamentoLocal';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +41,22 @@ export class LocalService {
 
   remove(_id: number) {
     return this.httpClient.delete(`${this.API}/${_id}`);
+  }
+
+  getEquipmentsByLocal(localId: number): Observable<EquipamentoLocal[]> {
+    const url = `${this.API}/locais/${localId}/equipamentos`;
+
+    return this.httpClient.get<EquipamentoLocal[]>(url).pipe(
+      catchError(this.handleError<EquipamentoLocal[]>('getEquipmentsByLocal', []))
+    );
+  }
+
+  private handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+      console.error(error);
+      console.log(`${operation} failed: ${error.message}`);
+
+      return of(result as T);
+    };
   }
 }

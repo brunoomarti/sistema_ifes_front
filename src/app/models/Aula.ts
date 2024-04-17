@@ -6,5 +6,6 @@ export interface Aula {
   _id: number,
   discipline: Disciplina,
   teacher: Professor,
-  semester: Semestre
+  semester: Semestre,
+  allocated: boolean
 }

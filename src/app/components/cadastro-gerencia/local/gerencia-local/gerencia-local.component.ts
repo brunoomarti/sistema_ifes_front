@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
@@ -10,6 +10,7 @@ import { ReloadService } from '../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Local } from '../../../../models/Local';
 import { EdicaoLocalComponent } from '../edicao-local/edicao-local.component';
+import { EquipamentoLocal } from '../../../../models/EquipamentoLocal';
 
 @Component({
   selector: 'app-gerencia-local',
@@ -18,15 +19,18 @@ import { EdicaoLocalComponent } from '../edicao-local/edicao-local.component';
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    NgIf,
+    NgFor
   ],
   templateUrl: './gerencia-local.component.html',
   styleUrl: './gerencia-local.component.css'
 })
 export class GerenciaLocalComponent implements OnInit {
 
-  locais: any[] = [];
+  locais: Local[] = [];
   dataSource: any;
+  itensInseridos: EquipamentoLocal[] = [];
   mensagemSnackbarAcerto: string = 'Local excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir local.';
 
@@ -43,6 +47,7 @@ export class GerenciaLocalComponent implements OnInit {
 
   ngOnInit(): void {
     this.atualizaTabela();
+
   }
 
   atualizaTabela() {
@@ -51,6 +56,8 @@ export class GerenciaLocalComponent implements OnInit {
       this.dataSource = new MatTableDataSource<Local>(this.locais);
       this.dataSource.paginator = this.paginator;
     });
+
+    console.log(this.service.listar())
   }
 
   editar(local: { name: string }): void {

@@ -22,6 +22,16 @@
         <td mat-cell *matCellDef="let local"> {{ local.capacity }} <td>
       </ng-container>
 
+      <ng-container matColumnDef="equipments">
+        <th mat-header-cell *matHeaderCellDef>Equipamentos</th>
+        <td mat-cell *matCellDef="let local">
+          <div *ngFor="let equipamento of local.equipments">
+            {{ equipamento.equipment.name }} - ({{ equipamento.quantity }})
+            <br>
+          </div>
+        <td>
+      </ng-container>
+
       <ng-container matColumnDef="actions">
         <th mat-header-cell *matHeaderCellDef>
           <div class="thButton">
@@ -43,8 +53,8 @@
         </td>
       </ng-container>
 
-      <tr class="header-row" mat-header-row *matHeaderRowDef="['name', 'capacity', 'actions']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['name', 'capacity', 'actions']"></tr>
+      <tr class="header-row" mat-header-row *matHeaderRowDef="['name', 'capacity', 'equipments', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'capacity', 'equipments', 'actions']"></tr>
     </table>
 
     <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->

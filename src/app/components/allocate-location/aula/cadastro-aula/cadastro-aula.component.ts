@@ -52,7 +52,8 @@ export class CadastroAulaComponent {
       _id: [0],
       discipline: new FormControl(''),
       teacher: new FormControl(''),
-      semester: new FormControl('')
+      semester: new FormControl(''),
+      allocated: false
     });
   }
 
@@ -76,7 +77,8 @@ export class CadastroAulaComponent {
         _id: obj._id,
         discipline: obj.discipline,
         teacher: obj.teacher,
-        semester: obj.semester
+        semester: obj.semester,
+        allocated: obj.allocated
       });
     }
   }
@@ -90,10 +92,7 @@ export class CadastroAulaComponent {
       this.form.patchValue({ discipline: selectedDiscipline });
       this.form.patchValue({ teacher: selectedTeacher });
       this.form.patchValue({ semester: selectedSemester });
-      this.form.patchValue([selectedDiscipline + ' (' + selectedTeacher.name + ')']);
     }
-
-    console.log(this.form.value)
 
     this.aulaService.save(this.form.value).subscribe(
       result => {
@@ -136,10 +135,10 @@ export class CadastroAulaComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'cadastrarNovo') {
-        this.form.get('name')?.setValue('');
         this.form.get('discipline')?.setValue('');
         this.form.get('teacher')?.setValue('');
         this.form.get('semester')?.setValue('');
+        this.form.get('allocated')?.setValue(false);
       } else {
         this.router.navigate(['/alocar-local/gerencia-aula']);
       }
