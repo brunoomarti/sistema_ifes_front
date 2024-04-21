@@ -57,7 +57,8 @@ export class AlocaAulaComponent implements OnInit {
       startDate: null,
       endDate: null,
       selectedTimes: new FormControl([]),
-      location: null
+      location: null,
+      type: 'Aula'
     });
   }
 
@@ -81,7 +82,8 @@ export class AlocaAulaComponent implements OnInit {
         startDate: null,
         endDate: null,
         selectedTimes: null,
-        location: null
+        location: null,
+        type: 'Aula'
       });
     }
   }
@@ -89,8 +91,11 @@ export class AlocaAulaComponent implements OnInit {
   onSubmit() {
     const selectedClasse = this.turmas.find(obj => obj._id == this.form.value.classe);
 
-    if (selectedClasse) {
+    const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
+
+    if (selectedClasse && selectedLocation) {
       this.form.patchValue({ classe: selectedClasse });
+      this.form.patchValue({ location: selectedLocation });
     }
 
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());

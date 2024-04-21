@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EdicaoEventoComponent } from '../edicao-evento/edicao-evento.component';
+import { AlocaEventoComponent } from '../aloca-evento/aloca-evento.component';
 
 @Component({
   selector: 'app-gerencia-evento',
@@ -100,8 +101,16 @@ export class GerenciaEventoComponent implements OnInit {
     this.router.navigate(['/alocar-local/cadastro-evento']);
   }
 
-  alocarAula(evento: Evento): void {
+  alocarEvento(evento: Evento): void {
+    const dialogRef = this.dialog.open(AlocaEventoComponent, {
+      disableClose: true,
+      backdropClass: 'backdrop',
+      data: { evento }
+    });
 
+    dialogRef.afterClosed().subscribe(() => {
+      this.atualizaTabela();
+    });
   }
 
   changeText(text: string, isHovering: boolean) {

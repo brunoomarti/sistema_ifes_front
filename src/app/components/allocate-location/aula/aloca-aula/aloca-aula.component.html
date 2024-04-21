@@ -1,6 +1,6 @@
 <div>
   <div class="dialog-container">
-    <p class="pageTitle">Você está alocando:</p>
+    <p class="pageTitle">Você está alocando uma aula.</p>
     <p class="pageText">
       Disciplina: {{ data.aula.discipline.name }}<br />
       Professor: {{ data.aula.teacher.name }}<br />
@@ -43,7 +43,10 @@
           <label for="schedule">Horário: (Selecione um ou mais)</label>
           <div id="options" class="dropdown-content">
             <ng-container *ngFor="let horario of horarios">
-              <label><input type="checkbox" [value]="horario._id"> {{ horario.startTime }} ~ {{ horario.endTime }}</label>
+              <label
+                ><input type="checkbox" [value]="horario._id" />
+                {{ horario.startTime }} ~ {{ horario.endTime }}</label
+              >
             </ng-container>
           </div>
         </div>

@@ -27,7 +27,7 @@
         <td mat-cell *matCellDef="let evento">
           <ng-container *ngIf="!evento.allocated; else alocado">
             <button mat-button
-                    (click)="alocarAula(evento)"
+                    (click)="alocarEvento(evento)"
                     (mouseover)="changeText('alocar', true)"
                     (mouseleave)="changeText('alocar', false)"
                     class="button two">
