@@ -6,8 +6,9 @@ import { Turma } from "./Turma";
 export interface Alocar {
   _id: number,
   lesson: Aula,
-  turma: Turma,
+  classe: Turma,
   schedule: Horario,
-  date: Date,
+  startDate: Date,
+  endDate: Date,
   location: Local
 }

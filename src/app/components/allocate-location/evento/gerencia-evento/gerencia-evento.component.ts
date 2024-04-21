@@ -29,6 +29,7 @@ export class GerenciaEventoComponent implements OnInit {
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Evento excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir evento.';
+  hoverText: string = 'Não alocado';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -97,6 +98,18 @@ export class GerenciaEventoComponent implements OnInit {
 
   cadastrar() {
     this.router.navigate(['/alocar-local/cadastro-evento']);
+  }
+
+  alocarAula(evento: Evento): void {
+
+  }
+
+  changeText(text: string, isHovering: boolean) {
+    if (isHovering) {
+      this.hoverText = text === 'alocar' ? 'Alocar agora' : this.hoverText;
+    } else {
+      this.hoverText = text === 'alocar' ? 'Não alocado' : this.hoverText;
+    }
   }
 
 }

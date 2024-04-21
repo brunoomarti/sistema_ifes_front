@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Aula } from '../../../../models/Aula';
 import { EdicaoAulaComponent } from '../edicao-aula/edicao-aula.component';
+import { AlocaAulaComponent } from '../aloca-aula/aloca-aula.component';
 
 @Component({
   selector: 'app-gerencia-aula',
@@ -28,6 +29,7 @@ export class GerenciaAulaComponent implements OnInit {
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Disciplina excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir disciplina.';
+  hoverText: string = 'Não alocado';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -95,5 +97,26 @@ export class GerenciaAulaComponent implements OnInit {
   cadastrar() {
     this.router.navigate(['/alocar-local/cadastro-aula']);
   }
+
+  alocarAula(aula: Aula): void {
+    const dialogRef = this.dialog.open(AlocaAulaComponent, {
+      disableClose: true,
+      backdropClass: 'backdrop',
+      data: { aula }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.atualizaTabela();
+    });
+  }
+
+  changeText(text: string, isHovering: boolean) {
+    if (isHovering) {
+      this.hoverText = text === 'alocar' ? 'Alocar agora' : this.hoverText;
+    } else {
+      this.hoverText = text === 'alocar' ? 'Não alocado' : this.hoverText;
+    }
+  }
+
 
 }

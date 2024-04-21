@@ -1,0 +1,58 @@
+<div>
+  <div class="dialog-container">
+    <p class="pageTitle">Você está alocando:</p>
+    <p class="pageText">
+      Disciplina: {{ data.aula.discipline.name }}<br />
+      Professor: {{ data.aula.teacher.name }}<br />
+      Semestre: {{ data.aula.semester.semester }}<br />
+    </p>
+
+    <form [formGroup]="form">
+      <div class="newInput">
+        <label for="classe">Turma:</label>
+        <select formControlName="classe" required>
+          <option *ngFor="let turma of turmas" [value]="turma._id">
+            {{ turma.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="newInput">
+        <label for="location">Local:</label>
+        <select formControlName="location" required>
+          <option *ngFor="let local of locais" [value]="local._id">
+            {{ local.name }}
+          </option>
+        </select>
+      </div>
+
+      <div class="selectGroup">
+        <div class="newInput">
+          <label for="startDate">Data Inicial:</label>
+          <input type="date" formControlName="startDate" required />
+        </div>
+
+        <div class="newInput">
+          <label for="endDate">Data Final:</label>
+          <input type="date" formControlName="endDate" required />
+        </div>
+      </div>
+
+      <div class="newInput">
+        <div class="dropdown">
+          <label for="schedule">Horário: (Selecione um ou mais)</label>
+          <div id="options" class="dropdown-content">
+            <ng-container *ngFor="let horario of horarios">
+              <label><input type="checkbox" [value]="horario._id"> {{ horario.startTime }} ~ {{ horario.endTime }}</label>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Alocar aula</button>
+      </div>
+    </form>
+  </div>
+</div>

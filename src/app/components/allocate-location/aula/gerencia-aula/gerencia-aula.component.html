@@ -28,8 +28,21 @@
       </ng-container>
 
       <ng-container matColumnDef="allocated">
-        <th mat-header-cell *matHeaderCellDef>Alocado</th>
-        <td mat-cell *matCellDef="let aula"> {{ aula.allocated }} <td>
+        <th mat-header-cell *matHeaderCellDef>Alocação</th>
+        <td mat-cell *matCellDef="let aula">
+          <ng-container *ngIf="!aula.allocated; else alocado">
+            <button mat-button
+                    (click)="alocarAula(aula)"
+                    (mouseover)="changeText('alocar', true)"
+                    (mouseleave)="changeText('alocar', false)"
+                    class="button two">
+              {{ hoverText }}
+            </button>
+          </ng-container>
+          <ng-template #alocado>
+            <span>Já alocado</span>
+          </ng-template>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
@@ -42,11 +55,11 @@
           </div>
         </th>
         <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
-          <button mat-button (click)="editar(equipamento)" class="button 2">
+          <button mat-button (click)="editar(equipamento)" class="button two">
             <span class="material-symbols-outlined table-button-icon">edit</span>
             Editar
           </button>
-          <button mat-button (click)="excluir(equipamento)" class="button 2 delete-button">
+          <button mat-button (click)="excluir(equipamento)" class="button two delete-button">
             <span class="material-symbols-outlined table-button-icon">delete</span>
             Excluir
           </button>

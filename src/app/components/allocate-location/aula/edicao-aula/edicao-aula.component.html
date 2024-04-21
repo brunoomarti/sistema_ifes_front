@@ -1,7 +1,7 @@
 <div>
   <div class="dialog-container">
 
-    <p class="pageTitle">Você está editando: {{ data.aula.name }}</p>
+    <p class="pageTitle">Você está editando: {{ data.aula.discipline.name }} ({{ data.aula.teacher.name }})</p>
 
     <form [formGroup]="form">
 
