@@ -33,10 +33,8 @@
           <ng-container *ngIf="!aula.allocated; else alocado">
             <button mat-button
                     (click)="alocarAula(aula)"
-                    (mouseover)="changeText('alocar', true)"
-                    (mouseleave)="changeText('alocar', false)"
                     class="button two">
-              {{ hoverText }}
+              Alocar agora
             </button>
           </ng-container>
           <ng-template #alocado>

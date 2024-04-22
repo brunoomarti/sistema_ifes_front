@@ -1,0 +1,33 @@
+<div class="loginContent">
+  <div class="greenOverlay"></div>
+  <div class="dialog-container">
+
+    <div>
+      <p class="pageSuperTitle">Bem-vindo</p>
+      <p class="pageDescription">Faça o login com sua identificação</p>
+    </div>
+
+    <form [formGroup]="form">
+
+      <div class="newInput">
+        <input type="text" formControlName="login" placeholder="Identificação" required>
+      </div>
+
+      <div class="newInput">
+        <input type="password" formControlName="password" placeholder="Senha" required>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button one" (click)="login()">Acessar</button>
+      </div>
+
+    </form>
+
+  </div>
+
+  <img class="ifesLogo" src="../../../../assets/images/logo-ifes-branco.png" alt="">
+
+  <div>
+    <img class="loginImg" src="../../../../assets/images/abstract3.jpg" alt="">
+  </div>
+</div>

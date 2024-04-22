@@ -1,0 +1,39 @@
+.loginContent {
+  position: relative;
+  overflow: hidden;
+}
+
+.loginImg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 99;
+}
+
+.greenOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--secondary-color);
+  mix-blend-mode: multiply;
+  opacity: 0.95;
+  z-index: 100;
+}
+
+.dialog-container {
+  width: 250px;
+}
+
+.ifesLogo {
+  position: absolute;
+  width: 150px;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 101;
+}

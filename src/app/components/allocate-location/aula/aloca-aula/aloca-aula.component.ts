@@ -13,6 +13,8 @@ import { Local } from '../../../../models/Local';
 import { LocalService } from '../../../cadastro-gerencia/local/service/local.service';
 import { HorarioService } from '../../../cadastro-gerencia/horario/service/horario.service';
 import { Horario } from '../../../../models/Horario';
+import { Semestre } from '../../../../models/Semestre';
+import { SemestreService } from '../../../cadastro-gerencia/semestre/service/semestre.service';
 
 @Component({
   selector: 'app-aloca-aula',
@@ -35,6 +37,7 @@ export class AlocaAulaComponent implements OnInit {
   locais: Local[] = [];
   horarios: Horario[] = [];
   selectedTimes: Horario[] = [];
+  semestres: Semestre[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<AlocaAulaComponent>,
@@ -42,6 +45,7 @@ export class AlocaAulaComponent implements OnInit {
     private turmaService: TurmaService,
     private localService: LocalService,
     private horarioService: HorarioService,
+    private semestreService: SemestreService,
     private allocateService: AllocateService,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
@@ -58,6 +62,7 @@ export class AlocaAulaComponent implements OnInit {
       endDate: null,
       selectedTimes: this.formBuilder.array([]),
       location: null,
+      semester: null,
       type: 'Aula'
     });
   }
@@ -75,6 +80,10 @@ export class AlocaAulaComponent implements OnInit {
       this.locais = locais;
     });
 
+    this.semestreService.listar().subscribe(semestres => {
+      this.semestres = semestres;
+    });
+
     this.listarHorarios();
 
     const obj: Aula = this.data.aula;
@@ -86,6 +95,7 @@ export class AlocaAulaComponent implements OnInit {
         startDate: null,
         endDate: null,
         selectedTimes: null,
+        semester: null,
         location: null,
         type: 'Aula'
       });
@@ -107,8 +117,26 @@ export class AlocaAulaComponent implements OnInit {
       this.form.patchValue({ location: selectedLocation });
     }
 
+<<<<<<< HEAD
     console.log('Form Value:', this.form.value);
     console.log('Selected Times:', this.selectedTimesFormArray.value);
+=======
+    const periodo = (document.getElementById("periodoSelect") as HTMLSelectElement).value;
+
+    if (periodo === "semestre") {
+      const selectedSemesterId = this.data.aula.semester;
+      const selectedSemester = this.semestres.find(semestre => semestre._id === selectedSemesterId);
+
+      if (selectedSemester) {
+        const startDate = selectedSemester.startDate;
+        const endDate = selectedSemester.endDate;
+        this.form.patchValue({ startDate: startDate });
+        this.form.patchValue({ endDate: endDate });
+      }
+    } else if (periodo === "dia") {
+      this.form.patchValue({ endDate: this.form.value.startDate });
+    }
+>>>>>>> d89c6dacc01fc230cf1eae49043660331a826ef1
 
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
@@ -152,6 +180,20 @@ export class AlocaAulaComponent implements OnInit {
 
   isSelected(horarioId: number): boolean {
     return this.selectedTimesFormArray.controls.some(ctrl => ctrl.value._id === horarioId);
+  }
+
+  toggleFields() {
+    const periodo = (document.getElementById("periodoSelect") as HTMLSelectElement).value;
+    const dataInicial = document.getElementById("dataInicial");
+    const semestre = document.getElementById("semestre");
+
+    if (periodo === "dia") {
+      dataInicial?.classList.remove("hidden");
+      // semestre?.classList.add("hidden");
+    } else if (periodo === "semestre") {
+      dataInicial?.classList.add("hidden");
+      // semestre?.classList.remove("hidden");
+    }
   }
 
 }
