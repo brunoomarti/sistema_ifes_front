@@ -9,6 +9,7 @@ import { MenuComponent } from './components/menu/menu.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { GuidePanelComponent } from './components/guide-panel/guide-panel.component';
 import { CadastroGerenciaComponent } from './components/cadastro-gerencia/cadastro-gerencia-principal/cadastro-gerencia.component';
+import { TelaLoginComponent } from './components/login/tela-login/tela-login.component';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,9 @@ import { CadastroGerenciaComponent } from './components/cadastro-gerencia/cadast
             CadastroTurmaComponent,
             CadastroCoordenadorComponent,
             CadastroDisciplinaComponent,
-            CadastroAlunoComponent],
+            CadastroAlunoComponent,
+            TelaLoginComponent,
+          ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { AuthGuard } from './auth.guard';
 
 @NgModule({
   declarations: [],
@@ -23,7 +24,8 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
     ReactiveFormsModule
   ],
   providers: [
-    provideHttpClient(withFetch())
+    provideHttpClient(withFetch()),
+    AuthGuard
   ],
 })
 export class AppModule { }

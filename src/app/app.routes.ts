@@ -27,6 +27,7 @@ import { GerenciaAulaComponent } from './components/allocate-location/aula/geren
 import { GerenciaEventoComponent } from './components/allocate-location/evento/gerencia-evento/gerencia-evento.component';
 import { CadastroEventoComponent } from './components/allocate-location/evento/cadastro-evento/cadastro-evento.component';
 import { GerenciaLocalComponent } from './components/cadastro-gerencia/local/gerencia-local/gerencia-local.component';
+import { TelaLoginComponent } from './components/login/tela-login/tela-login.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -61,6 +62,8 @@ export const routes: Routes = [
   { path: 'alocar-local/gerencia-aula', data: { title: 'SIFES | Gerenciar Aula' }, component: GerenciaAulaComponent },
 
   { path: 'horarios', component: SchedulesComponent },
+
+  { path: 'login', component: TelaLoginComponent },
   //{ path: '**',component: PageNotFoundComponent }, -- Caso queira criar uma pagina para NotFound
 ];
 

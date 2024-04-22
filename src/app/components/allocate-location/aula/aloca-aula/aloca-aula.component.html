@@ -28,14 +28,26 @@
 
       <div class="selectGroup">
         <div class="newInput">
-          <label for="startDate">Data Inicial:</label>
-          <input type="date" formControlName="startDate" required />
+          <label for="periodo">Período:</label>
+          <select name="periodo" id="periodoSelect" (change)="toggleFields()">
+            <option value="dia">Dia</option>
+            <option value="semestre">Semestre</option>
+          </select>
         </div>
 
-        <div class="newInput">
-          <label for="endDate">Data Final:</label>
-          <input type="date" formControlName="endDate" required />
+        <div id="dataInicial" class="newInput">
+          <label for="startDate">Data:</label>
+          <input type="date" name="startDate" id="startDate" required />
         </div>
+
+        <!-- <div id="semestre" class="newInput hidden">
+          <label for="semester">Selecione:</label>
+          <select formControlName="semester" id="semestreSelect">
+            <option *ngFor="let semestre of semestres" [value]="semestre._id">
+              {{ semestre.semester }}
+            </option>
+          </select>
+        </div> -->
       </div>
 
       <div class="newInput">
