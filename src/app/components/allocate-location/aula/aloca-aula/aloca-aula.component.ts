@@ -1,7 +1,7 @@
 import { Turma } from './../../../../models/Turma';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { TurmaService } from '../../../cadastro-gerencia/turma/service/turma.service';
@@ -56,10 +56,14 @@ export class AlocaAulaComponent implements OnInit {
       classe: new FormControl(''),
       startDate: null,
       endDate: null,
-      selectedTimes: new FormControl([]),
+      selectedTimes: this.formBuilder.array([]),
       location: null,
       type: 'Aula'
     });
+  }
+
+  get selectedTimesFormArray(): FormArray {
+    return this.form.get('selectedTimes') as FormArray;
   }
 
   ngOnInit(): void {
@@ -89,14 +93,22 @@ export class AlocaAulaComponent implements OnInit {
   }
 
   onSubmit() {
+
+
     const selectedClasse = this.turmas.find(obj => obj._id == this.form.value.classe);
 
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
+
+    startDate: this.form.value.startDate
+    endDate: this.form.value.endDate
 
     if (selectedClasse && selectedLocation) {
       this.form.patchValue({ classe: selectedClasse });
       this.form.patchValue({ location: selectedLocation });
     }
+
+    console.log('Form Value:', this.form.value);
+    console.log('Selected Times:', this.selectedTimesFormArray.value);
 
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
@@ -118,20 +130,28 @@ export class AlocaAulaComponent implements OnInit {
 
   listarHorarios(): void {
     this.horarioService.listar().subscribe(horarios => {
-      this.horarios = horarios.map(horario => {
-        return {
-          _id: horario._id,
-          startTime: this.formatarHora(horario.startTime),
-          endTime: this.formatarHora(horario.endTime)
-        };
-      });
+      this.horarios = horarios.map(horario => ({
+        _id: horario._id,
+        startTime: horario.startTime,
+        endTime: horario.endTime
+      }));
     });
   }
 
-  formatarHora(time: String): String {
-    const date = new Date(time.toString());
-    const formattedTime = this.datePipe.transform(date, 'HH:mm');
-    return formattedTime !== null ? formattedTime : '';
+  onCheckboxChange(event: Event, horario: Horario): void {
+    const checkbox = event.target as HTMLInputElement;
+    if (checkbox.checked) {
+      this.selectedTimesFormArray.push(new FormControl(horario));
+    } else {
+      const index = this.selectedTimesFormArray.controls.findIndex(ctrl => ctrl.value._id === horario._id);
+      if (index !== -1) {
+        this.selectedTimesFormArray.removeAt(index);
+      }
+    }
+  }
+
+  isSelected(horarioId: number): boolean {
+    return this.selectedTimesFormArray.controls.some(ctrl => ctrl.value._id === horarioId);
   }
 
 }

@@ -43,14 +43,19 @@
           <label for="schedule">Horário: (Selecione um ou mais)</label>
           <div id="options" class="dropdown-content">
             <ng-container *ngFor="let horario of horarios">
-              <label
-                ><input type="checkbox" [value]="horario._id" />
-                {{ horario.startTime }} ~ {{ horario.endTime }}</label
-              >
+              <label>
+                <input type="checkbox"
+                       [value]="horario._id"
+                       (change)="onCheckboxChange($event, horario)"
+                       [checked]="isSelected(horario._id)">
+                {{ horario.startTime }} ~ {{ horario.endTime }}
+              </label>
             </ng-container>
           </div>
         </div>
       </div>
+
+
 
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>

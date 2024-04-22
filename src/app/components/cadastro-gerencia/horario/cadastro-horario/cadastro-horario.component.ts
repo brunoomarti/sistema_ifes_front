@@ -53,33 +53,24 @@ export class CadastroHorarioComponent implements OnInit {
     }
   }
 
-  converterParaDate(hora: string){
+  formatarHora(hora: string): string {
     const [horas, minutos] = hora.split(":");
 
     const horasInt: number = parseInt(horas, 10);
     const minutosInt: number = parseInt(minutos, 10);
 
-    const currentDateTime = new Date(); 
-
-    currentDateTime.setHours(horasInt);
-    currentDateTime.setMinutes(minutosInt);
-
-    return currentDateTime;
+    // Formata a hora e minuto para garantir o formato "HH:mm"
+    const horaFormatada = `${horasInt.toString().padStart(2, '0')}:${minutosInt.toString().padStart(2, '0')}`;
+    return horaFormatada;
   }
 
   onSubmit() {
-    this.form.value.startTime = this.converterParaDate(this.form.value.startTime);
-    this.form.value.endTime = this.converterParaDate(this.form.value.endTime);
-
-    const horaInicio = this.form.value.startTime.getHours() ;
-    const horaFim = this.form.value.endTime.getHours();
-
-    const minutoInicio = this.form.value.endTime.getHours();
-    const minutoFim = this.form.value.endTime.getMinutes();
+    this.form.value.startTime = this.formatarHora(this.form.value.startTime);
+    this.form.value.endTime = this.formatarHora(this.form.value.endTime);
 
     this.service.save(this.form.value).subscribe(
       result => {
-        const formattedTimeRange = `${horaInicio}:${minutoInicio} ~ ${horaFim}:${minutoFim} `;
+        const formattedTimeRange = `${this.form.value.startTime} ~ ${this.form.value.endTime}`;
 
         const dialogData = {
           title: 'Horário Cadastrado',
