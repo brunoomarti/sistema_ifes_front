@@ -10,8 +10,8 @@ export interface Alocar {
   event: Evento,
   classe: Turma,
   selectedTimes: AlocaHorario,
-  startDate: Date,
-  endDate: Date,
+  startDate: String,
+  endDate: String,
   location: Local,
   type: String
 }

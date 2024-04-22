@@ -13,3 +13,59 @@
 .groupTwo {
   width: 20%;
 }
+
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 700,
+  'GRAD' 0,
+  'opsz' 20;
+  padding: 0;
+  font-size: 16px;
+}
+
+.mat-column-actions {
+  width: 170px;
+  height: fit-content;
+  padding: 10px 0;
+}
+
+.delete-button:hover {
+  background-color: darkred !important;
+}
+
+.table-button-icon {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 20;
+}
+
+.header-row {
+  background-color: var(--primary-color);
+  color: white;
+  height: 35px;
+}
+
+table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
+table tr:first-child th:first-child {
+  border-top-left-radius: var(--secondary-boxes-radius);
+  border-bottom-left-radius: var(--secondary-boxes-radius);
+}
+
+table tr:first-child th:last-child {
+  border-top-right-radius: var(--secondary-boxes-radius);
+  border-bottom-right-radius: var(--secondary-boxes-radius);
+}
+
+mat-paginator {
+  font-size: var(--normal-font-size);
+}
+
+

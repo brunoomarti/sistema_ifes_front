@@ -103,8 +103,6 @@ export class AlocaAulaComponent implements OnInit {
   }
 
   onSubmit() {
-
-
     const selectedClasse = this.turmas.find(obj => obj._id == this.form.value.classe);
 
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
@@ -117,10 +115,8 @@ export class AlocaAulaComponent implements OnInit {
       this.form.patchValue({ location: selectedLocation });
     }
 
-<<<<<<< HEAD
     console.log('Form Value:', this.form.value);
     console.log('Selected Times:', this.selectedTimesFormArray.value);
-=======
     const periodo = (document.getElementById("periodoSelect") as HTMLSelectElement).value;
 
     if (periodo === "semestre") {
@@ -136,7 +132,6 @@ export class AlocaAulaComponent implements OnInit {
     } else if (periodo === "dia") {
       this.form.patchValue({ endDate: this.form.value.startDate });
     }
->>>>>>> d89c6dacc01fc230cf1eae49043660331a826ef1
 
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
