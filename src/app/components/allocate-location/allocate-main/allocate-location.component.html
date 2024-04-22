@@ -62,18 +62,39 @@
 
       <ng-container matColumnDef="classEvent">
         <th mat-header-cell *matHeaderCellDef>Aula/Evento</th>
-        <td mat-cell *matCellDef="let alocacao"> {{ alocacao.lesson.discipline.name }} {{ alocacao.event.name }} <td>
+        <td mat-cell *matCellDef="let alocacao">
+          <ng-container *ngIf="alocacao.type === 'Aula'">
+            {{ alocacao.lesson.discipline.name }} 
+          </ng-container>
+          <ng-container *ngIf="alocacao.type !== 'Aula'">
+            {{ alocacao.event.name }} 
+            
+          </ng-container>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="teacher">
-        <th mat-header-cell *matHeaderCellDef>Professor</th>
-        <!-- <td mat-cell *matCellDef="let alocacao"> {{ alocacao.lesson.teacher.name }} <td> -->
-          <td mat-cell *matCellDef="let alocacao"> sim <td>
+        <th mat-header-cell *matHeaderCellDef>Aula/Evento</th>
+        <td mat-cell *matCellDef="let alocacao">
+          <ng-container *ngIf="alocacao.type === 'Aula'">
+            {{ alocacao.lesson.teacher.name }} 
+          </ng-container>
+          <ng-container *ngIf="alocacao.type !== 'Aula'">
+            - 
+          </ng-container>
+        </td>
       </ng-container>
-
+      
       <ng-container matColumnDef="class">
-        <th mat-header-cell *matHeaderCellDef>Turma</th>
-        <td mat-cell *matCellDef="let alocacao"> {{ alocacao.classe.name }} <td>
+        <th mat-header-cell *matHeaderCellDef>Aula/Evento</th>
+        <td mat-cell *matCellDef="let alocacao">
+          <ng-container *ngIf="alocacao.type === 'Aula'">
+            {{ alocacao.classe.name }} 
+          </ng-container>
+          <ng-container *ngIf="alocacao.type !== 'Aula'">
+            - 
+          </ng-container>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="location">

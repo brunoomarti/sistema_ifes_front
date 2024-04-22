@@ -59,4 +59,8 @@ export class LocalService {
       return of(result as T);
     };
   }
+
+  getLocaisAtivos(): Observable<Local[]> {
+    return this.httpClient.get<Local[]>(`${this.API}/availableLocal`);
+  }
 }

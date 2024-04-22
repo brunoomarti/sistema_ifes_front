@@ -66,11 +66,23 @@ export class EdicaoHorarioComponent implements OnInit {
 
     return currentDateTime;
   }
+   
+  formatarHora(hora: string): string {
+    const [horas, minutos] = hora.split(":");
+
+    const horasInt: number = parseInt(horas, 10);
+    const minutosInt: number = parseInt(minutos, 10);
+
+    // Formata a hora e minuto para garantir o formato "HH:mm"
+    const horaFormatada = `${horasInt.toString().padStart(2, '0')}:${minutosInt.toString().padStart(2, '0')}`;
+    return horaFormatada;
+  }
+
 
   onSubmit() {
-    this.form.value.startTime = this.converterParaDate(this.form.value.startTime);
-    this.form.value.endTime = this.converterParaDate(this.form.value.endTime);
-    
+    this.form.value.startTime = this.formatarHora(this.form.value.startTime);
+    this.form.value.endTime = this.formatarHora(this.form.value.endTime);
+
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 

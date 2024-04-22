@@ -1,7 +1,6 @@
 import { Aula } from "./Aula";
 import { Local } from "./Local";
 import { Turma } from "./Turma";
-import { AlocaHorario } from "./AlocaHorario";
 import { Evento } from "./Evento";
 
 export interface Alocar {
@@ -9,7 +8,6 @@ export interface Alocar {
   lesson: Aula,
   event: Evento,
   classe: Turma,
-  selectedTimes: AlocaHorario,
   startDate: String,
   endDate: String,
   location: Local,

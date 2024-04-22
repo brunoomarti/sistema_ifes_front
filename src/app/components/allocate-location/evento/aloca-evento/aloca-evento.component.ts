@@ -9,7 +9,6 @@ import { AllocateService } from '../../allocate-main/service/allocate.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { Evento } from '../../../../models/Evento';
-import { AlocaHorario } from '../../../../models/AlocaHorario';
 
 @Component({
   selector: 'app-aloca-evento',
@@ -47,14 +46,13 @@ export class AlocaEventoComponent implements OnInit {
       endDate: null,
       startTime: null,
       endTime: null,
-      selectedTimes: new FormControl([]),
       location: null,
       type: 'Evento'
     });
   }
 
   ngOnInit(): void {
-    this.localService.listar().subscribe(locais => {
+    this.localService.getLocaisAtivos().subscribe(locais => {
       this.locais = locais;
     });
 
@@ -67,7 +65,6 @@ export class AlocaEventoComponent implements OnInit {
         endDate: null,
         startTime: null,
         endTime: null,
-        selectedTimes: null,
         location: null,
         type: 'Evento'
       });
@@ -77,20 +74,12 @@ export class AlocaEventoComponent implements OnInit {
   onSubmit() {
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
 
-    const selectedTimes: AlocaHorario = {
-      _id: 0,
-      schedule: {
-        _id: 0,
-        startTime: this.form.value.startTime,
-        endTime: this.form.value.endTime
-      }
-    };
 
-    if (selectedLocation && selectedTimes && this.form.value.startDate) {
-      this.form.patchValue({ classe: selectedLocation });
-      this.form.patchValue({ selectedTimes: selectedTimes });
+    if (selectedLocation && this.form.value.startDate) {
+      this.form.patchValue({ location: selectedLocation }); 
       this.form.patchValue({ endDate: this.form.value.startDate });
     }
+
 
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }

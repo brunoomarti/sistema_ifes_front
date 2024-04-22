@@ -76,12 +76,12 @@ export class AlocaAulaComponent implements OnInit {
       this.turmas = turmas;
     });
 
-    this.localService.listar().subscribe(locais => {
+    this.localService.getLocaisAtivos().subscribe(locais => {
       this.locais = locais;
     });
 
     this.semestreService.listar().subscribe(semestres => {
-      this.semestres = semestres;
+       this.semestres = semestres;
     });
 
     this.listarHorarios();
@@ -115,8 +115,6 @@ export class AlocaAulaComponent implements OnInit {
       this.form.patchValue({ location: selectedLocation });
     }
 
-    console.log('Form Value:', this.form.value);
-    console.log('Selected Times:', this.selectedTimesFormArray.value);
     const periodo = (document.getElementById("periodoSelect") as HTMLSelectElement).value;
 
     if (periodo === "semestre") {
@@ -132,6 +130,9 @@ export class AlocaAulaComponent implements OnInit {
     } else if (periodo === "dia") {
       this.form.patchValue({ endDate: this.form.value.startDate });
     }
+
+    console.log('Form Value:', this.form.value);
+    console.log('Selected Times:', this.selectedTimesFormArray.value);
 
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
