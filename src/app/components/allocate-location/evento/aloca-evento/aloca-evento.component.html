@@ -21,15 +21,19 @@
         <input type="date" formControlName="startDate" required />
       </div>
 
-      <div class="selectGroup">
-        <div class="newInput">
-          <label for="startTime">Início:</label>
-          <input type="time" formControlName="startTime" placeholder="Horário de início da aula" required>
-        </div>
-
-        <div class="newInput">
-          <label for="endTime">Fim:</label>
-          <input type="time" formControlName="endTime" placeholder="Horário de término da aula" required>
+      <div class="newInput">
+        <div class="dropdown">
+          <label for="schedule">Horário: (Selecione um ou mais)</label>
+          <div id="options" class="dropdown-content">
+            <ng-container *ngFor="let horario of horarios">
+              <label>
+                <input type="checkbox"
+                       [value]="horario._id"
+                       (change)="onCheckboxChange($event, horario)">
+                {{ horario.startTime }} ~ {{ horario.endTime }}
+              </label>
+            </ng-container>
+          </div>
         </div>
       </div>
 

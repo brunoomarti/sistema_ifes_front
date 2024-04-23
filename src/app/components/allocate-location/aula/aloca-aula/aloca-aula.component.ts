@@ -37,6 +37,7 @@ export class AlocaAulaComponent implements OnInit {
   locais: Local[] = [];
   horarios: Horario[] = [];
   selectedTimes: Horario[] = [];
+  indexTimes: number[] = [];
   semestres: Semestre[] = [];
 
   constructor(
@@ -60,7 +61,7 @@ export class AlocaAulaComponent implements OnInit {
       classe: new FormControl(''),
       startDate: null,
       endDate: null,
-      selectedTimes: this.formBuilder.array([]),
+      selectedTimes:[],
       location: null,
       semester: null,
       type: 'Aula'
@@ -94,7 +95,7 @@ export class AlocaAulaComponent implements OnInit {
         classe: null,
         startDate: null,
         endDate: null,
-        selectedTimes: null,
+        selectedTimes: [],
         semester: null,
         location: null,
         type: 'Aula'
@@ -105,15 +106,24 @@ export class AlocaAulaComponent implements OnInit {
   onSubmit() {
     const selectedClasse = this.turmas.find(obj => obj._id == this.form.value.classe);
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
+    
+
+    this.indexTimes.forEach(hr => {
+      const selectedHour = this.horarios.find(obj => obj._id == hr);
+      if (selectedHour){
+        this.selectedTimes.push(selectedHour);
+      }
+    })
 
     if(this.form.value.startDate === null || this.form.value.endDate === null){
       this.form.patchValue({startDate: this.form.value.lesson.semester.startDate});
       this.form.patchValue({endDate: this.form.value.lesson.semester.endDate});
     }
 
-    if (selectedClasse && selectedLocation) {
+    if (selectedClasse && selectedLocation ) {
       this.form.patchValue({ classe: selectedClasse });
-      this.form.patchValue({ location: selectedLocation });
+      this.form.patchValue({ location: selectedLocation }); 
+      this.form.patchValue({ selectedTimes: this.selectedTimes })
     }
 
     console.log(this.form.value)
@@ -146,21 +156,19 @@ export class AlocaAulaComponent implements OnInit {
     });
   }
 
-  onCheckboxChange(event: Event, horario: Horario): void {
-    const checkbox = event.target as HTMLInputElement;
-    if (checkbox.checked) {
-      this.selectedTimesFormArray.push(new FormControl(horario));
+
+  onCheckboxChange(event: any, horario: any) {
+    if (event.target.checked) {
+      this.indexTimes.push(horario._id); 
     } else {
-      const index = this.selectedTimesFormArray.controls.findIndex(ctrl => ctrl.value._id === horario._id);
+      const index = this.indexTimes.indexOf(horario._id);
       if (index !== -1) {
-        this.selectedTimesFormArray.removeAt(index);
+        this.indexTimes.splice(index, 1); 
       }
     }
+    console.log(this.indexTimes); 
   }
 
-  isSelected(horarioId: number): boolean {
-    return this.selectedTimesFormArray.controls.some(ctrl => ctrl.value._id === horarioId);
-  }
 
   toggleFields() {
     const periodo = (document.getElementById("periodoSelect") as HTMLSelectElement).value;

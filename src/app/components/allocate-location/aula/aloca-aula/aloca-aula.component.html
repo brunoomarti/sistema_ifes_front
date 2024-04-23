@@ -54,8 +54,7 @@
               <label>
                 <input type="checkbox"
                        [value]="horario._id"
-                       (change)="onCheckboxChange($event, horario)"
-                       [checked]="isSelected(horario._id)">
+                       (change)="onCheckboxChange($event, horario)">
                 {{ horario.startTime }} ~ {{ horario.endTime }}
               </label>
             </ng-container>

@@ -9,6 +9,8 @@ import { AllocateService } from '../../allocate-main/service/allocate.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { Evento } from '../../../../models/Evento';
+import { Horario } from '../../../../models/Horario';
+import { HorarioService } from '../../../cadastro-gerencia/horario/service/horario.service';
 
 @Component({
   selector: 'app-aloca-evento',
@@ -27,11 +29,15 @@ export class AlocaEventoComponent implements OnInit {
   mensagemSnackbarAcerto: string = 'Evento alocado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao alocar evento.';
   locais: Local[] = [];
+  horarios: Horario[] = [];
+  selectedTimes: Horario[] = [];
+  indexTimes: number[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<AlocaEventoComponent>,
     private formBuilder: FormBuilder,
     private localService: LocalService,
+    private horarioService: HorarioService,
     private allocateService: AllocateService,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
@@ -44,8 +50,7 @@ export class AlocaEventoComponent implements OnInit {
       event: null,
       startDate: null,
       endDate: null,
-      startTime: null,
-      endTime: null,
+      selectedTimes: [],
       location: null,
       type: 'Evento'
     });
@@ -56,6 +61,8 @@ export class AlocaEventoComponent implements OnInit {
       this.locais = locais;
     });
 
+    this.listarHorarios();
+
     const obj: Evento = this.data.evento;
     if (obj) {
       this.form.setValue({
@@ -63,26 +70,59 @@ export class AlocaEventoComponent implements OnInit {
         event: obj,
         startDate: null,
         endDate: null,
-        startTime: null,
-        endTime: null,
+        selectedTimes: [],
         location: null,
         type: 'Evento'
       });
     }
+    
   }
+  
 
   onSubmit() {
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
 
 
+    this.indexTimes.forEach(hr => {
+      const selectedHour = this.horarios.find(obj => obj._id == hr);
+      if (selectedHour){
+        this.selectedTimes.push(selectedHour);
+      }
+    })
+    
     if (selectedLocation && this.form.value.startDate) {
       this.form.patchValue({ location: selectedLocation }); 
       this.form.patchValue({ endDate: this.form.value.startDate });
+      this.form.patchValue({ selectedTimes: this.selectedTimes })
     }
 
 
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
+
+  listarHorarios(): void {
+    this.horarioService.listar().subscribe(horarios => {
+      this.horarios = horarios.map(horario => ({
+        _id: horario._id,
+        startTime: horario.startTime,
+        endTime: horario.endTime
+      }));
+    });
+  }
+
+
+  onCheckboxChange(event: any, horario: any) {
+    if (event.target.checked) {
+      this.indexTimes.push(horario._id); 
+    } else {
+      const index = this.indexTimes.indexOf(horario._id);
+      if (index !== -1) {
+        this.indexTimes.splice(index, 1); 
+      }
+    }
+    console.log(this.indexTimes); 
+  }
+
 
   onCancel(): void {
     this.dialogRef.close();
