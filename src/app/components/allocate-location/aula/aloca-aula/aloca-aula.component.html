@@ -34,20 +34,16 @@
             <option value="semestre">Semestre</option>
           </select>
         </div>
+      </div>
 
-        <div id="dataInicial" class="newInput">
-          <label for="startDate">Data:</label>
-          <input type="date" name="startDate" id="startDate" required />
-        </div>
+      <div id="dataInicial" class="newInput">
+        <label for="startDate">Data Inicio:</label>
+        <input type="date" formControlName="startDate" required />
+      </div>
 
-        <!-- <div id="semestre" class="newInput hidden">
-          <label for="semester">Selecione:</label>
-          <select formControlName="semester" id="semestreSelect">
-            <option *ngFor="let semestre of semestres" [value]="semestre._id">
-              {{ semestre.semester }}
-            </option>
-          </select>
-        </div> -->
+      <div id="dataFim" class="newInput">
+        <label for="endDate">Data Fim:</label>
+        <input type="date" formControlName="endDate" required />
       </div>
 
       <div class="newInput">

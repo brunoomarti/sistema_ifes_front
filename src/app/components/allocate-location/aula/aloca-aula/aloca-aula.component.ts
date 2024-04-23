@@ -104,35 +104,19 @@ export class AlocaAulaComponent implements OnInit {
 
   onSubmit() {
     const selectedClasse = this.turmas.find(obj => obj._id == this.form.value.classe);
-
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
 
-    startDate: this.form.value.startDate
-    endDate: this.form.value.endDate
+    if(this.form.value.startDate === null || this.form.value.endDate === null){
+      this.form.patchValue({startDate: this.form.value.lesson.semester.startDate});
+      this.form.patchValue({endDate: this.form.value.lesson.semester.endDate});
+    }
 
     if (selectedClasse && selectedLocation) {
       this.form.patchValue({ classe: selectedClasse });
       this.form.patchValue({ location: selectedLocation });
     }
 
-    const periodo = (document.getElementById("periodoSelect") as HTMLSelectElement).value;
-
-    if (periodo === "semestre") {
-      const selectedSemesterId = this.data.aula.semester;
-      const selectedSemester = this.semestres.find(semestre => semestre._id === selectedSemesterId);
-
-      if (selectedSemester) {
-        const startDate = selectedSemester.startDate;
-        const endDate = selectedSemester.endDate;
-        this.form.patchValue({ startDate: startDate });
-        this.form.patchValue({ endDate: endDate });
-      }
-    } else if (periodo === "dia") {
-      this.form.patchValue({ endDate: this.form.value.startDate });
-    }
-
-    console.log('Form Value:', this.form.value);
-    console.log('Selected Times:', this.selectedTimesFormArray.value);
+    console.log(this.form.value)
 
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
@@ -181,15 +165,14 @@ export class AlocaAulaComponent implements OnInit {
   toggleFields() {
     const periodo = (document.getElementById("periodoSelect") as HTMLSelectElement).value;
     const dataInicial = document.getElementById("dataInicial");
-    const semestre = document.getElementById("semestre");
+    const dataFim = document.getElementById("dataFim");
 
     if (periodo === "dia") {
       dataInicial?.classList.remove("hidden");
-      // semestre?.classList.add("hidden");
+      dataFim?.classList.remove("hidden");
     } else if (periodo === "semestre") {
       dataInicial?.classList.add("hidden");
-      // semestre?.classList.remove("hidden");
+      dataFim?.classList.add("hidden");
     }
   }
-
 }
