@@ -75,9 +75,9 @@ export class AlocaEventoComponent implements OnInit {
         type: 'Evento'
       });
     }
-    
+
   }
-  
+
 
   onSubmit() {
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
@@ -89,10 +89,10 @@ export class AlocaEventoComponent implements OnInit {
         this.selectedTimes.push(selectedHour);
       }
     })
-    
+
     if (selectedLocation && this.form.value.startDate) {
-      this.form.patchValue({ location: selectedLocation }); 
-      this.form.patchValue({ endDate: this.form.value.startDate });
+      this.form.patchValue({ location: selectedLocation });
+      this.form.patchValue({ endDate: this.form.value.endDate });
       this.form.patchValue({ selectedTimes: this.selectedTimes })
     }
 
@@ -113,14 +113,14 @@ export class AlocaEventoComponent implements OnInit {
 
   onCheckboxChange(event: any, horario: any) {
     if (event.target.checked) {
-      this.indexTimes.push(horario._id); 
+      this.indexTimes.push(horario._id);
     } else {
       const index = this.indexTimes.indexOf(horario._id);
       if (index !== -1) {
-        this.indexTimes.splice(index, 1); 
+        this.indexTimes.splice(index, 1);
       }
     }
-    console.log(this.indexTimes); 
+    console.log(this.indexTimes);
   }
 
 
