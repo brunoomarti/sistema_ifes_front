@@ -1,0 +1,35 @@
+<div>
+  <div class="dialog-container dialog-container-two">
+    <p class="pageTitle">Matricular Aluno na Aula</p>
+    <p class="pageText">
+      Disciplina: {{ data.aula.discipline.name }}<br />
+      Professor: {{ data.aula.teacher.name }}<br />
+      Semestre: {{ data.aula.semester.semester }}<br />
+    </p>
+
+    <form [formGroup]="form">
+
+      <div class="newInput">
+        <div class="dropdown">
+          <label for="schedule">Alunos: (Selecione um ou mais)</label>
+          <div id="options" class="dropdown-content">
+            <ng-container *ngFor="let aluno of alunos">
+              <label>
+                <input type="checkbox"
+                       [value]="aluno._id"
+                       (change)="onCheckboxChange($event, aluno)">
+                {{ aluno.name }} ({{ aluno.studentCode }})
+              </label>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Matricular Aluno</button>
+      </div>
+
+    </form>
+  </div>
+</div>

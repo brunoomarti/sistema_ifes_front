@@ -25,7 +25,8 @@ import { EdicaoAlocacaoComponent } from './edicao-alocacao/edicao-alocacao.compo
 })
 export class AllocateLocationComponent implements OnInit {
 
-  alocacoes: any[] = [];
+  alocacoesAula: any[] = [];
+  alocacoesEvento: any[] = [];
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Alocação excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir alocação.';
@@ -40,13 +41,22 @@ export class AllocateLocationComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.atualizaTabela();
+    this.atualizaTabelaAula();
+    this.atualizaTabelaEvento();
   }
 
-  atualizaTabela() {
+  atualizaTabelaAula() {
     this.service.listar().subscribe(alocacoes => {
-      this.alocacoes = alocacoes;
-      this.dataSource = new MatTableDataSource<Alocar>(this.alocacoes);
+      this.alocacoesAula = alocacoes.filter(alocacao => alocacao.type === 'Aula');
+      this.dataSource = new MatTableDataSource<Alocar>(this.alocacoesAula);
+      this.dataSource.paginator = this.paginator;
+    });
+  }
+
+  atualizaTabelaEvento() {
+    this.service.listar().subscribe(alocacoes => {
+      this.alocacoesEvento = alocacoes.filter(alocacao => alocacao.type === 'Evento');
+      this.dataSource = new MatTableDataSource<Alocar>(this.alocacoesEvento);
       this.dataSource.paginator = this.paginator;
     });
   }
@@ -59,7 +69,7 @@ export class AllocateLocationComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.atualizaTabela();
+      this.atualizaTabelaAula();
     });
   }
 
@@ -67,10 +77,14 @@ export class AllocateLocationComponent implements OnInit {
     const confirmacao = confirm('Tem certeza que deseja excluir esta alocação?');
     if (confirmacao) {
       this.service.remove(alocacao._id).subscribe(() => {
-        this.alocacoes = this.alocacoes.filter(e => e._id !== alocacao._id);
-        this.onSucess(true);
+        this.alocacoesAula = this.alocacoesAula.filter(e => e._id !== alocacao._id);
+        if (alocacao.type === 'Evento'){
+          this.onSucess(true, true);
+        } else {
+          this.onSucess(true, false);
+        }
+
       }, error => {
-        console.error('Erro ao excluir evento:', error);
         this.onFailed();
       });
     }
@@ -80,13 +94,27 @@ export class AllocateLocationComponent implements OnInit {
     this.snackBar.open(this.mensagemSnackbarErro, '', { duration: 5000, panelClass: ['errorSnackbar'] });
   }
 
-  onSucess(excluir: boolean = false) {
+  onSucess(excluir: boolean = false, evento: boolean) {
     if (excluir) {
-      this.snackBar.open('Evento excluído com sucesso', '', { duration: 5000, panelClass: ['successSnackbar'] });
-      this.atualizaTabela();
+      this.snackBar.open('Alocação excluída com sucesso', '', { duration: 5000, panelClass: ['successSnackbar'] });
+      if (evento) {
+        this.atualizaTabelaEvento();
+      } else {
+        this.atualizaTabelaAula();
+      }
     } else {
       this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
     }
+  }
+
+  getFormattedSchedule(alocacao: Alocar): string {
+    const selectedTimes = alocacao.selectedTimes;
+    if (selectedTimes.length === 0) {
+      return '';
+    }
+    const firstStartTime = selectedTimes[0].startTime;
+    const lastEndTime = selectedTimes[selectedTimes.length - 1].endTime;
+    return `${firstStartTime} ~ ${lastEndTime}`;
   }
 
 }

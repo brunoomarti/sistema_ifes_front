@@ -50,6 +50,9 @@ export class AlocaEventoComponent implements OnInit {
       event: null,
       startDate: null,
       endDate: null,
+      startTime: null,
+      endTime: null,
+      applicant: null,
       selectedTimes: [],
       location: null,
       type: 'Evento'
@@ -70,32 +73,23 @@ export class AlocaEventoComponent implements OnInit {
         event: obj,
         startDate: null,
         endDate: null,
+        startTime: null,
+        endTime: null,
+        applicant: null,
         selectedTimes: [],
         location: null,
         type: 'Evento'
       });
     }
-
   }
-
 
   onSubmit() {
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
 
-
-    this.indexTimes.forEach(hr => {
-      const selectedHour = this.horarios.find(obj => obj._id == hr);
-      if (selectedHour){
-        this.selectedTimes.push(selectedHour);
-      }
-    })
-
     if (selectedLocation && this.form.value.startDate) {
       this.form.patchValue({ location: selectedLocation });
-      this.form.patchValue({ endDate: this.form.value.endDate });
-      this.form.patchValue({ selectedTimes: this.selectedTimes })
+      this.form.patchValue({ endDate: this.form.value.startDate });
     }
-
 
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
@@ -110,7 +104,6 @@ export class AlocaEventoComponent implements OnInit {
     });
   }
 
-
   onCheckboxChange(event: any, horario: any) {
     if (event.target.checked) {
       this.indexTimes.push(horario._id);
@@ -122,7 +115,6 @@ export class AlocaEventoComponent implements OnInit {
     }
     console.log(this.indexTimes);
   }
-
 
   onCancel(): void {
     this.dialogRef.close();

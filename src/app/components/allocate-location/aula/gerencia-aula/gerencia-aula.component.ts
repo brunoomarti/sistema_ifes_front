@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Aula } from '../../../../models/Aula';
 import { EdicaoAulaComponent } from '../edicao-aula/edicao-aula.component';
 import { AlocaAulaComponent } from '../aloca-aula/aloca-aula.component';
+import { AlunosMatriculadosComponent } from '../alunos-matriculados/alunos-matriculados.component';
 
 @Component({
   selector: 'app-gerencia-aula',
@@ -118,5 +119,16 @@ export class GerenciaAulaComponent implements OnInit {
     }
   }
 
+  alunosAula(aula: Aula): void {
+    const dialogRef = this.dialog.open(AlunosMatriculadosComponent, {
+      disableClose: false,
+      backdropClass: 'backdrop',
+      data: { aula }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.atualizaTabela();
+    });
+  }
 
 }

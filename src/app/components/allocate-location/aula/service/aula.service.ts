@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Aula } from '../../../../models/Aula';
-import { first, tap } from 'rxjs';
+import { first, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +32,12 @@ export class AulaService {
       .pipe(
         first(),
         tap(aulas => console.log()))
+  }
+
+  listarAlunosPorAula(id: string) {
+    return this.httpClient.get<Aula>(`${this.API}/${id}`).pipe(
+      map(aula => aula.students)
+    );
   }
 
   loadById(id: string) {

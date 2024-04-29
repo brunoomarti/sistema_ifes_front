@@ -10,8 +10,11 @@ export interface Alocar {
   event: Evento,
   classe: Turma,
   startDate: String,
-  selectedTimes: Horario[];
   endDate: String,
+  startTime: String,
+  endTime: String,
+  selectedTimes: Horario[],
   location: Local,
-  type: String
+  type: String,
+  diaSemana: String,
 }

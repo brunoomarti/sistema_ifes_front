@@ -36,6 +36,7 @@
         <div class="newInput">
           <label for="allocateFilter">Filtrar por:</label>
           <select name="allocateFilter">
+            <option>Ambos</option>
             <option>Aula</option>
             <option>Evento</option>
           </select>
@@ -43,10 +44,10 @@
         <div class="newInput">
           <label for="periodFilter">Período:</label>
           <select name="periodFilter">
+            <option>Sempre</option>
             <option>Hoje</option>
             <option>Amanhã</option>
             <option>Essa semana</option>
-            <option>Sempre</option>
             <option>Selecionar...</option>
           </select>
         </div>
@@ -57,101 +58,171 @@
     </div>
 
     <br>
+    <div class="tituloTabela">
+      <p class="pageTitle">Alocações de Aula</p>
 
-    <table mat-table [dataSource]="alocacoes">
+      <table mat-table [dataSource]="alocacoesAula">
 
-      <ng-container matColumnDef="evntAula">
-        <th mat-header-cell *matHeaderCellDef>Tipo</th>
-        <td mat-cell *matCellDef="let alocacao">
-          <ng-container *ngIf="alocacao.type === 'Aula'">
-            {{ alocacao.type }}
-          </ng-container>
-          <ng-container *ngIf="alocacao.type !== 'Aula'">
-           {{ alocacao.type }}
-          </ng-container>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="discipline">
+          <th mat-header-cell *matHeaderCellDef>Disciplina</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Aula'">
+              {{ alocacao.lesson.discipline.name }}
+            </ng-container>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="classEvent">
-        <th mat-header-cell *matHeaderCellDef>Nome</th>
-        <td mat-cell *matCellDef="let alocacao">
-          <ng-container *ngIf="alocacao.type === 'Aula'">
-            {{ alocacao.lesson.discipline.name }}
-          </ng-container>
-          <ng-container *ngIf="alocacao.type !== 'Aula'">
-          {{ alocacao.event.name}}
-          </ng-container>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="teacher">
+          <th mat-header-cell *matHeaderCellDef>Professor</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Aula'">
+              {{ alocacao.lesson.teacher.name }}
+            </ng-container>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="teacher">
-        <th mat-header-cell *matHeaderCellDef>Professor</th>
-        <td mat-cell *matCellDef="let alocacao">
-          <ng-container *ngIf="alocacao.type === 'Aula'">
-            {{ alocacao.lesson.teacher.name }}
-          </ng-container>
-          <ng-container *ngIf="alocacao.type !== 'Aula'">
-            -
-          </ng-container>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="class">
+          <th mat-header-cell *matHeaderCellDef>Turma</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Aula'">
+              {{ alocacao.classe.name }}
+            </ng-container>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="class">
-        <th mat-header-cell *matHeaderCellDef>Turma</th>
-        <td mat-cell *matCellDef="let alocacao">
-          <ng-container *ngIf="alocacao.type === 'Aula'">
-            {{ alocacao.classe.name }}
-          </ng-container>
-          <ng-container *ngIf="alocacao.type !== 'Aula'">
-            -
-          </ng-container>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="location">
+          <th mat-header-cell *matHeaderCellDef>Local</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Aula'">
+              {{ alocacao.location.name }}
+            </ng-container>
+          <td>
+        </ng-container>
 
-      <ng-container matColumnDef="location">
-        <th mat-header-cell *matHeaderCellDef>Local</th>
-        <td mat-cell *matCellDef="let alocacao"> {{ alocacao.location.name }} <td>
-      </ng-container>
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Período (Data)</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Aula'">
+              {{ alocacao.startDate | date: 'dd/MM/yyyy'}} - {{ alocacao.endDate | date: 'dd/MM/yyyy'}}
+            </ng-container>
+          <td>
+        </ng-container>
 
-      <ng-container matColumnDef="startDate">
-        <th mat-header-cell *matHeaderCellDef>Data Inicio</th>
-        <td mat-cell *matCellDef="let alocacao"> {{ alocacao.startDate | date: 'dd/MM/yyyy'}} <td>
-      </ng-container>
+        <ng-container matColumnDef="weekDay">
+          <th mat-header-cell *matHeaderCellDef>Dia</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Aula'">
+              {{ alocacao.weekDay }}
+            </ng-container>
+          <td>
+        </ng-container>
 
-      <ng-container matColumnDef="endDate">
-        <th mat-header-cell *matHeaderCellDef>Data Fim</th>
-        <td mat-cell *matCellDef="let alocacao"> {{ alocacao.endDate | date: 'dd/MM/yyyy'}} <td>
-      </ng-container>
+        <ng-container matColumnDef="schedule">
+          <th mat-header-cell *matHeaderCellDef>Horário</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Aula'">
+              {{ getFormattedSchedule(alocacao) }}
+            </ng-container>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="schedule">
-        <th mat-header-cell *matHeaderCellDef>Horário</th>
-        <td mat-cell *matCellDef="let alocacao">
-          <span *ngFor="let horario of alocacao.selectedTimes; let last = last">
-            {{ horario.startTime }} ~ {{ horario.endTime }}{{ last ? '' : ', ' }}
-          </span>
-        </td>
-      </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+            <div>Ações</div>
+          </th>
+          <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
+            <button mat-button (click)="editar(equipamento)" class="button 2">
+              <span class="material-symbols-outlined table-button-icon">edit</span>
+            </button>
+            <button mat-button (click)="excluir(equipamento)" class="button 2 delete-button">
+              <span class="material-symbols-outlined table-button-icon">delete</span>
+            </button>
+          </td>
+        </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          <div>Ações</div>
-        </th>
-        <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
-          <button mat-button (click)="editar(equipamento)" class="button 2">
-            <span class="material-symbols-outlined table-button-icon">edit</span>
-            Editar
-          </button>
-          <button mat-button (click)="excluir(equipamento)" class="button 2 delete-button">
-            <span class="material-symbols-outlined table-button-icon">delete</span>
-            Excluir
-          </button>
-        </td>
-      </ng-container>
+        <tr class="header-row" mat-header-row *matHeaderRowDef="['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule', 'actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule', 'actions']"></tr>
+      </table>
+    </div>
 
-      <tr class="header-row" mat-header-row *matHeaderRowDef="['evntAula','classEvent', 'teacher', 'class', 'location', 'startDate','endDate', 'schedule', 'actions']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['evntAula','classEvent', 'teacher', 'class', 'location', 'startDate','endDate', 'schedule', 'actions']"></tr>
-    </table>
+    <br>
+    <div class="tituloTabela">
+      <p class="pageTitle">Alocações de Evento</p>
 
+      <table mat-table [dataSource]="alocacoesEvento">
+
+        <ng-container matColumnDef="event">
+          <th mat-header-cell *matHeaderCellDef>Evento</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Evento'">
+            {{ alocacao.event.name }}
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Descrição</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Evento'">
+              {{ alocacao.event.description }}
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="applicant">
+          <th mat-header-cell *matHeaderCellDef>Requerente</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Evento'">
+              {{ alocacao.applicant }}
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="location">
+          <th mat-header-cell *matHeaderCellDef>Local</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Evento'">
+              {{ alocacao.location.name }}
+            </ng-container>
+          <td>
+        </ng-container>
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>Data</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Evento'">
+              {{ alocacao.startDate | date: 'dd/MM/yyyy'}}
+            </ng-container>
+          <td>
+        </ng-container>
+
+        <ng-container matColumnDef="schedule">
+          <th mat-header-cell *matHeaderCellDef>Horário</th>
+          <td mat-cell *matCellDef="let alocacao">
+            <ng-container *ngIf="alocacao.type === 'Evento'">
+              {{ alocacao.startTime }} ~ {{ alocacao.endTime }}
+            </ng-container>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+            <div>Ações</div>
+          </th>
+          <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
+            <button mat-button (click)="editar(equipamento)" class="button 2">
+              <span class="material-symbols-outlined table-button-icon">edit</span>
+            </button>
+            <button mat-button (click)="excluir(equipamento)" class="button 2 delete-button">
+              <span class="material-symbols-outlined table-button-icon">delete</span>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr class="header-row" mat-header-row *matHeaderRowDef="['event', 'description', 'applicant', 'location', 'date', 'schedule', 'actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['event', 'description', 'applicant', 'location', 'date', 'schedule', 'actions']"></tr>
+      </table>
+    </div>
   </div>
   <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
 </div>

@@ -1,20 +1,4 @@
-.backdrop {
-  display: block;
-}
-
-.material-symbols-outlined {
-  font-size: 20px;
-}
-
-.groupOne {
-  width: 80%;
-}
-
-.groupTwo {
-  width: 20%;
-}
-
-.material-symbols-outlined {
+.material-symbols-outlined{
   font-variation-settings:
   'FILL' 0,
   'wght' 700,
@@ -25,7 +9,7 @@
 }
 
 .mat-column-actions {
-  width: 100px;
+  width: 110px;
   height: fit-content;
   padding: 10px 0;
 }
@@ -67,5 +51,4 @@ table tr:first-child th:last-child {
 mat-paginator {
   font-size: var(--normal-font-size);
 }
-
 

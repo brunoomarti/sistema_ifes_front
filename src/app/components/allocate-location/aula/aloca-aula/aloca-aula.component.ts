@@ -64,7 +64,8 @@ export class AlocaAulaComponent implements OnInit {
       selectedTimes:[],
       location: null,
       semester: null,
-      type: 'Aula'
+      type: 'Aula',
+      weekDay: null,
     });
   }
 
@@ -98,7 +99,8 @@ export class AlocaAulaComponent implements OnInit {
         selectedTimes: [],
         semester: null,
         location: null,
-        type: 'Aula'
+        type: 'Aula',
+        weekDay: null,
       });
     }
   }
@@ -106,7 +108,7 @@ export class AlocaAulaComponent implements OnInit {
   onSubmit() {
     const selectedClasse = this.turmas.find(obj => obj._id == this.form.value.classe);
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
-    
+
 
     this.indexTimes.forEach(hr => {
       const selectedHour = this.horarios.find(obj => obj._id == hr);
@@ -122,7 +124,7 @@ export class AlocaAulaComponent implements OnInit {
 
     if (selectedClasse && selectedLocation ) {
       this.form.patchValue({ classe: selectedClasse });
-      this.form.patchValue({ location: selectedLocation }); 
+      this.form.patchValue({ location: selectedLocation });
       this.form.patchValue({ selectedTimes: this.selectedTimes })
     }
 
@@ -159,14 +161,14 @@ export class AlocaAulaComponent implements OnInit {
 
   onCheckboxChange(event: any, horario: any) {
     if (event.target.checked) {
-      this.indexTimes.push(horario._id); 
+      this.indexTimes.push(horario._id);
     } else {
       const index = this.indexTimes.indexOf(horario._id);
       if (index !== -1) {
-        this.indexTimes.splice(index, 1); 
+        this.indexTimes.splice(index, 1);
       }
     }
-    console.log(this.indexTimes); 
+    console.log(this.indexTimes);
   }
 
 

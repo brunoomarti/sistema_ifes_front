@@ -8,42 +8,58 @@
     </p>
 
     <form [formGroup]="form">
-      <div class="newInput">
-        <label for="classe">Turma:</label>
-        <select formControlName="classe" required>
-          <option *ngFor="let turma of turmas" [value]="turma._id">
-            {{ turma.name }}
-          </option>
-        </select>
-      </div>
-
-      <div class="newInput">
-        <label for="location">Local:</label>
-        <select formControlName="location" required>
-          <option *ngFor="let local of locais" [value]="local._id">
-            {{ local.name }}
-          </option>
-        </select>
-      </div>
 
       <div class="selectGroup">
         <div class="newInput">
-          <label for="periodo">Período:</label>
-          <select name="periodo" id="periodoSelect" (change)="toggleFields()">
-            <option value="dia">Dia</option>
-            <option value="semestre">Semestre</option>
+          <label for="classe">Turma:</label>
+          <select formControlName="classe" required>
+            <option *ngFor="let turma of turmas" [value]="turma._id">
+              {{ turma.name }}
+            </option>
+          </select>
+        </div>
+
+        <div class="newInput">
+          <label for="location">Local:</label>
+          <select formControlName="location" required>
+            <option *ngFor="let local of locais" [value]="local._id">
+              {{ local.name }}
+            </option>
           </select>
         </div>
       </div>
 
-      <div id="dataInicial" class="newInput">
-        <label for="startDate">Data Inicio:</label>
-        <input type="date" formControlName="startDate" required />
+      <div class="newInput">
+        <label for="periodo">Período:</label>
+        <select name="periodo" id="periodoSelect" (change)="toggleFields()">
+          <option value="dia">Escolher</option>
+          <option value="semestre">Semestre</option>
+        </select>
       </div>
 
-      <div id="dataFim" class="newInput">
-        <label for="endDate">Data Fim:</label>
-        <input type="date" formControlName="endDate" required />
+      <div class="selectGroup">
+        <div id="dataInicial" class="newInput">
+          <label for="startDate">Data Inicio:</label>
+          <input type="date" formControlName="startDate" required />
+        </div>
+
+        <div id="dataFim" class="newInput">
+          <label for="endDate">Data Fim:</label>
+          <input type="date" formControlName="endDate" required />
+        </div>
+      </div>
+
+      <div class="newInput">
+        <label for="weekDay">Dia da semana:</label>
+        <select formControlName="weekDay" required>
+          <option value="Domingo">Domingo</option>
+          <option value="Segunda-feira">Segunda-feira</option>
+          <option value="Terça-feira">Terça-feira</option>
+          <option value="Quarta-feira">Quarta-feira</option>
+          <option value="Quinta-feira">Quinta-feira</option>
+          <option value="Sexta-feira">Sexta-feira</option>
+          <option value="Sábado">Sábado</option>
+        </select>
       </div>
 
       <div class="newInput">
@@ -61,8 +77,6 @@
           </div>
         </div>
       </div>
-
-
 
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>

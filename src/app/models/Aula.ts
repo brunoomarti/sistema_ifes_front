@@ -1,3 +1,4 @@
+import { Aluno } from "./Aluno";
 import { Disciplina } from "./Disciplina";
 import { Professor } from "./Professor";
 import { Semestre } from "./Semestre";
@@ -7,5 +8,6 @@ export interface Aula {
   discipline: Disciplina,
   teacher: Professor,
   semester: Semestre,
-  allocated: boolean
+  allocated: boolean,
+  students: Aluno[],
 }

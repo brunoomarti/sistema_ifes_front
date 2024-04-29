@@ -102,6 +102,7 @@ export class CadastroEventoComponent {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'cadastrarNovo') {
         this.form.get('name')?.setValue('');
+        this.form.get('applicant')?.setValue('');
         this.form.get('description')?.setValue('');
         this.form.get('allocated')?.setValue(false);
       } else {

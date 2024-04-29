@@ -53,6 +53,7 @@ export class CadastroAulaComponent {
       discipline: new FormControl(''),
       teacher: new FormControl(''),
       semester: new FormControl(''),
+      students: null,
       allocated: false
     });
   }
@@ -78,6 +79,7 @@ export class CadastroAulaComponent {
         discipline: obj.discipline,
         teacher: obj.teacher,
         semester: obj.semester,
+        students: null,
         allocated: obj.allocated
       });
     }

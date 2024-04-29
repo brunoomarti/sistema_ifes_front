@@ -17,16 +17,28 @@
       </div>
 
       <div class="newInput">
-        <label for="startDate">Data Início:</label>
+        <label for="applicant">Nome do requerente:</label>
+        <input type="text" formControlName="applicant" placeholder="Nome do requerente" required>
+      </div>
+
+      <div class="newInput">
+        <label for="startDate">Data:</label>
         <input type="date" formControlName="startDate" required />
       </div>
 
-      <div class="newInput">
-        <label for="endDate">Data Fim:</label>
-        <input type="date" formControlName="endDate" required />
+      <div class="selectGroup">
+        <div class="newInput">
+          <label for="startTime">Hora de início:</label>
+          <input type="time" formControlName="startTime" />
+        </div>
+
+        <div class="newInput">
+          <label for="endTime">Hora de fim:</label>
+          <input type="time" formControlName="endTime" />
+        </div>
       </div>
 
-      <div class="newInput">
+      <!-- <div class="newInput">
         <div class="dropdown">
           <label for="schedule">Horário: (Selecione um ou mais)</label>
           <div id="options" class="dropdown-content">
@@ -40,7 +52,7 @@
             </ng-container>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>
