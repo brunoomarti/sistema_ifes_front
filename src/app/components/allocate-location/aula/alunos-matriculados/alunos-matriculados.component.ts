@@ -30,6 +30,7 @@ export class AlunosMatriculadosComponent implements OnInit {
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Aluno desvinculado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao desvincular aluno.';
+  aulaId: string = "";
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -50,9 +51,9 @@ export class AlunosMatriculadosComponent implements OnInit {
 
   atualizaTabela() {
 
-    const aulaId = this.data.aula._id.toString();
+    this.aulaId = this.data.aula._id.toString();
 
-    this.service.listarAlunosPorAula(aulaId).subscribe(alunos => {
+    this.service.listarAlunosPorAula(this.aulaId).subscribe(alunos => {
       this.alunos = alunos;
       this.dataSource = new MatTableDataSource<Aluno>(this.alunos);
       this.dataSource.paginator = this.paginator;
@@ -74,7 +75,7 @@ export class AlunosMatriculadosComponent implements OnInit {
   excluir(aluno: Aluno): void {
     const confirmacao = confirm('Tem certeza que deseja desvincular este aluno da aula?');
     if (confirmacao) {
-      this.service.remove(aluno._id).subscribe(() => {
+      this.service.removerAlunoDaAula(aluno._id, this.aulaId).subscribe(() => {
         this.alunos = this.alunos.filter(e => e._id !== aluno._id);
         this.onSucess(true);
       }, error => {
