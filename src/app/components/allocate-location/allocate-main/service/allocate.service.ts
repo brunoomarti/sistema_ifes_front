@@ -1,8 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Alocar } from '../../../../models/Alocar';
-import { Observable, first, tap } from 'rxjs';
-import { Local } from '../../../../models/Local';
+import { first, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

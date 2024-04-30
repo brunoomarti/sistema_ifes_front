@@ -4,13 +4,60 @@
     <p class="pageTitle">Você está editando uma alocação de aula.</p>
     <p class="pageText">
       Disciplina: {{ data.alocacao.lesson.discipline.name }}<br />
-       Professor: {{ data.alocacao.lesson.teacher.name }}<br />
-      Semestre: {{ data.alocacao.lesson.semester.semester }}<br /> 
+      Professor: {{ data.alocacao.lesson.teacher.name }}<br />
+      Semestre: {{ data.alocacao.lesson.semester.semester }}<br />
     </p>
 
     <form [formGroup]="form">
 
+      <div class="selectGroup">
+        <div class="newInput">
+          <label for="classe">Turma:</label>
+          <select formControlName="classe" required>
+            <option *ngFor="let turma of turmas" [value]="turma._id">
+              {{ turma.name }}
+            </option>
+          </select>
+        </div>
 
+        <div class="newInput">
+          <label for="location">Local:</label>
+          <select formControlName="location" required>
+            <option *ngFor="let local of locais" [value]="local._id">
+              {{ local.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="newInput">
+        <label for="weekDay">Dia da semana:</label>
+        <select formControlName="weekDay" required>
+          <option value="Domingo">Domingo</option>
+          <option value="Segunda-feira">Segunda-feira</option>
+          <option value="Terça-feira">Terça-feira</option>
+          <option value="Quarta-feira">Quarta-feira</option>
+          <option value="Quinta-feira">Quinta-feira</option>
+          <option value="Sexta-feira">Sexta-feira</option>
+          <option value="Sábado">Sábado</option>
+        </select>
+      </div>
+
+      <div class="newInput">
+        <div class="dropdown">
+          <label for="schedule">Horário: (Selecione um ou mais)</label>
+          <div id="options" class="dropdown-content">
+            <ng-container *ngFor="let horario of horarios">
+              <label>
+                <input type="checkbox"
+                       [value]="horario._id"
+                       (change)="onCheckboxChange($event, horario)">
+                {{ horario.startTime }} ~ {{ horario.endTime }}
+              </label>
+            </ng-container>
+          </div>
+        </div>
+      </div>
 
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>

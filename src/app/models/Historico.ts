@@ -3,8 +3,9 @@ import { Local } from "./Local";
 import { Turma } from "./Turma";
 import { Evento } from "./Evento";
 import { Horario } from "./Horario";
+import { Alocar } from "./Alocar";
 
-export interface Alocar {
+export interface Historico {
   _id: number,
   lesson: Aula,
   event: Evento,
@@ -13,9 +14,12 @@ export interface Alocar {
   endDate: String,
   startTime: String,
   endTime: String,
-  selectedTimes: Horario[],
+  selectedTimes: String,
   location: Local,
   type: String,
   weekDay: String,
-  alocacao: Alocar
+  alocacao: Alocar,
+  date: String,
+  authorName: String,
+  changeType: String,
 }

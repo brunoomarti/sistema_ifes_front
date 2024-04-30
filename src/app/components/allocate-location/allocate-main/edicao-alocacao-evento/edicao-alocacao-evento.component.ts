@@ -31,7 +31,7 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
     private service: AllocateService,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: Alocar,
   )
 
   {
@@ -41,7 +41,7 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const obj: Alocar = this.data.alocar;
+    const obj: Alocar = this.data;
     if (obj) {
       this.form.setValue({
         _id: obj._id
