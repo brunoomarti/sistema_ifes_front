@@ -48,14 +48,20 @@ export class MatricularAlunoAulaComponent {
       discipline: null,
       teacher: null,
       semester: null,
+      weeklyQuantity: 0,
       students: [],
       allocated: null
     });
   }
 
   ngOnInit(): void {
-    this.alunoService.listar().subscribe(alunos => {
-      this.alunos = alunos;
+    this.alunoService.listar().subscribe((alunos: Aluno[]) => {
+      if (this.data && this.data.aula && this.data.aula.students) {
+        const alunoIdsMatriculados = this.data.aula.students.map((aluno: Aluno) => aluno._id);
+        this.alunos = alunos.filter((aluno: Aluno) => !alunoIdsMatriculados.includes(aluno._id));
+      } else {
+        this.alunos = alunos;
+      }
     });
 
     const obj: Aula = this.data.aula;
@@ -65,6 +71,7 @@ export class MatricularAlunoAulaComponent {
         discipline: obj.discipline,
         teacher: obj.teacher,
         semester: obj.semester,
+        weeklyQuantity: obj.weeklyQuantity,
         students: null,
         allocated: obj.allocated
       });
@@ -80,7 +87,9 @@ export class MatricularAlunoAulaComponent {
       }
     })
 
-    this.form.patchValue({ students: this.selectedStudents })
+    const mergedStudents = [...this.selectedStudents, ...this.data.aula.students];
+
+    this.form.patchValue({ students: mergedStudents })
 
     console.log(this.form.value);
 
@@ -112,5 +121,4 @@ export class MatricularAlunoAulaComponent {
     }
     console.log(this.indexAlunos);
   }
-
 }

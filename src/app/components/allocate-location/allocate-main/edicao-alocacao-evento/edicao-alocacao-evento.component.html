@@ -1,0 +1,20 @@
+<div>
+  <div class="dialog-container">
+
+    <p class="pageTitle">Você está editando uma alocação de evento.</p>
+    <p class="pageText">
+      Evento: {{ data.alocar.event.name }}<br />
+      Requerinte: {{ data.alocar.event.applicant }}<br />
+    </p>
+
+    <form [formGroup]="form">
+
+
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Salvar edição</button>
+      </div>
+    </form>
+  </div>
+</div>

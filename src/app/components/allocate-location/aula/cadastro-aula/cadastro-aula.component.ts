@@ -53,6 +53,7 @@ export class CadastroAulaComponent {
       discipline: new FormControl(''),
       teacher: new FormControl(''),
       semester: new FormControl(''),
+      weeklyQuantity: 0,
       students: null,
       allocated: false
     });
@@ -79,6 +80,7 @@ export class CadastroAulaComponent {
         discipline: obj.discipline,
         teacher: obj.teacher,
         semester: obj.semester,
+        weeklyQuantity: obj.weeklyQuantity,
         students: null,
         allocated: obj.allocated
       });
@@ -95,6 +97,8 @@ export class CadastroAulaComponent {
       this.form.patchValue({ teacher: selectedTeacher });
       this.form.patchValue({ semester: selectedSemester });
     }
+
+
 
     this.aulaService.save(this.form.value).subscribe(
       result => {

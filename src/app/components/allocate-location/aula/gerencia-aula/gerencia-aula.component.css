@@ -9,9 +9,19 @@
 }
 
 .mat-column-actions {
-  width: 200px;
+  width: 120px;
   height: fit-content;
   padding: 10px 0;
+}
+
+.mat-column-weeklyQuantity {
+  width: 100px;
+  height: fit-content;
+}
+
+.mat-column-allocatedLessons {
+  width: 100px;
+  height: fit-content;
 }
 
 .delete-button:hover {

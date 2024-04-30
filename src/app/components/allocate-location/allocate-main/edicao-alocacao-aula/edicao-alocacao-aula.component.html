@@ -1,0 +1,21 @@
+<div>
+  <div class="dialog-container">
+
+    <p class="pageTitle">Você está editando uma alocação de aula.</p>
+    <p class="pageText">
+      Disciplina: {{ data.lesson.discipline.name }}<br />
+      <!-- Professor: {{ data.alocar.lesson.teacher.name }}<br />
+      Semestre: {{ data.alocar.lesson.semester.semester }}<br /> -->
+    </p>
+
+    <form [formGroup]="form">
+
+
+
+      <div class="buttonGroupForm">
+        <button class="button two" (click)="onCancel()">Cancelar</button>
+        <button class="button one" (click)="onSubmit()">Salvar edição</button>
+      </div>
+    </form>
+  </div>
+</div>

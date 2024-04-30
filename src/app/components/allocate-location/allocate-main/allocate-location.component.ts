@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,7 +8,9 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { AllocateService } from './service/allocate.service';
 import { Alocar } from '../../../models/Alocar';
-import { EdicaoAlocacaoComponent } from './edicao-alocacao/edicao-alocacao.component';
+import { EventoService } from '../evento/service/evento.service';
+import { EdicaoAlocacaoAulaComponent } from './edicao-alocacao-aula/edicao-alocacao-aula.component';
+import { EdicaoAlocacaoEventoComponent } from './edicao-alocacao-evento/edicao-alocacao-evento.component';
 
 @Component({
   selector: 'app-allocate-location',
@@ -18,7 +20,8 @@ import { EdicaoAlocacaoComponent } from './edicao-alocacao/edicao-alocacao.compo
     CommonModule,
     MatTableModule,
     RouterLink,
-    RouterLinkActive
+    RouterLinkActive,
+    FormsModule
   ],
   templateUrl: './allocate-location.component.html',
   styleUrl: './allocate-location.component.css'
@@ -30,6 +33,7 @@ export class AllocateLocationComponent implements OnInit {
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Alocação excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir alocação.';
+  selectedFilter: string = 'Ambos';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -38,6 +42,7 @@ export class AllocateLocationComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
+    private eventoService: EventoService,
   ) { }
 
   ngOnInit(): void {
@@ -61,9 +66,21 @@ export class AllocateLocationComponent implements OnInit {
     });
   }
 
-  editar(alocacao: { name: string }): void {
-    const dialogRef = this.dialog.open(EdicaoAlocacaoComponent, {
-      disableClose: true,
+  editarAlocacaoAula(alocacao: Alocar): void {
+    const dialogRef = this.dialog.open(EdicaoAlocacaoAulaComponent, {
+      disableClose: false,
+      backdropClass: 'backdrop',
+      data: { alocacao }
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.atualizaTabelaAula();
+    });
+  }
+
+  editarAlocacaoEvento(alocacao: Alocar): void {
+    const dialogRef = this.dialog.open(EdicaoAlocacaoEventoComponent, {
+      disableClose: false,
       backdropClass: 'backdrop',
       data: { alocacao }
     });
@@ -80,10 +97,11 @@ export class AllocateLocationComponent implements OnInit {
         this.alocacoesAula = this.alocacoesAula.filter(e => e._id !== alocacao._id);
         if (alocacao.type === 'Evento'){
           this.onSucess(true, true);
+          alocacao.event.allocated = false;
+          this.eventoService.save(alocacao.event).subscribe(result => this.onSucessEvent(), error => this.onFailedEvent());
         } else {
           this.onSucess(true, false);
         }
-
       }, error => {
         this.onFailed();
       });
@@ -107,6 +125,14 @@ export class AllocateLocationComponent implements OnInit {
     }
   }
 
+  onSucessEvent() {
+    this.snackBar.open('Evento desalocado com sucesso', '', { duration: 5000, panelClass: ['successSnackbar'] });
+  }
+
+  onFailedEvent() {
+    this.snackBar.open('Erro ao desalocar evento', '', { duration: 5000, panelClass: ['errorSnackbar'] });
+  }
+
   getFormattedSchedule(alocacao: Alocar): string {
     const selectedTimes = alocacao.selectedTimes;
     if (selectedTimes.length === 0) {
@@ -115,6 +141,10 @@ export class AllocateLocationComponent implements OnInit {
     const firstStartTime = selectedTimes[0].startTime;
     const lastEndTime = selectedTimes[selectedTimes.length - 1].endTime;
     return `${firstStartTime} ~ ${lastEndTime}`;
+  }
+
+  toggleTableVisibility(filter: string) {
+    this.selectedFilter = filter;
   }
 
 }

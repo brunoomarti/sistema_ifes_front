@@ -11,6 +11,7 @@ import { ReloadService } from '../../../../shared-services/reload.service';
 import { Evento } from '../../../../models/Evento';
 import { Horario } from '../../../../models/Horario';
 import { HorarioService } from '../../../cadastro-gerencia/horario/service/horario.service';
+import { EventoService } from '../service/evento.service';
 
 @Component({
   selector: 'app-aloca-evento',
@@ -39,6 +40,7 @@ export class AlocaEventoComponent implements OnInit {
     private localService: LocalService,
     private horarioService: HorarioService,
     private allocateService: AllocateService,
+    private eventoService: EventoService,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -91,6 +93,9 @@ export class AlocaEventoComponent implements OnInit {
       this.form.patchValue({ endDate: this.form.value.startDate });
     }
 
+    this.data.evento.allocated = true;
+
+    this.eventoService.save(this.data.evento).subscribe(result => this.onSucess(), error => this.onFailed());
     this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 

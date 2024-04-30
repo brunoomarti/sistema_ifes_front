@@ -8,6 +8,7 @@ export interface Aula {
   discipline: Disciplina,
   teacher: Professor,
   semester: Semestre,
+  weeklyQuantity: number,
   allocated: boolean,
   students: Aluno[],
 }

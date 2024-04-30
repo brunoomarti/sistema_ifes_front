@@ -9,6 +9,7 @@
           <button
             class="subMenuButton"
             routerLink="/alocar-local/gerencia-aula"
+            style="z-index: 1"
           >
             <span class="material-symbols-outlined">door_front</span>
             <div class="subMenuButtonText">Aula</div>
@@ -19,6 +20,7 @@
           <button
             class="subMenuButton"
             routerLink="/alocar-local/gerencia-evento"
+            style="z-index: 1"
           >
             <span class="material-symbols-outlined">event_seat</span>
             <div class="subMenuButtonText">Evento</div>
@@ -32,10 +34,10 @@
 
   <div class="boxSize">
     <div class="selectGroup">
-      <div class="selectGroup groupOne">
+      <div class="selectGroup">
         <div class="newInput">
           <label for="allocateFilter">Filtrar por:</label>
-          <select name="allocateFilter">
+          <select name="allocateFilter" [(ngModel)]="selectedFilter" (change)="toggleTableVisibility(selectedFilter)">
             <option>Ambos</option>
             <option>Aula</option>
             <option>Evento</option>
@@ -52,13 +54,13 @@
           </select>
         </div>
       </div>
-      <div class="groupTwo">
+      <!-- <div class="groupTwo">
         <button class="button two" type="button">Filtrar</button>
-      </div>
+      </div> -->
     </div>
 
     <br>
-    <div class="tituloTabela">
+    <div class="tituloTabela" [ngClass]="{'hide': selectedFilter !== 'Ambos' && selectedFilter !== 'Aula'}">
       <p class="pageTitle">Alocações de Aula</p>
 
       <table mat-table [dataSource]="alocacoesAula">
@@ -130,11 +132,11 @@
           <th mat-header-cell *matHeaderCellDef>
             <div>Ações</div>
           </th>
-          <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
-            <button mat-button (click)="editar(equipamento)" class="button 2">
+          <td mat-cell *matCellDef="let obj" class="buttonGroupForm">
+            <button mat-button (click)="editarAlocacaoAula(obj)" class="button two">
               <span class="material-symbols-outlined table-button-icon">edit</span>
             </button>
-            <button mat-button (click)="excluir(equipamento)" class="button 2 delete-button">
+            <button mat-button (click)="excluir(obj)" class="button two delete-button">
               <span class="material-symbols-outlined table-button-icon">delete</span>
             </button>
           </td>
@@ -143,10 +145,10 @@
         <tr class="header-row" mat-header-row *matHeaderRowDef="['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule', 'actions']"></tr>
         <tr mat-row *matRowDef="let row; columns: ['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule', 'actions']"></tr>
       </table>
+      <br>
     </div>
 
-    <br>
-    <div class="tituloTabela">
+    <div class="tituloTabela" [ngClass]="{'hide': selectedFilter !== 'Ambos' && selectedFilter !== 'Evento'}">
       <p class="pageTitle">Alocações de Evento</p>
 
       <table mat-table [dataSource]="alocacoesEvento">
@@ -209,11 +211,11 @@
           <th mat-header-cell *matHeaderCellDef>
             <div>Ações</div>
           </th>
-          <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
-            <button mat-button (click)="editar(equipamento)" class="button 2">
+          <td mat-cell *matCellDef="let obj" class="buttonGroupForm">
+            <button mat-button (click)="editarAlocacaoEvento(obj)" class="button two">
               <span class="material-symbols-outlined table-button-icon">edit</span>
             </button>
-            <button mat-button (click)="excluir(equipamento)" class="button 2 delete-button">
+            <button mat-button (click)="excluir(obj)" class="button two delete-button">
               <span class="material-symbols-outlined table-button-icon">delete</span>
             </button>
           </td>

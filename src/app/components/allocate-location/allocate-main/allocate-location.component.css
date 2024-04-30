@@ -68,4 +68,6 @@ mat-paginator {
   font-size: var(--normal-font-size);
 }
 
-
+.hide {
+  display: none;
+}
