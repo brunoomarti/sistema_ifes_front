@@ -36,18 +36,18 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
 
   {
     this.form = this.formBuilder.group({
-      // _id: [0],
+      _id: [0],
     });
   }
 
   ngOnInit(): void {
     const obj: Alocar = this.data;
-    console.log(obj);
-    // if (obj) {
-    //   this.form.setValue({
-    //     _id: obj._id
-    //   });
-    // }
+    console.log(this.data);
+    if (obj) {
+      this.form.setValue({
+        _id: obj._id
+      });
+    }
   }
 
   onSubmit() {

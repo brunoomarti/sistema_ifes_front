@@ -3,9 +3,9 @@
 
     <p class="pageTitle">Você está editando uma alocação de aula.</p>
     <p class="pageText">
-      Disciplina: {{ data.lesson.discipline.name }}<br />
-      <!-- Professor: {{ data.alocar.lesson.teacher.name }}<br />
-      Semestre: {{ data.alocar.lesson.semester.semester }}<br /> -->
+      Disciplina: {{ data.alocacao.lesson.discipline.name }}<br />
+       Professor: {{ data.alocacao.lesson.teacher.name }}<br />
+      Semestre: {{ data.alocacao.lesson.semester.semester }}<br /> 
     </p>
 
     <form [formGroup]="form">

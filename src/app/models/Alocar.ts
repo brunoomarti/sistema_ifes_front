@@ -17,4 +17,5 @@ export interface Alocar {
   location: Local,
   type: String,
   diaSemana: String,
+  alocacao: Alocar
 }
