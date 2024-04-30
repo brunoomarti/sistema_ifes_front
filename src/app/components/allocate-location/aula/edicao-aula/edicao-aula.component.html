@@ -26,6 +26,11 @@
         </select>
       </div>
 
+      <div class="newInput">
+        <label for="weeklyQuantity">Quantidade de aulas por semana:</label>
+        <input type="number" formControlName="weeklyQuantity" min="0" max="10" required>
+      </div>
+
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>
         <button class="button one" (click)="onSubmit()">Salvar edição</button>

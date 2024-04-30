@@ -34,21 +34,19 @@
 
       <ng-container matColumnDef="allocatedLessons">
         <th mat-header-cell *matHeaderCellDef>Aulas alocadas</th>
-        <td mat-cell *matCellDef="let aula">  <td>
+        <td mat-cell *matCellDef="let aula">{{ aulasAlocadasPorAula.get(aula._id) || 0 }}<td>
       </ng-container>
 
       <ng-container matColumnDef="allocated">
         <th mat-header-cell *matHeaderCellDef>Alocação</th>
         <td mat-cell *matCellDef="let aula">
-          <ng-container *ngIf="!aula.allocated; else alocado">
-            <button mat-button
-                    (click)="alocarAula(aula)"
-                    class="button two">
+          <ng-container *ngIf="!isLimiteMaximoAtingido(aula); else limiteAtingido">
+            <button mat-button (click)="alocarAula(aula)" class="button two">
               Alocar agora
             </button>
           </ng-container>
-          <ng-template #alocado>
-            <span>Já alocado</span>
+          <ng-template #limiteAtingido>
+            <span>Limite máximo atingido</span>
           </ng-template>
         </td>
       </ng-container>

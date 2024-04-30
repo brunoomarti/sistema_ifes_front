@@ -52,6 +52,8 @@ export class EdicaoAulaComponent implements OnInit {
       discipline: new FormControl(''),
       teacher: new FormControl(''),
       semester: new FormControl(''),
+      weeklyQuantity: 0,
+      students: null,
       allocated: false
     });
   }
@@ -76,6 +78,8 @@ export class EdicaoAulaComponent implements OnInit {
         discipline: obj.discipline,
         teacher: obj.teacher,
         semester: obj.semester,
+        weeklyQuantity: obj.weeklyQuantity,
+        students: obj.students,
         allocated: obj.allocated
       });
     }
