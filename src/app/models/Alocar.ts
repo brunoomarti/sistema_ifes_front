@@ -17,5 +17,6 @@ export interface Alocar {
   location: Local,
   type: String,
   weekDay: String,
-  alocacao: Alocar
+  alocacao: Alocar,
+  applicant: String
 }

@@ -4,11 +4,35 @@
     <p class="pageTitle">Você está editando uma alocação de evento.</p>
     <p class="pageText">
       Evento: {{ data.alocacao.event.name }}<br />
-      Requerente: {{ data.alocacao.event.applicant }}<br />
+      Requerente: {{ data.alocacao.applicant }}<br />
     </p>
 
     <form [formGroup]="form">
+      <div class="newInput">
+        <label for="location">Local:</label>
+        <select formControlName="location" required>
+          <option *ngFor="let local of locais" [value]="local._id">
+            {{ local.name }}
+          </option>
+        </select>
+      </div>
+ 
+      <div class="newInput">
+        <label for="startDate">Data:</label>
+        <input type="date" formControlName="startDate" required />
+      </div>
 
+      <div class="selectGroup">
+        <div class="newInput">
+          <label for="startTime">Hora de início:</label>
+          <input type="time" formControlName="startTime" />
+        </div>
+
+        <div class="newInput">
+          <label for="endTime">Hora de fim:</label>
+          <input type="time" formControlName="endTime" />
+        </div>
+      </div>
 
 
       <div class="buttonGroupForm">

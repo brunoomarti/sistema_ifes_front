@@ -1,3 +1,5 @@
+import { Alocar } from "./Alocar";
+
 export interface Evento {
   _id: number,
   name: string,
@@ -5,5 +7,6 @@ export interface Evento {
   description: string,
   startTime: String,
   endTime: String,
-  allocated: boolean
+  allocated: boolean, 
+  alocacao: Alocar
 }
