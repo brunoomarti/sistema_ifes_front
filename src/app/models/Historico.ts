@@ -2,7 +2,6 @@ import { Aula } from "./Aula";
 import { Local } from "./Local";
 import { Turma } from "./Turma";
 import { Evento } from "./Evento";
-import { Horario } from "./Horario";
 import { Alocar } from "./Alocar";
 
 export interface Historico {

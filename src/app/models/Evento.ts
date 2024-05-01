@@ -2,9 +2,8 @@ import { Alocar } from "./Alocar";
 
 export interface Evento {
   _id: number,
-  name: string,
-  applicant: String,
-  description: string,
+  name: String,
+  description: String,
   startTime: String,
   endTime: String,
   allocated: boolean, 

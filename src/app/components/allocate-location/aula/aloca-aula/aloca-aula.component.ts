@@ -66,6 +66,7 @@ export class AlocaAulaComponent implements OnInit {
       semester: null,
       type: 'Aula',
       weekDay: null,
+      active: true
     });
   }
 
@@ -101,6 +102,7 @@ export class AlocaAulaComponent implements OnInit {
         location: null,
         type: 'Aula',
         weekDay: null,
+        active: true
       });
     }
   }

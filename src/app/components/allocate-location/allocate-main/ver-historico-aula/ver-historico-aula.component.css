@@ -24,11 +24,6 @@
   font-size: 16px;
 }
 
-.mat-column-actions {
-  width: 100px;
-  padding: 10px 0;
-}
-
 .delete-button:hover {
   background-color: darkred !important;
 }
@@ -65,8 +60,4 @@ table tr:first-child th:last-child {
 
 mat-paginator {
   font-size: var(--normal-font-size);
-}
-
-.hide {
-  display: none;
 }

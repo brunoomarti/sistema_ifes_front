@@ -57,7 +57,8 @@ export class AlocaEventoComponent implements OnInit {
       applicant: null,
       selectedTimes: [],
       location: null,
-      type: 'Evento'
+      type: 'Evento',
+      active: true
     });
   }
 
@@ -80,7 +81,8 @@ export class AlocaEventoComponent implements OnInit {
         applicant: null,
         selectedTimes: [],
         location: null,
-        type: 'Evento'
+        type: 'Evento',
+        active: true
       });
     }
   }

@@ -47,7 +47,6 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
     private horarioService: HorarioService,
     private historyService: HistoryService,
     private snackBar: MatSnackBar,
-    private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: Alocar,
   )
 
@@ -63,6 +62,7 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
       semester: null,
       type: 'Aula',
       weekDay: null,
+      active: true
     });
 
     this.formHistory = this.formBuilder.group({
@@ -107,6 +107,7 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
         location: obj.alocacao.location,
         type: 'Aula',
         weekDay: obj.alocacao.weekDay,
+        active: true
       });
     }
   }
@@ -132,7 +133,7 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
       location: obj.alocacao.location,
       type: 'Aula',
       weekDay: obj.alocacao.weekDay,
-      alocacao: obj.alocacao._id,
+      alocacao: obj.alocacao,
       date: new Date(),
       authorName: 'Igor',
       changeType: 'Edição',
@@ -142,25 +143,25 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
 
     this.historyService.save(this.formHistory.value).subscribe(result => this.onSucess(), error => this.onFailed());
 
-    // const selectedClasse = this.turmas.find(findObj => findObj._id == this.form.value.classe);
-    // const selectedLocation = this.locais.find(findObj => findObj._id == this.form.value.location);
+    const selectedClasse = this.turmas.find(findObj => findObj._id == this.form.value.classe);
+    const selectedLocation = this.locais.find(findObj => findObj._id == this.form.value.location);
 
-    // this.indexTimes.forEach(hr => {
-    //   const selectedHour = this.horarios.find(obj => obj._id == hr);
-    //   if (selectedHour){
-    //     this.selectedTimes.push(selectedHour);
-    //   }
-    // })
+    this.indexTimes.forEach(hr => {
+      const selectedHour = this.horarios.find(obj => obj._id == hr);
+      if (selectedHour){
+        this.selectedTimes.push(selectedHour);
+      }
+    })
 
-    // if (selectedClasse && selectedLocation ) {
-    //   this.form.patchValue({ classe: selectedClasse });
-    //   this.form.patchValue({ location: selectedLocation });
-    //   this.form.patchValue({ selectedTimes: this.selectedTimes })
-    // }
+    if (selectedClasse && selectedLocation ) {
+      this.form.patchValue({ classe: selectedClasse });
+      this.form.patchValue({ location: selectedLocation });
+      this.form.patchValue({ selectedTimes: this.selectedTimes })
+    }
 
-    // console.log(this.form.value);
+    console.log(this.form.value);
 
-    // this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+    this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 
   onCancel(): void {

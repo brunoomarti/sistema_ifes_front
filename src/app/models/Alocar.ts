@@ -18,5 +18,6 @@ export interface Alocar {
   type: String,
   weekDay: String,
   alocacao: Alocar,
-  applicant: String
+  applicant: String,
+  active: boolean
 }

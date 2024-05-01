@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,6 +11,9 @@ import { Alocar } from '../../../models/Alocar';
 import { EventoService } from '../evento/service/evento.service';
 import { EdicaoAlocacaoAulaComponent } from './edicao-alocacao-aula/edicao-alocacao-aula.component';
 import { EdicaoAlocacaoEventoComponent } from './edicao-alocacao-evento/edicao-alocacao-evento.component';
+import { VerHistoricoAulaComponent } from './ver-historico-aula/ver-historico-aula.component';
+import { VerHistoricoEventoComponent } from './ver-historico-evento/ver-historico-evento.component';
+import { HistoryService } from './historyService/history.service';
 
 @Component({
   selector: 'app-allocate-location',
@@ -28,6 +31,7 @@ import { EdicaoAlocacaoEventoComponent } from './edicao-alocacao-evento/edicao-a
 })
 export class AllocateLocationComponent implements OnInit {
 
+  formHistory: FormGroup;
   alocacoesAula: any[] = [];
   alocacoesEvento: any[] = [];
   dataSource: any;
@@ -39,11 +43,29 @@ export class AllocateLocationComponent implements OnInit {
 
   constructor(
     private service: AllocateService,
-    private router: Router,
+    private historyService: HistoryService,
+    private formBuilder: FormBuilder,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
     private eventoService: EventoService,
-  ) { }
+  ) {
+    this.formHistory = this.formBuilder.group({
+      _id: 0,
+      lesson: null,
+      classe: null,
+      startDate: null,
+      endDate: null,
+      selectedTimes:[],
+      location: null,
+      semester: null,
+      type: null,
+      weekDay: null,
+      alocacao: null,
+      date: null,
+      authorName: null,
+      changeType: null,
+    });
+   }
 
   ngOnInit(): void {
     this.atualizaTabelaAula();
@@ -91,25 +113,48 @@ export class AllocateLocationComponent implements OnInit {
   }
 
   excluir(alocacao: Alocar): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir esta alocação?');
+    const confirmacao = confirm('Tem certeza que deseja desativar esta alocação?');
     if (confirmacao) {
-      this.service.remove(alocacao._id).subscribe(() => {
-        this.alocacoesAula = this.alocacoesAula.filter(e => e._id !== alocacao._id);
-        if (alocacao.type === 'Evento'){
-          this.onSucess(true, true);
-          alocacao.event.allocated = false;
-          this.eventoService.save(alocacao.event).subscribe(result => this.onSucessEvent(), error => this.onFailedEvent());
-        } else {
-          this.onSucess(true, false);
-        }
-      }, error => {
-        this.onFailed();
+
+      const selectedTimesAsString = alocacao.selectedTimes.map(time => ({
+        _id: time._id,
+        startTime: time.startTime.toString(),
+        endTime: time.endTime.toString()
+      }));
+
+      this.formHistory.setValue({
+        _id: 0,
+        lesson: alocacao.lesson,
+        classe: alocacao.classe,
+        startDate: alocacao.startDate,
+        endDate: alocacao.endDate,
+        selectedTimes: JSON.stringify(selectedTimesAsString),
+        semester: alocacao.lesson.semester,
+        location: alocacao.location,
+        type: 'Aula',
+        weekDay: alocacao.weekDay,
+        alocacao: alocacao,
+        date: new Date(),
+        authorName: 'Igor',
+        changeType: 'Desativação',
       });
+
+      alocacao.active = false;
+      this.service.save(alocacao).subscribe(result => this.deleteSuccess(), error => this.deleteFailed());
+      this.historyService.save(this.formHistory.value).subscribe(result => console.log('salvou historico'), error => console.log('não salvou historico'));
     }
   }
 
   onFailed() {
     this.snackBar.open(this.mensagemSnackbarErro, '', { duration: 5000, panelClass: ['errorSnackbar'] });
+  }
+
+  deleteFailed() {
+    this.snackBar.open('Falha ao desativar alocação.', '', { duration: 5000, panelClass: ['errorSnackbar'] });
+  }
+
+  deleteSuccess() {
+    this.snackBar.open('Alocação desativada com sucesso.', '', { duration: 5000, panelClass: ['errorSnackbar'] });
   }
 
   onSucess(excluir: boolean = false, evento: boolean) {
@@ -147,4 +192,19 @@ export class AllocateLocationComponent implements OnInit {
     this.selectedFilter = filter;
   }
 
+  verHistoricoAula(alocacao: Alocar): void {
+    const dialogRef = this.dialog.open(VerHistoricoAulaComponent, {
+      disableClose: false,
+      backdropClass: 'backdrop',
+      data: { alocacao }
+    });
+  }
+
+  verHistoricoEvento(alocacao: Alocar): void {
+    const dialogRef = this.dialog.open(VerHistoricoEventoComponent, {
+      disableClose: false,
+      backdropClass: 'backdrop',
+      data: { alocacao }
+    });
+  }
 }
