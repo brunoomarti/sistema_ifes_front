@@ -47,6 +47,7 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
     private horarioService: HorarioService,
     private historyService: HistoryService,
     private snackBar: MatSnackBar,
+    private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: Alocar,
   )
 
@@ -76,7 +77,7 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
       semester: null,
       type: 'Aula',
       weekDay: null,
-      alocacao: null,
+      allocation: null,
       date: null,
       authorName: 'Igor',
       changeType: null,
@@ -133,7 +134,7 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
       location: obj.alocacao.location,
       type: 'Aula',
       weekDay: obj.alocacao.weekDay,
-      alocacao: obj.alocacao,
+      allocation: obj.alocacao,
       date: new Date(),
       authorName: 'Igor',
       changeType: 'Edição',
@@ -171,7 +172,7 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
   onSucess() {
     this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
     this.dialogRef.close();
-    // this.reloadService.triggerReload();
+    this.reloadService.triggerReload();
   }
 
   onFailed() {

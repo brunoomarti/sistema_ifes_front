@@ -17,7 +17,7 @@ export interface Historico {
   location: Local,
   type: String,
   weekDay: String,
-  alocacao: Alocar,
+  allocation: Alocar,
   date: String,
   authorName: String,
   changeType: String,

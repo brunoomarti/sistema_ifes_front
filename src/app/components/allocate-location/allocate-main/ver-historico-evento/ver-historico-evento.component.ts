@@ -34,14 +34,29 @@ export class VerHistoricoEventoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.atualizaTabelaHistoricoAula();
+    this.atualizaTabelaHistoricoEvento();
   }
 
-  atualizaTabelaHistoricoAula() {
-    this.service.listar().subscribe(alocacoes => {
-      this.historicoEvento = alocacoes;
+  atualizaTabelaHistoricoEvento() {
+    this.service.listar().subscribe(historico => {
+      console.log(historico);
+      console.log(this.data.alocacao._id);
+      this.historicoEvento = historico.filter(item => item.allocation._id === this.data.alocacao._id);
     });
-    console.log(this.historicoEvento);
+  }
+
+  formatDateAndTime(date: string): string {
+    const parsedDate = new Date(date);
+    parsedDate.setHours(parsedDate.getHours());
+
+    const formattedDate = `${parsedDate.getDate().toString().padStart(2, '0')}-` +
+                          `${(parsedDate.getMonth() + 1).toString().padStart(2, '0')}-` +
+                          `${parsedDate.getFullYear()}`;
+
+    const formattedTime = `${parsedDate.getHours().toString().padStart(2, '0')}:` +
+                          `${parsedDate.getMinutes().toString().padStart(2, '0')}`;
+
+    return `${formattedDate} ${formattedTime}`;
   }
 
 }

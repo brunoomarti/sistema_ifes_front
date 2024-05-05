@@ -31,7 +31,8 @@ import { HistoryService } from './historyService/history.service';
 })
 export class AllocateLocationComponent implements OnInit {
 
-  formHistory: FormGroup;
+  formHistoryAula: FormGroup;
+  formHistoryEvento: FormGroup;
   alocacoesAula: any[] = [];
   alocacoesEvento: any[] = [];
   dataSource: any;
@@ -49,7 +50,7 @@ export class AllocateLocationComponent implements OnInit {
     public dialog: MatDialog,
     private eventoService: EventoService,
   ) {
-    this.formHistory = this.formBuilder.group({
+    this.formHistoryAula = this.formBuilder.group({
       _id: 0,
       lesson: null,
       classe: null,
@@ -60,7 +61,23 @@ export class AllocateLocationComponent implements OnInit {
       semester: null,
       type: null,
       weekDay: null,
-      alocacao: null,
+      allocation: null,
+      date: null,
+      authorName: null,
+      changeType: null,
+    });
+
+    this.formHistoryEvento = this.formBuilder.group({
+      _id: 0,
+      event: null,
+      startDate: null,
+      endDate: null,
+      startTime: null,
+      endTime: null,
+      applicant: null,
+      location: null,
+      type: null,
+      allocation: null,
       date: null,
       authorName: null,
       changeType: null,
@@ -108,11 +125,11 @@ export class AllocateLocationComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.atualizaTabelaAula();
+      this.atualizaTabelaEvento();
     });
   }
 
-  excluir(alocacao: Alocar): void {
+  excluirAlocacaoAula(alocacao: Alocar): void {
     const confirmacao = confirm('Tem certeza que deseja desativar esta alocação?');
     if (confirmacao) {
 
@@ -122,7 +139,7 @@ export class AllocateLocationComponent implements OnInit {
         endTime: time.endTime.toString()
       }));
 
-      this.formHistory.setValue({
+      this.formHistoryAula.setValue({
         _id: 0,
         lesson: alocacao.lesson,
         classe: alocacao.classe,
@@ -133,15 +150,41 @@ export class AllocateLocationComponent implements OnInit {
         location: alocacao.location,
         type: 'Aula',
         weekDay: alocacao.weekDay,
-        alocacao: alocacao,
+        allocation: alocacao,
         date: new Date(),
         authorName: 'Igor',
         changeType: 'Desativação',
       });
 
       alocacao.active = false;
+      this.historyService.save(this.formHistoryAula.value).subscribe(result => console.log('salvou historico'), error => console.log('não salvou historico'));
       this.service.save(alocacao).subscribe(result => this.deleteSuccess(), error => this.deleteFailed());
-      this.historyService.save(this.formHistory.value).subscribe(result => console.log('salvou historico'), error => console.log('não salvou historico'));
+    }
+  }
+
+  excluirAlocacaoEvento(alocacao: Alocar): void {
+    const confirmacao = confirm('Tem certeza que deseja desativar esta alocação?');
+    if (confirmacao) {
+
+      this.formHistoryEvento.setValue({
+        _id: 0,
+        event: alocacao.event,
+        startDate: alocacao.startDate,
+        endDate: alocacao.endDate,
+        startTime: alocacao.startTime,
+        endTime: alocacao.endTime,
+        applicant: alocacao.applicant,
+        location: alocacao.location,
+        type: 'Evento',
+        allocation: alocacao,
+        date: new Date(),
+        authorName: 'Igor',
+        changeType: 'Desativação',
+      });
+
+      alocacao.active = false;
+      this.historyService.save(this.formHistoryEvento.value).subscribe(result => console.log('salvou historico'), error => console.log('não salvou historico'));
+      this.service.save(alocacao).subscribe(result => this.deleteSuccess(), error => this.deleteFailed());
     }
   }
 

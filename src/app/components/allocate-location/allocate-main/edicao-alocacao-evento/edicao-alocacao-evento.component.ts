@@ -33,7 +33,7 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
   locais: Local[] = [];
   selectedTimes: Horario[] = [];
   indexTimes: number[] = [];
-  
+
   constructor(
     public dialogRef: MatDialogRef<EdicaoAlocacaoEventoComponent>,
     private formBuilder: FormBuilder,
@@ -48,23 +48,28 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       _id: 0,
+      event: null,
       startDate: null,
+      endDate: null,
       startTime: null,
-      endTime: null, 
-      selectedTimes: [],
+      endTime: null,
+      applicant: null,
       location: null,
-      type: 'Evento'
+      type: 'Evento',
+      active: true
     });
 
     this.formHistory = this.formBuilder.group({
       _id: 0,
+      event: null,
       startDate: null,
+      endDate: null,
       startTime: null,
       endTime: null,
-      selectedTimes:[],
+      applicant: null,
       location: null,
       type: 'Evento',
-      alocacao: null,
+      allocation: null,
       date: null,
       authorName: 'Igor',
       changeType: null,
@@ -77,17 +82,20 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
 
     this.localService.getLocaisAtivos().subscribe(locais => {
       this.locais = locais;
-    }); 
+    });
 
     if (obj) {
       this.form.setValue({
         _id: obj.alocacao._id,
+        event: obj.alocacao.event,
         startTime: obj.alocacao.startTime,
         endTime: obj.alocacao.endTime,
         startDate: obj.alocacao.startDate,
-        selectedTimes: obj.alocacao.selectedTimes,
+        endDate: obj.alocacao.endDate,
+        applicant: obj.alocacao.applicant,
         location: obj.alocacao.location,
-        type: "Evento"
+        type: "Evento",
+        active: true
       });
     }
   }
@@ -101,15 +109,19 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
       endTime: time.endTime.toString()
     }));
 
+    console.log(obj);
+
     this.formHistory.setValue({
       _id: 0,
+      event: obj.alocacao.event,
       startDate: obj.alocacao.startDate,
+      endDate: obj.alocacao.endDate,
       startTime: obj.alocacao.startTime,
       endTime: obj.alocacao.endTime,
-      selectedTimes: JSON.stringify(selectedTimesAsString),
+      applicant: obj.alocacao.applicant,
       location: obj.alocacao.location,
       type: 'Evento',
-      alocacao: obj.alocacao._id,
+      allocation: obj.alocacao,
       date: new Date(),
       authorName: 'Igor',
       changeType: 'Edição',
@@ -118,7 +130,16 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
     console.log(this.formHistory.value);
 
     this.historyService.save(this.formHistory.value).subscribe(result => this.onSucess(), error => this.onFailed());
- 
+
+    const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
+
+    if (selectedLocation && this.form.value.startDate) {
+      this.form.patchValue({ location: selectedLocation });
+      this.form.patchValue({ endDate: this.form.value.startDate });
+    }
+
+    this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+
   }
 
   onCancel(): void {
