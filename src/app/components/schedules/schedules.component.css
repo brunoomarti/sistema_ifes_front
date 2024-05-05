@@ -1,0 +1,63 @@
+.scheduleTable th:not(.primary-cell),
+.scheduleTable td:not(.primary-cell) {
+  padding: 8px;
+  margin: 0;
+  font-size: var(--normal-font-size);
+  color: var(--dark-gray);
+  font-weight: 600;
+}
+
+.scheduleTable .tableContent th,
+.scheduleTable .tableContent td {
+  height: 27.5px;
+}
+
+.scheduleTable .tableContent th,
+.scheduleTable .tableContent td,
+.scheduleTable .scheduleRow th,
+.scheduleTable .scheduleRow td {
+  border: 1px solid var(--light-gray);
+}
+
+.scheduleTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.headerRow th:not(.primary-cell) {
+  font-weight: 800;
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.primary-cell {
+  background-color: white;
+}
+
+.headerRow th:nth-child(2) {
+  border-top-left-radius: var(--secondary-boxes-radius);
+  border-bottom-left-radius: var(--secondary-boxes-radius);
+}
+
+.headerRow th:last-child {
+  border-top-right-radius: var(--secondary-boxes-radius);
+  border-bottom-right-radius: var(--secondary-boxes-radius);
+}
+
+.headerRow th:nth-child(2),
+.headerRow th:nth-child(3){
+  border-right: white solid 1px;
+}
+
+.scheduleRow th:not(.primary-cell):first-child {
+  border-top-left-radius: var(--secondary-boxes-radius);
+}
+
+.scheduleRow th:not(.primary-cell):last-child {
+  border-top-right-radius: var(--secondary-boxes-radius);
+}
+
+.scheduleRow th:nth-child(odd),
+.tableContent th:nth-child(even) {
+  background-color: var(--tertiary-color);
+}

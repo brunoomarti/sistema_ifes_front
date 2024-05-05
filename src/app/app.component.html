@@ -1,6 +1,9 @@
 <div class="marginPage">
   <div class="flexContent">
-    <app-menu></app-menu>
+    <div class="leftContent">
+      <app-menu></app-menu>
+      <app-person-info *ngIf="selectedButton === 5"></app-person-info>
+    </div>
     <div class="mainContent">
       <app-guide-panel></app-guide-panel>
       <router-outlet></router-outlet>

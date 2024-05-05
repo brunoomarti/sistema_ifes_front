@@ -1,1 +1,185 @@
-<p>schedules works!</p>
+<div class="componentContent">
+  <p class="pageTitle">Horários</p>
+
+  <div class="boxSize">
+    <form [formGroup]="form">
+      <div class="selectGroup">
+        <div class="newInput">
+          <label for="scheduleType">Pesquisar por:</label>
+          <select formControlName="scheduleType" (change)="onScheduleTypeChange($event)">
+            <option>Aluno</option>
+            <option>Professor</option>
+          </select>
+        </div>
+        <div
+          class="newInput"
+          *ngIf="form.controls['scheduleType'].value === 'Aluno'"
+        >
+          <label for="scheduleStudent">Matrícula do aluno:</label>
+          <input
+            type="text"
+            formControlName="scheduleStudent"
+            placeholder="Matrícula do aluno"
+            required
+          />
+        </div>
+        <div
+          class="newInput"
+          *ngIf="form.controls['scheduleType'].value === 'Professor'"
+        >
+          <label for="scheduleProfessor">Código do professor:</label>
+          <input
+            type="text"
+            formControlName="scheduleProfessor"
+            placeholder="Código do professor"
+            required
+          />
+        </div>
+        <div class="newInput">
+          <label for="schedulePeriod">Período:</label>
+          <select formControlName="schedulePeriod">
+            <option
+              *ngFor="let periodo of periodos"
+              [value]="periodo._id"
+              required
+            >
+              {{ periodo.semester }}
+            </option>
+          </select>
+        </div>
+        <div class="buttonGroupForm">
+          <button class="button two" (click)="onClean()">Limpar</button>
+          <button class="button one" (click)="onSubmit()">Pesquisar</button>
+        </div>
+      </div>
+    </form>
+
+    <br>
+
+    <div class="tableContainer">
+      <table class="scheduleTable">
+        <thead>
+          <tr class="headerRow">
+            <th rowspan="2" class="primary-cell"></th>
+            <th colspan="6">MATUTINO</th>
+            <th colspan="6">VESPERTINO</th>
+            <th colspan="4">NOTURNO</th>
+          </tr>
+          <tr class="scheduleRow">
+            <th>07:00<br>7:50</th>
+            <th>7:50<br>8:40</th>
+            <th>8:40<br>09:30</th>
+            <th>09:50<br>10:40</th>
+            <th>10:40<br>11:30</th>
+            <th>11:30<br>12:20</th>
+            <th>13:00<br>13:50</th>
+            <th>13:50<br>14:40</th>
+            <th>14:40<br>15:30</th>
+            <th>15:50<br>16:40</th>
+            <th>16:40<br>17:30</th>
+            <th>17:30<br>18:20</th>
+            <th>18:50<br>19:35</th>
+            <th>19:35<br>20:20</th>
+            <th>20:30<br>21:15</th>
+            <th>21:15<br>22:00</th>
+          </tr>
+          <tr class="tableContent">
+            <th>SEG</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr class="tableContent">
+            <th>TER</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr class="tableContent">
+            <th>QUA</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr class="tableContent">
+            <th>QUI</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr class="tableContent">
+            <th>SEX</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+      </table>
+    </div>
+  </div>
+</div>

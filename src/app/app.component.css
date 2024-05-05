@@ -14,10 +14,6 @@
   align-content: center;
 }
 
-app-menu {
-  width: 19%;
-}
-
 .mainContent {
   width: 80%;
   display: flex;
@@ -25,8 +21,11 @@ app-menu {
   gap: 10px;
 }
 
-app-calendar {
+.leftContent {
   width: 19%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 router-outlet {
