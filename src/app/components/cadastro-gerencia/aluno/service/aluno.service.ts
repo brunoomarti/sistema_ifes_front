@@ -41,4 +41,8 @@ export class AlunoService {
   remove(_id: number) {
     return this.httpClient.delete(`${this.API}/${_id}`);
   }
+
+  getStudentSchedule(studentCode: number) {
+    return this.httpClient.get<any>(`${this.API}/schedule/${studentCode}`);
+  }
 }

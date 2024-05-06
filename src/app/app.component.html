@@ -1,8 +1,8 @@
 <div class="marginPage">
   <div class="flexContent">
     <div class="leftContent">
-      <app-menu></app-menu>
-      <app-person-info *ngIf="selectedButton === 5"></app-person-info>
+      <app-menu [ngClass]="getClasses()"></app-menu>
+      <app-person-info *ngIf="showPersonInfo" style="height: 22%;"></app-person-info>
     </div>
     <div class="mainContent">
       <app-guide-panel></app-guide-panel>

@@ -3,7 +3,7 @@ import { CadastroDisciplinaComponent } from './components/cadastro-gerencia/disc
 import { CadastroCoordenadorComponent } from './components/cadastro-gerencia/coordenador/cadastro-coordenador/cadastro-coordenador.component';
 import { CadastroTurmaComponent } from './components/cadastro-gerencia/turma/cadastro-turma/cadastro-turma.component';
 import { CadastroLocalComponent } from './components/cadastro-gerencia/local/cadastro-local/cadastro-local.component';
-import { Component} from '@angular/core';
+import { Component, OnInit} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './components/menu/menu.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
@@ -11,6 +11,8 @@ import { GuidePanelComponent } from './components/guide-panel/guide-panel.compon
 import { CadastroGerenciaComponent } from './components/cadastro-gerencia/cadastro-gerencia-principal/cadastro-gerencia.component';
 import { TelaLoginComponent } from './components/login/tela-login/tela-login.component';
 import { PersonInfoComponent } from './components/schedules/person-info/person-info.component';
+import { SharedService } from './shared-services/shared.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -26,13 +28,41 @@ import { PersonInfoComponent } from './components/schedules/person-info/person-i
             CadastroDisciplinaComponent,
             CadastroAlunoComponent,
             TelaLoginComponent,
-            PersonInfoComponent
+            PersonInfoComponent,
+            CommonModule
           ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
-  title = 'sistema_ifes_front';
+export class AppComponent implements OnInit {
+  selectedButton: number | null = null;
+  showPersonInfo: boolean = false;
+  private delayTimeout: any;
+
+  constructor(private sharedService: SharedService) {
+    this.sharedService.selectedButton$.subscribe(button => {
+      this.selectedButton = button;
+      if (this.selectedButton === 5) {
+        clearTimeout(this.delayTimeout);
+        this.delayTimeout = setTimeout(() => {
+          this.showPersonInfo = true;
+        }, 300);
+      } else {
+        this.showPersonInfo = false;
+      }
+    });
+  }
+
+  getClasses() {
+    return {
+      'menu-selected': this.selectedButton === 5,
+      'menu-not-selected': this.selectedButton !== 5
+    };
+  }
+
+  ngOnInit() {
+    this.showPersonInfo = false;
+  }
 }
 
 

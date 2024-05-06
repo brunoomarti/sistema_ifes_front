@@ -1,1 +1,20 @@
-<p>person-info works!</p>
+<div class="infoBox">
+  <ng-container *ngIf="data.person && data.person === 'aluno'">
+    <p class="pageTitle">Aluno selecionado</p>
+    <p class="pageText">
+      Nome: <br />
+      Matrícula:
+    </p>
+  </ng-container>
+  <ng-container *ngIf="data.person && data.person === 'professor'">
+    <p class="pageTitle">Professor selecionado</p>
+    <p class="pageText">
+      Nome: <br />
+      Código:
+    </p>
+  </ng-container>
+  <ng-container *ngIf="!data.person">
+    <p class="pageTitle">Pesquise por um horário ao lado</p>
+  </ng-container>
+</div>
+

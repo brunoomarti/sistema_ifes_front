@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
+import { SharedService } from '../../shared-services/shared.service';
 
 @Component({
   selector: 'app-menu',
@@ -14,10 +15,15 @@ import { filter } from 'rxjs';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css', '/src/styles.css']
 })
-export class MenuComponent implements OnInit {
-  selectedButton: number | null = null;
 
-  constructor(private router: Router) {}
+export class MenuComponent implements OnInit {
+
+  selectedButton: number = 0;
+
+  constructor(
+    private router: Router,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit() {
     this.router.events
@@ -40,8 +46,8 @@ export class MenuComponent implements OnInit {
       this.selectedButton = 4;
     } else if (url.includes('/horarios')) {
       this.selectedButton = 5;
-    } else {
-      this.selectedButton = null;
     }
+
+    this.sharedService.updateSelectedButton(this.selectedButton);
   }
 }
