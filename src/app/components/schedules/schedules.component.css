@@ -30,6 +30,12 @@
   color: white;
 }
 
+.tableContent th:not(.weekDay) {
+  font-weight: 400;
+  font-size: var(--smallest-font-size);
+  white-space: pre-line;
+}
+
 .primary-cell {
   background-color: white;
 }

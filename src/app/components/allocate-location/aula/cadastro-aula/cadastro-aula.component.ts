@@ -145,6 +145,7 @@ export class CadastroAulaComponent {
         this.form.get('teacher')?.setValue('');
         this.form.get('semester')?.setValue('');
         this.form.get('allocated')?.setValue(false);
+        this.form.get('weeklyQuantity')?.setValue('0');
       } else {
         this.router.navigate(['/alocar-local/gerencia-aula']);
       }

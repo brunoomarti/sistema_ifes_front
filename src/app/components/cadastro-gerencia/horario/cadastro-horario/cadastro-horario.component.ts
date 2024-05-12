@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -25,6 +25,8 @@ export class CadastroHorarioComponent implements OnInit {
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Horário cadastrado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar horário.';
+
+  @ViewChild('startTimeField') startTimeField!: ElementRef;
 
   constructor(
     private router: Router,
@@ -113,6 +115,7 @@ export class CadastroHorarioComponent implements OnInit {
       if (result === 'cadastrarNovo') {
         this.form.get('startTime')?.setValue('');
         this.form.get('endTime')?.setValue('');
+        this.startTimeField.nativeElement.focus();
       } else {
         this.router.navigate(['/cadastro-gerencia/gerencia-horario']);
       }

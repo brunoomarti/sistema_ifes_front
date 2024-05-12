@@ -113,6 +113,8 @@ export class CadastroDisciplinaComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'cadastrarNovo') {
         this.form.get('name')?.setValue('');
+        this.form.get('course')?.setValue('');
+        this.form.get('acronym')?.setValue('');
       } else {
         this.router.navigate(['/cadastro-gerencia/gerencia-disciplina']);
       }
