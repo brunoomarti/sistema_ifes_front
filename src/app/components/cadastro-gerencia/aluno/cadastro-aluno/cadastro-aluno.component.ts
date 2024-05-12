@@ -1,3 +1,4 @@
+import { Curso } from './../../../../models/Curso';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
+import { CursoService } from '../../curso/service/curso.service';
 
 @Component({
   selector: 'app-cadastro-aluno',
@@ -25,6 +27,7 @@ export class CadastroAlunoComponent implements OnInit {
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Aluno(a) cadastrado(a) com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar aluno(a).';
+  cursos: Curso[] = [];
 
   constructor(
     private router: Router,
@@ -32,13 +35,15 @@ export class CadastroAlunoComponent implements OnInit {
     private route: ActivatedRoute,
     private service: AlunoService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cursoService: CursoService
   )
 
   {
     this.form = this.formBuilder.group({
       id: [0],
       name: [''],
+      course: null,
       studentCode: ['']
     });
     this.form.get('studentCode')?.setValue(this.gerarCodigo());
@@ -50,12 +55,23 @@ export class CadastroAlunoComponent implements OnInit {
       this.form.setValue({
         id: obj._id,
         name: obj.name,
+        course: obj.course,
         barcode: obj.studentCode
       });
     }
+
+    this.cursoService.listar().subscribe(cursos => {
+      this.cursos = cursos;
+    });
   }
 
   onSubmit() {
+    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
+
+    if (selectedCourse) {
+        this.form.patchValue({ course: selectedCourse });
+    }
+
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {

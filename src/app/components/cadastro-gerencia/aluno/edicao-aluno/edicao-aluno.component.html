@@ -11,6 +11,13 @@
       </div>
 
       <div class="newInput">
+        <label >Curso:</label>
+        <select formControlName="course" required>
+          <option *ngFor="let curso of cursos" [value]="curso._id">{{curso.name}}</option>
+        </select>
+      </div>
+
+      <div class="newInput">
         <label for="name">Código: {{ data.aluno.studentCode }}</label>
       </div>
 

@@ -11,6 +11,18 @@
         <input type="text" formControlName="name" placeholder="Nome da disciplina" required>
       </div>
 
+      <div class="newInput">
+        <label for="acronym">Sigla:</label>
+        <input type="text" formControlName="acronym" placeholder="Sigla da disciplina" required>
+      </div>
+
+      <div class="newInput">
+        <label >Curso:</label>
+        <select formControlName="course" required>
+          <option *ngFor="let curso of cursos" [value]="curso._id">{{curso.name}}</option>
+        </select>
+      </div>
+
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>
         <button class="button one" (click)="onSubmit()">Criar Disciplina</button>

@@ -9,6 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Disciplina } from '../../../../models/Disciplina';
+import { CursoService } from '../../curso/service/curso.service';
+import { Curso } from '../../../../models/Curso';
 
 @Component({
   selector: 'app-edicao-disciplina',
@@ -26,6 +28,7 @@ export class EdicaoDisciplinaComponent implements OnInit {
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Disciplina editada com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao editar disciplina.';
+  cursos: Curso[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<EdicaoDisciplinaComponent>,
@@ -35,12 +38,15 @@ export class EdicaoDisciplinaComponent implements OnInit {
     private route: ActivatedRoute,
     private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: any,
+    private cursoService: CursoService
   )
 
   {
     this.form = this.formBuilder.group({
       _id: 0,
-      name: ''
+      name: '',
+      acronym: '',
+      course: null
     });
   }
 
@@ -49,12 +55,24 @@ export class EdicaoDisciplinaComponent implements OnInit {
     if (obj) {
       this.form.setValue({
         _id: obj._id,
-        name: obj.name
+        name: obj.name,
+        acronym: obj.acronym,
+        course: obj.course
       });
     }
+
+    this.cursoService.listar().subscribe(cursos => {
+      this.cursos = cursos;
+    });
   }
 
   onSubmit() {
+    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
+
+    if (selectedCourse) {
+        this.form.patchValue({ course: selectedCourse });
+    }
+
     console.log(this.form.value);
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }

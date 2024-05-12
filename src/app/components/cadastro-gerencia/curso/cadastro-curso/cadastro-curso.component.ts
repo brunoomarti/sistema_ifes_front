@@ -3,82 +3,60 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DisciplinaService } from '../service/disciplina.service';
+import { CursoService } from '../service/curso.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Disciplina } from '../../../../models/Disciplina';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
-import { Curso } from '../../../../models/Curso';
-import { CursoService } from '../../curso/service/curso.service';
 
 @Component({
-  selector: 'app-cadastro-disciplina',
+  selector: 'app-cadastro-curso',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatTableModule
   ],
-  templateUrl: './cadastro-disciplina.component.html',
-  styleUrl: './cadastro-disciplina.component.css'
+  templateUrl: './cadastro-curso.component.html',
+  styleUrl: './cadastro-curso.component.css'
 })
-export class CadastroDisciplinaComponent implements OnInit {
+export class CadastroCursoComponent implements OnInit {
 
   form: FormGroup;
-  mensagemSnackbarAcerto: string = 'Disciplina cadastrada com sucesso.';
-  mensagemSnackbarErro: string = 'Erro ao cadastrar disciplina.';
-  cursos: Curso[] = [];
+  mensagemSnackbarAcerto: string = 'Curso cadastrado com sucesso.';
+  mensagemSnackbarErro: string = 'Erro ao cadastrar curso.';
 
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private service: DisciplinaService,
+    private service: CursoService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private cursoService: CursoService
+    private dialog: MatDialog
   )
 
   {
     this.form = this.formBuilder.group({
       id: [0],
-      name: '',
-      acronym: '',
-      course: null
+      name: ['']
     });
   }
 
   ngOnInit(): void {
-    const obj: Disciplina = this.route.snapshot.data['disciplina'];
-    if (obj) {
-      this.form.setValue({
-        id: obj._id,
-        name: obj.name,
-        acronym: obj.acronym,
-        course: obj.course
-      });
-    }
-
-    this.cursoService.listar().subscribe(cursos => {
-      this.cursos = cursos;
+    this.form.setValue({
+      id: null,
+      name: null
     });
   }
 
   onSubmit() {
-    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
-
-    if (selectedCourse) {
-        this.form.patchValue({ course: selectedCourse });
-    }
-
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {
-          title: 'Disciplina Cadastrada',
-          message: `A disciplina ${result.name} foi cadastrada.`,
+          title: 'Curso Cadastrado',
+          message: `O curso ${result.name} foi cadastrado.`,
           buttons: {
-            cadastrarNovo: 'Cadastrar Nova Disciplina',
-            irParaGerencia: 'Ver Disciplinas Cadastradas'
+            cadastrarNovo: 'Cadastrar Novo Curso',
+            irParaGerencia: 'Ver Cursos Cadastrados'
           }
         };
         this.openDialog(dialogData);
@@ -114,8 +92,9 @@ export class CadastroDisciplinaComponent implements OnInit {
       if (result === 'cadastrarNovo') {
         this.form.get('name')?.setValue('');
       } else {
-        this.router.navigate(['/cadastro-gerencia/gerencia-disciplina']);
+        this.router.navigate(['/cadastro-gerencia/gerencia-curso']);
       }
     });
   }
+
 }

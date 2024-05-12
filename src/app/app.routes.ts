@@ -28,6 +28,8 @@ import { GerenciaEventoComponent } from './components/allocate-location/evento/g
 import { CadastroEventoComponent } from './components/allocate-location/evento/cadastro-evento/cadastro-evento.component';
 import { GerenciaLocalComponent } from './components/cadastro-gerencia/local/gerencia-local/gerencia-local.component';
 import { TelaLoginComponent } from './components/login/tela-login/tela-login.component';
+import { CadastroCursoComponent } from './components/cadastro-gerencia/curso/cadastro-curso/cadastro-curso.component';
+import { GerenciaCursoComponent } from './components/cadastro-gerencia/curso/gerencia-curso/gerencia-curso.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -52,6 +54,8 @@ export const routes: Routes = [
   { path: 'cadastro-gerencia/gerencia-horario', data: { title: 'SIFES | Gerenciar Horário' }, component: GerenciaHorarioComponent },
   { path: 'cadastro-gerencia/cadastro-professor', data: { title: 'SIFES | Cadastrar Professor' }, component: CadastroProfessorComponent },
   { path: 'cadastro-gerencia/gerencia-professor', data: { title: 'SIFES | Gerenciar Professor' }, component: GerenciaProfessorComponent },
+  { path: 'cadastro-gerencia/cadastro-curso', data: { title: 'SIFES | Cadastrar Curso' }, component: CadastroCursoComponent },
+  { path: 'cadastro-gerencia/gerencia-curso', data: { title: 'SIFES | Gerenciar Curso' }, component: GerenciaCursoComponent },
 
   { path: 'importar-dados', component: ImportDataComponent },
 

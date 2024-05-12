@@ -182,9 +182,11 @@ export class AllocateLocationComponent implements OnInit {
         changeType: 'Desativação',
       });
 
+      alocacao.event.allocated = false;
       alocacao.active = false;
       this.historyService.save(this.formHistoryEvento.value).subscribe(result => console.log('salvou historico'), error => console.log('não salvou historico'));
       this.service.save(alocacao).subscribe(result => this.deleteSuccess(), error => this.deleteFailed());
+      this.eventoService.save(alocacao.event).subscribe(result => this.deleteSuccess(), error => this.deleteFailed());
     }
   }
 

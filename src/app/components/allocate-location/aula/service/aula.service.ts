@@ -47,10 +47,14 @@ export class AulaService {
   remove(_id: number) {
     return this.httpClient.delete(`${this.API}/${_id}`);
   }
-  
+
   removerAlunoDaAula(studentId: number, lessonId: string) {
     let lessonIdInt: number = parseInt(lessonId);
     return this.httpClient.delete(`${this.API}/removeStudent/${studentId}/${lessonIdInt}`);
+  }
+
+  findLessonsByStudentCodeAndSemesterId(studentCode: number, semesterId: number) {
+    return this.httpClient.get<any>(`${this.API}/getLessons/${studentCode}/${semesterId}`);
   }
 
 }

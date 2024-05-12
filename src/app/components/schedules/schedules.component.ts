@@ -5,7 +5,7 @@ import { Semestre } from '../../models/Semestre';
 import { SemestreService } from '../cadastro-gerencia/semestre/service/semestre.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AlunoService } from '../cadastro-gerencia/aluno/service/aluno.service';
-import { Aluno } from '../../models/Aluno';
+import { AulaService } from '../allocate-location/aula/service/aula.service';
 
 @Component({
   selector: 'app-schedules',
@@ -22,11 +22,13 @@ export class SchedulesComponent implements OnInit {
   form: FormGroup;
   periodos: Semestre[] = [];
   horarioIndividual: any[] = [];
+  semesterId: number = 0;
+  tabela: any[][] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private semestreService: SemestreService,
-    private studentService: AlunoService,
+    private service: AulaService,
     private snackBar: MatSnackBar
   )
 
@@ -46,6 +48,8 @@ export class SchedulesComponent implements OnInit {
     });
 
     this.formInit();
+    this.preencheVetor();
+    this.preencheTabela();
   }
 
   formInit() {
@@ -73,9 +77,16 @@ export class SchedulesComponent implements OnInit {
 
   onSubmit() {
     const scheduleType = this.form.get('scheduleType')?.value;
+    const selectedSemester = this.periodos.find(obj => obj._id == this.form.value.schedulePeriod);
+
+    if (selectedSemester) {
+      this.semesterId = selectedSemester._id;
+    }
 
     if (scheduleType === 'Aluno') {
-      this.studentService.getStudentSchedule(this.form.get('scheduleStudent')?.value).subscribe(
+      const studentCode = this.form.get('scheduleStudent')?.value;
+
+      this.service.findLessonsByStudentCodeAndSemesterId(studentCode, this.semesterId).subscribe(
         result => {
           this.horarioIndividual = result;
           console.log(this.horarioIndividual);
@@ -90,12 +101,38 @@ export class SchedulesComponent implements OnInit {
     }
   }
 
+
   onFailed() {
     console.log("puts")
   }
 
   onSuccess(excluir: boolean = false) {
     console.log("eba")
+  }
+
+  preencheVetor() {
+    for (let i = 0; i < 7; i++) {
+      this.tabela[i] = [];
+      for (let j = 0; j < 17; j++) {
+        if (i >= 2 && j >= 1 && j < 17) {
+
+        } else {
+          this.tabela[i][j] = '';
+        }
+      }
+    }
+    console.log(this.tabela);
+  }
+
+  preencheTabela() {
+    const table = document.querySelector('.scheduleTable') as HTMLTableElement;
+
+    for (let i = 2; i < 7; i++) {
+      for (let j = 1; j < 17; j++) {
+        const cell = table.rows[i].cells[j];
+        cell.textContent = this.tabela[i][j];
+      }
+    }
   }
 
 }
