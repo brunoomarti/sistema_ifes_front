@@ -1,0 +1,26 @@
+<div class="dialog-container">
+  <p class="pageTitle">{{ data.title }}</p>
+
+  <form [formGroup]="form">
+    <div class="newInput" *ngIf="data.tipo === 'Aluno'">
+      <select formControlName="student" required>
+        <option *ngFor="let aluno of listagemAlunos" [value]="aluno._id">
+          {{ aluno.name }} ({{ aluno.studentCode }})
+        </option>
+      </select>
+    </div>
+
+    <div class="newInput" *ngIf="data.tipo === 'Professor'">
+      <select formControlName="teacher" required>
+        <option *ngFor="let professor of listagemProfessores" [value]="professor._id">
+          {{ professor.name }} ({{ professor.teacherCode }})
+        </option>
+      </select>
+    </div>
+
+    <div class="buttonGroupForm">
+      <button class="button two" (click)="onCancel()">Cancelar</button>
+      <button class="button one" (click)="onSubmit()">Inserir</button>
+    </div>
+  </form>
+</div>

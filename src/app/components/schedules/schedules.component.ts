@@ -1,3 +1,4 @@
+import { Aluno } from './../../models/Aluno';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -9,6 +10,8 @@ import { AulaService } from '../allocate-location/aula/service/aula.service';
 import { Alocar } from '../../models/Alocar';
 import { Horario } from '../../models/Horario';
 import { HorarioIndividual } from '../../models/HorarioIndividual';
+import { MatDialog } from '@angular/material/dialog';
+import { ListagemComponent } from './listagem/listagem.component';
 
 @Component({
   selector: 'app-schedules',
@@ -28,6 +31,7 @@ export class SchedulesComponent implements OnInit {
     private formBuilder: FormBuilder,
     private semestreService: SemestreService,
     private service: AulaService,
+    private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {
     this.form = this.formBuilder.group({
@@ -60,14 +64,42 @@ export class SchedulesComponent implements OnInit {
   onScheduleTypeChange(event: any) {
     const selectedType = event.target.value;
     if (selectedType === 'Aluno') {
-      this.form.controls['scheduleProfessor'].reset();
+      this.form.controls['scheduleTeacher'].reset();
     } else if (selectedType === 'Professor') {
       this.form.controls['scheduleStudent'].reset();
     }
   }
 
-  onClean() {
-    this.formInit();
+  onList() {
+    const scheduleType = this.form.get('scheduleType')?.value;
+    if (scheduleType === 'Aluno') {
+      const dialogData = {
+        title: 'Listagem de alunos.',
+        tipo: scheduleType
+      };
+      this.openDialog(dialogData);
+    } else if (scheduleType === 'Professor') {
+      const dialogData = {
+        title: 'Listagem de professores.',
+        tipo: scheduleType
+      };
+      this.openDialog(dialogData);
+    }
+  }
+
+  openDialog(data: any): void {
+    const dialogRef = this.dialog.open(ListagemComponent, {
+      data: data,
+      backdropClass: 'backdrop'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.tipo === 'Aluno') {
+        this.form.get('scheduleStudent')?.setValue(result.objetoSelecionado.studentCode);
+      } else {
+        this.form.get('scheduleTeacher')?.setValue(result.objetoSelecionado.teacherCode);
+      }
+    });
   }
 
   onSubmit() {
@@ -81,10 +113,10 @@ export class SchedulesComponent implements OnInit {
     }
 
     if (scheduleType === 'Aluno') {
-      const studentCode = this.form.get('scheduleStudent')?.value;
+      const code = this.form.get('scheduleStudent')?.value;
 
       this.service
-        .findLessonsByStudentCodeAndSemesterId(studentCode, this.semesterId)
+        .findLessonsByStudentCodeAndSemesterId(code, this.semesterId)
         .subscribe(
           (result) => {
             this.horarioIndividual = result;
@@ -95,7 +127,19 @@ export class SchedulesComponent implements OnInit {
           }
         );
     } else if (scheduleType === 'Professor') {
-      console.log('oi');
+      const code = this.form.get('scheduleTeacher')?.value;
+
+      this.service
+        .findLessonsByTeacherCodeAndSemesterId(code, this.semesterId)
+        .subscribe(
+          (result) => {
+            this.horarioIndividual = result;
+            this.onSuccess();
+          },
+          (error) => {
+            this.onFailed();
+          }
+        );
     }
   }
 
@@ -104,6 +148,7 @@ export class SchedulesComponent implements OnInit {
   }
 
   onSuccess(excluir: boolean = false) {
+    console.log(this.horarioIndividual);
     this.preencheVetor();
     this.preencheTabela();
   }

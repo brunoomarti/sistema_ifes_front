@@ -27,10 +27,10 @@
           class="newInput"
           *ngIf="form.controls['scheduleType'].value === 'Professor'"
         >
-          <label for="scheduleProfessor">Código do professor:</label>
+          <label for="scheduleTeacher">Código do professor:</label>
           <input
             type="text"
-            formControlName="scheduleProfessor"
+            formControlName="scheduleTeacher"
             placeholder="Código do professor"
             required
           />
@@ -48,8 +48,8 @@
           </select>
         </div>
         <div class="buttonGroupForm">
-          <button class="button two" (click)="onClean()">Limpar</button>
           <button class="button one" (click)="onSubmit()">Pesquisar</button>
+          <button class="button two" (click)="onList()">Listagem</button>
         </div>
       </div>
     </form>

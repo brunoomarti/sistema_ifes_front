@@ -498,3 +498,7 @@ tr[mat-row].row-disabled {
   width: 100%;
   height: max-content;
 }
+
+.bigHeight {
+  height: 50vh;
+}
