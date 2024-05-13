@@ -1,17 +1,17 @@
-import { Aluno } from './../../models/Aluno';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Semestre } from '../../models/Semestre';
 import { SemestreService } from '../cadastro-gerencia/semestre/service/semestre.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AlunoService } from '../cadastro-gerencia/aluno/service/aluno.service';
 import { AulaService } from '../allocate-location/aula/service/aula.service';
-import { Alocar } from '../../models/Alocar';
-import { Horario } from '../../models/Horario';
 import { HorarioIndividual } from '../../models/HorarioIndividual';
 import { MatDialog } from '@angular/material/dialog';
 import { ListagemComponent } from './listagem/listagem.component';
+import { SharedService } from '../../shared-services/shared.service';
+import { AlunoService } from '../cadastro-gerencia/aluno/service/aluno.service';
+import { Aluno } from '../../models/Aluno';
+import { Curso } from '../../models/Curso';
+import { ProfessorService } from '../cadastro-gerencia/professor/service/professor.service';
 
 @Component({
   selector: 'app-schedules',
@@ -26,14 +26,20 @@ export class SchedulesComponent implements OnInit {
   horarioIndividual: HorarioIndividual[] = [];
   semesterId: number = 0;
   tabela: any[][] = [];
+  alunoSelecionado: any;
+  professorSelecionado: any;
 
   constructor(
     private formBuilder: FormBuilder,
     private semestreService: SemestreService,
     private service: AulaService,
+    private alunoService: AlunoService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {
+    private sharedService: SharedService,
+    private professorService: ProfessorService
+  )
+
+  {
     this.form = this.formBuilder.group({
       _id: 0,
       scheduleType: null,
@@ -120,7 +126,7 @@ export class SchedulesComponent implements OnInit {
         .subscribe(
           (result) => {
             this.horarioIndividual = result;
-            this.onSuccess();
+            this.onSuccess(scheduleType);
           },
           (error) => {
             this.onFailed();
@@ -134,7 +140,7 @@ export class SchedulesComponent implements OnInit {
         .subscribe(
           (result) => {
             this.horarioIndividual = result;
-            this.onSuccess();
+            this.onSuccess(scheduleType);
           },
           (error) => {
             this.onFailed();
@@ -147,13 +153,21 @@ export class SchedulesComponent implements OnInit {
     console.log('puts');
   }
 
-  onSuccess(excluir: boolean = false) {
-    console.log(this.horarioIndividual);
-    this.preencheVetor();
+  onSuccess(tipo: string) {
+    if (tipo === 'Aluno') {
+      this.alunoSelecionado = this.alunoService.idByCode(this.form.get('scheduleStudent')?.value);
+      const obj = { name: this.alunoSelecionado.name, registration: this.alunoSelecionado.studentCode, type: 'Aluno' };
+      this.sharedService.setData(obj);
+    } else {
+      this.professorSelecionado = this.professorService.idByCode(this.form.get('scheduleStudent')?.value);
+      const obj = { name: this.professorSelecionado.name, registration: this.professorSelecionado.teacherCode, type: 'Professor' };
+      this.sharedService.setData(obj);
+    }
+    this.preencheVetor(tipo);
     this.preencheTabela();
   }
 
-  preencheVetor() {
+  preencheVetor(tipo: string) {
     const horarios = [
       '07:00',
       '07:50',
@@ -189,7 +203,7 @@ export class SchedulesComponent implements OnInit {
       for (let j = 0; j < 17; j++) {
         const horario = horarios[j-1];
         if (i !== 0 && i !== 7) {
-          this.preencheCelula(diaSemana, horario, i, j);
+          this.preencheCelula(diaSemana, horario, i, j, tipo);
         } else {
           this.tabela[i][j] = '';
         }
@@ -197,19 +211,28 @@ export class SchedulesComponent implements OnInit {
     }
   }
 
-  preencheCelula(diaSemana: string, horario: string, i: number, j: number) {
+  preencheCelula(diaSemana: string, horario: string, i: number, j: number, tipo: string) {
     this.horarioIndividual.forEach((element) => {
       element.allocations.forEach((allocation) => {
         if (allocation.weekDay === diaSemana) {
           allocation.selectedTimes.forEach((time) => {
             if (time.startTime === horario) {
-              const firstName = element.teacher.name.split(' ')[0];
-              this.tabela[i][j] =
-                firstName +
-                '\n' +
-                element.discipline.acronym +
-                '\n' +
-                allocation.location.name;
+              if (tipo === 'Aluno'){
+                const firstName = element.teacher.name.split(' ')[0];
+                this.tabela[i][j] =
+                  firstName +
+                  '\n' +
+                  element.discipline.acronym +
+                  '\n' +
+                  allocation.location.name;
+              } else {
+                this.tabela[i][j] =
+                  allocation.classe.name +
+                  '\n' +
+                  element.discipline.acronym +
+                  '\n' +
+                  allocation.location.name;
+              }
             }
           });
         }

@@ -38,6 +38,10 @@ export class AlunoService {
     return this.httpClient.get<Aluno>(`${this.API}/${id}`);
   }
 
+  idByCode(studentCode: string) {
+    return this.httpClient.get<Aluno>(`${this.API}/idByCode/${studentCode}`);
+  }
+
   remove(_id: number) {
     return this.httpClient.delete(`${this.API}/${_id}`);
   }

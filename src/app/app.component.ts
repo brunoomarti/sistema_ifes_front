@@ -39,7 +39,9 @@ export class AppComponent implements OnInit {
   showPersonInfo: boolean = false;
   private delayTimeout: any;
 
-  constructor(private sharedService: SharedService) {
+  constructor(
+    private sharedService: SharedService
+  ) {
     this.sharedService.selectedButton$.subscribe(button => {
       this.selectedButton = button;
       if (this.selectedButton === 5) {
@@ -49,6 +51,8 @@ export class AppComponent implements OnInit {
         }, 300);
       } else {
         this.showPersonInfo = false;
+        // const obj = { name: '', registration: '', type: '' };
+        // this.sharedService.setData(obj)
       }
     });
   }

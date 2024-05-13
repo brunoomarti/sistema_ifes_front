@@ -13,9 +13,9 @@ export class ProfessorService {
   constructor(private httpClient: HttpClient) { }
 
   save(record: Partial<Professor>) {
-    if (record._id) { 
+    if (record._id) {
       return this.update(record);
-    } 
+    }
     return this.create(record);
   }
 
@@ -36,6 +36,10 @@ export class ProfessorService {
 
   loadById(id: string) {
     return this.httpClient.get<Professor>(`${this.API}/${id}`);
+  }
+
+  idByCode(studentCode: string) {
+    return this.httpClient.get<Professor>(`${this.API}/idByCode/${studentCode}`);
   }
 
   remove(_id: number) {

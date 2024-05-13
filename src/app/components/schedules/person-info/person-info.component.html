@@ -1,20 +1,19 @@
 <div class="infoBox">
-  <ng-container *ngIf="data.person && data.person === 'aluno'">
+  <ng-container *ngIf="data.type === 'Aluno'">
     <p class="pageTitle">Aluno selecionado</p>
     <p class="pageText">
-      Nome: <br />
-      Matrícula:
+      Nome: {{ data.name }}<br />
+      Matrícula: {{ data.registration }}
     </p>
   </ng-container>
-  <ng-container *ngIf="data.person && data.person === 'professor'">
+  <ng-container *ngIf="data.type === 'Professor'">
     <p class="pageTitle">Professor selecionado</p>
     <p class="pageText">
-      Nome: <br />
-      Código:
+      Nome: {{ data.name }}<br />
+      Código: {{ data.registration }}
     </p>
   </ng-container>
-  <ng-container *ngIf="!data.person">
+  <ng-container *ngIf="!data.type">
     <p class="pageTitle">Pesquise por um horário ao lado</p>
   </ng-container>
 </div>
-

@@ -58,7 +58,7 @@ export class AulaService {
   }
 
   findLessonsByTeacherCodeAndSemesterId(teacherCode: number, semesterId: number) {
-    return this.httpClient.get<any>(`${this.API}/getLessons/${teacherCode}/${semesterId}`);
+    return this.httpClient.get<any>(`${this.API}/getLessonsT/${teacherCode}/${semesterId}`);
   }
 
 }
