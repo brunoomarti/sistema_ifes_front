@@ -51,8 +51,8 @@ export class AppComponent implements OnInit {
         }, 300);
       } else {
         this.showPersonInfo = false;
-        // const obj = { name: '', registration: '', type: '' };
-        // this.sharedService.setData(obj)
+        const obj = { name: '', registration: '', type: '' };
+        this.sharedService.setData(obj)
       }
     });
   }

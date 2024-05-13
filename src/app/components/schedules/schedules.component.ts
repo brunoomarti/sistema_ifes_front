@@ -101,8 +101,10 @@ export class SchedulesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.tipo === 'Aluno') {
+        this.alunoSelecionado = result;
         this.form.get('scheduleStudent')?.setValue(result.objetoSelecionado.studentCode);
       } else {
+        this.professorSelecionado = result;
         this.form.get('scheduleTeacher')?.setValue(result.objetoSelecionado.teacherCode);
       }
     });
@@ -155,12 +157,10 @@ export class SchedulesComponent implements OnInit {
 
   onSuccess(tipo: string) {
     if (tipo === 'Aluno') {
-      this.alunoSelecionado = this.alunoService.idByCode(this.form.get('scheduleStudent')?.value);
-      const obj = { name: this.alunoSelecionado.name, registration: this.alunoSelecionado.studentCode, type: 'Aluno' };
+      const obj = { name: this.alunoSelecionado.objetoSelecionado.name, registration: this.alunoSelecionado.objetoSelecionado.studentCode, type: 'Aluno' };
       this.sharedService.setData(obj);
     } else {
-      this.professorSelecionado = this.professorService.idByCode(this.form.get('scheduleStudent')?.value);
-      const obj = { name: this.professorSelecionado.name, registration: this.professorSelecionado.teacherCode, type: 'Professor' };
+      const obj = { name: this.professorSelecionado.objetoSelecionado.name, registration: this.professorSelecionado.objetoSelecionado.teacherCode, type: 'Professor' };
       this.sharedService.setData(obj);
     }
     this.preencheVetor(tipo);
