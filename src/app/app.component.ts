@@ -13,6 +13,8 @@ import { TelaLoginComponent } from './components/login/tela-login/tela-login.com
 import { PersonInfoComponent } from './components/schedules/person-info/person-info.component';
 import { SharedService } from './shared-services/shared.service';
 import { CommonModule } from '@angular/common';
+import { AuthGuard } from './components/login/service/auth-guard.service';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -39,9 +41,15 @@ export class AppComponent implements OnInit {
   showPersonInfo: boolean = false;
   private delayTimeout: any;
 
+  private isLoggedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  isLogged$: Observable<boolean> = this.isLoggedSubject.asObservable();
+
   constructor(
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private authComponent: AuthGuard,
+    
   ) {
+    console.log(this.isLogged$)
     this.sharedService.selectedButton$.subscribe(button => {
       this.selectedButton = button;
       if (this.selectedButton === 5) {
@@ -64,6 +72,10 @@ export class AppComponent implements OnInit {
     };
   }
 
+  setLoggedStatus(isLogged: boolean): void {
+    this.isLoggedSubject.next(isLogged);
+  }
+  
   ngOnInit() {
     this.showPersonInfo = false;
   }

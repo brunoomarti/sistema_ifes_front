@@ -50,4 +50,10 @@ export class MenuComponent implements OnInit {
 
     this.sharedService.updateSelectedButton(this.selectedButton);
   }
+
+  logout(){
+    sessionStorage.removeItem('auth-token');
+    sessionStorage.removeItem('username');
+    window.location.reload();
+  }
 }
