@@ -1,21 +1,19 @@
-<router-outlet></router-outlet>
-<div *ngIf="isLogged$">
-<div class="marginPage">
-  <div class="flexContent">
-    <div class="leftContent">
-      <app-menu [ngClass]="getClasses()"></app-menu>
-      <app-person-info *ngIf="showPersonInfo" style="height: 22%;"></app-person-info>
+
+<div *ngIf="isLogged; else notLoggedContent">
+  <div class="marginPage">
+    <div class="flexContent">
+      <div class="leftContent">
+        <app-menu [ngClass]="getClasses()"></app-menu>
+        <app-person-info *ngIf="showPersonInfo" style="height: 22%;"></app-person-info>
+      </div>
+      <div class="mainContent">
+        <app-guide-panel></app-guide-panel>
+        <router-outlet></router-outlet>
+      </div> 
     </div>
-    <div class="mainContent">
-      <app-guide-panel></app-guide-panel>
-      <router-outlet></router-outlet>
-    </div> 
-    <!-- <app-calendar></app-calendar> 
   </div>
-</div> -->
 </div>
 
-
-<!-- <div class="marginPageLogin">
-  <app-tela-login></app-tela-login>
-</div> -->
+<ng-template #notLoggedContent>
+  <router-outlet></router-outlet>
+</ng-template>

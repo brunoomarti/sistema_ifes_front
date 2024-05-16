@@ -52,8 +52,8 @@ export class MenuComponent implements OnInit {
   }
 
   logout(){
-    sessionStorage.removeItem('auth-token');
-    sessionStorage.removeItem('username');
+    localStorage.removeItem('auth-token');
+    localStorage.removeItem('username');
     window.location.reload();
   }
 }

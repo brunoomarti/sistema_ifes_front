@@ -4,7 +4,7 @@ import { CadastroCoordenadorComponent } from './components/cadastro-gerencia/coo
 import { CadastroTurmaComponent } from './components/cadastro-gerencia/turma/cadastro-turma/cadastro-turma.component';
 import { CadastroLocalComponent } from './components/cadastro-gerencia/local/cadastro-local/cadastro-local.component';
 import { Component, OnInit} from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { MenuComponent } from './components/menu/menu.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { GuidePanelComponent } from './components/guide-panel/guide-panel.component';
@@ -40,16 +40,13 @@ export class AppComponent implements OnInit {
   selectedButton: number | null = null;
   showPersonInfo: boolean = false;
   private delayTimeout: any;
-
-  private isLoggedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  isLogged$: Observable<boolean> = this.isLoggedSubject.asObservable();
+  isLogged: boolean = false;
 
   constructor(
     private sharedService: SharedService,
-    private authComponent: AuthGuard,
+    private authComponent: AuthGuard
     
-  ) {
-    console.log(this.isLogged$)
+  ) { 
     this.sharedService.selectedButton$.subscribe(button => {
       this.selectedButton = button;
       if (this.selectedButton === 5) {
@@ -70,13 +67,24 @@ export class AppComponent implements OnInit {
       'menu-selected': this.selectedButton === 5,
       'menu-not-selected': this.selectedButton !== 5
     };
+  } 
+  
+  isLoggedIn(): boolean {
+    if (typeof localStorage!== 'undefined') {
+      if (!localStorage.getItem('auth-token')){
+        return false;
+      } 
+      return true;
+    } else { 
+      return false;
+    }
+    
   }
 
-  setLoggedStatus(isLogged: boolean): void {
-    this.isLoggedSubject.next(isLogged);
-  }
-  
   ngOnInit() {
+    if (this.isLoggedIn()){
+      this.isLogged = true
+    } 
     this.showPersonInfo = false;
   }
 }
