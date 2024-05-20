@@ -1,19 +1,14 @@
 
-<div *ngIf="isLogged; else notLoggedContent">
-  <div class="marginPage">
-    <div class="flexContent">
-      <div class="leftContent">
-        <app-menu [ngClass]="getClasses()"></app-menu>
-        <app-person-info *ngIf="showPersonInfo" style="height: 22%;"></app-person-info>
-      </div>
-      <div class="mainContent">
-        <app-guide-panel></app-guide-panel>
-        <router-outlet></router-outlet>
-      </div> 
+
+<div class="marginPage">
+  <div class="flexContent">
+    <div class="leftContent">
+      <app-menu [ngClass]="getClasses()"></app-menu>
+      <app-person-info *ngIf="showPersonInfo" style="height: 22%;"></app-person-info>
     </div>
+    <div class="mainContent">
+      <app-guide-panel></app-guide-panel>
+      <router-outlet></router-outlet>
+    </div> 
   </div>
 </div>
-
-<ng-template #notLoggedContent>
-  <router-outlet></router-outlet>
-</ng-template>

@@ -27,47 +27,44 @@ import { GerenciaAulaComponent } from './components/allocate-location/aula/geren
 import { GerenciaEventoComponent } from './components/allocate-location/evento/gerencia-evento/gerencia-evento.component';
 import { CadastroEventoComponent } from './components/allocate-location/evento/cadastro-evento/cadastro-evento.component';
 import { GerenciaLocalComponent } from './components/cadastro-gerencia/local/gerencia-local/gerencia-local.component';
-import { TelaLoginComponent } from './components/login/tela-login/tela-login.component';
 import { CadastroCursoComponent } from './components/cadastro-gerencia/curso/cadastro-curso/cadastro-curso.component';
-import { GerenciaCursoComponent } from './components/cadastro-gerencia/curso/gerencia-curso/gerencia-curso.component';
-import { AuthGuard } from './components/login/service/auth-guard.service';
+import { GerenciaCursoComponent } from './components/cadastro-gerencia/curso/gerencia-curso/gerencia-curso.component'; 
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'login', component: TelaLoginComponent },
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'home', component: HomeComponent},
 
-  { path: 'cadastro-gerencia', component: CadastroGerenciaComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-local', data: { title: 'SIFES | Cadastrar Local' }, component: CadastroLocalComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-local', data: { title: 'SIFES | Gerenciar Local' }, component: GerenciaLocalComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-turma', data: { title: 'SIFES | Cadastrar Turma' }, component: CadastroTurmaComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-turma', data: { title: 'SIFES | Gerenciar Turma' }, component: GerenciaTurmaComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-coordenador', data: { title: 'SIFES | Cadastrar Coordenador' }, component: CadastroCoordenadorComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-coordenador', data: { title: 'SIFES | Gerenciar Coordenador' }, component: GerenciaCoordenadorComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-disciplina', data: { title: 'SIFES | Cadastrar Disciplina' }, component: CadastroDisciplinaComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-disciplina', data: { title: 'SIFES | Gerenciar Disciplina' }, component: GerenciaDisciplinaComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-aluno', data: { title: 'SIFES | Cadastrar Aluno' }, component: CadastroAlunoComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-aluno', data: { title: 'SIFES | Gerenciar Aluno' }, component: GerenciaAlunoComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-coordenadoria', data: { title: 'SIFES | Cadastrar Coordenadoria' }, component: CadastroCoordenadoriaComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-coordenadoria', data: { title: 'SIFES | Gerenciar Coordenadoria' }, component: GerenciaCoordenadoriaComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-semestre', data: { title: 'SIFES | Cadastrar Semestre' }, component: CadastroSemestreComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-semestre', data: { title: 'SIFES | Gerenciar Semestre' }, component: GerenciaSemestreComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-horario', data: { title: 'SIFES | Cadastrar Horário' }, component: CadastroHorarioComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-horario', data: { title: 'SIFES | Gerenciar Horário' }, component: GerenciaHorarioComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-professor', data: { title: 'SIFES | Cadastrar Professor' }, component: CadastroProfessorComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-professor', data: { title: 'SIFES | Gerenciar Professor' }, component: GerenciaProfessorComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/cadastro-curso', data: { title: 'SIFES | Cadastrar Curso' }, component: CadastroCursoComponent, canActivate: [AuthGuard] },
-  { path: 'cadastro-gerencia/gerencia-curso', data: { title: 'SIFES | Gerenciar Curso' }, component: GerenciaCursoComponent, canActivate: [AuthGuard] },
+  { path: 'cadastro-gerencia', component: CadastroGerenciaComponent},
+  { path: 'cadastro-gerencia/cadastro-local', data: { title: 'SIFES | Cadastrar Local' }, component: CadastroLocalComponent},
+  { path: 'cadastro-gerencia/gerencia-local', data: { title: 'SIFES | Gerenciar Local' }, component: GerenciaLocalComponent},
+  { path: 'cadastro-gerencia/cadastro-turma', data: { title: 'SIFES | Cadastrar Turma' }, component: CadastroTurmaComponent},
+  { path: 'cadastro-gerencia/gerencia-turma', data: { title: 'SIFES | Gerenciar Turma' }, component: GerenciaTurmaComponent},
+  { path: 'cadastro-gerencia/cadastro-coordenador', data: { title: 'SIFES | Cadastrar Coordenador' }, component: CadastroCoordenadorComponent},
+  { path: 'cadastro-gerencia/gerencia-coordenador', data: { title: 'SIFES | Gerenciar Coordenador' }, component: GerenciaCoordenadorComponent},
+  { path: 'cadastro-gerencia/cadastro-disciplina', data: { title: 'SIFES | Cadastrar Disciplina' }, component: CadastroDisciplinaComponent},
+  { path: 'cadastro-gerencia/gerencia-disciplina', data: { title: 'SIFES | Gerenciar Disciplina' }, component: GerenciaDisciplinaComponent},
+  { path: 'cadastro-gerencia/cadastro-aluno', data: { title: 'SIFES | Cadastrar Aluno' }, component: CadastroAlunoComponent},
+  { path: 'cadastro-gerencia/gerencia-aluno', data: { title: 'SIFES | Gerenciar Aluno' }, component: GerenciaAlunoComponent},
+  { path: 'cadastro-gerencia/cadastro-coordenadoria', data: { title: 'SIFES | Cadastrar Coordenadoria' }, component: CadastroCoordenadoriaComponent},
+  { path: 'cadastro-gerencia/gerencia-coordenadoria', data: { title: 'SIFES | Gerenciar Coordenadoria' }, component: GerenciaCoordenadoriaComponent},
+  { path: 'cadastro-gerencia/cadastro-semestre', data: { title: 'SIFES | Cadastrar Semestre' }, component: CadastroSemestreComponent},
+  { path: 'cadastro-gerencia/gerencia-semestre', data: { title: 'SIFES | Gerenciar Semestre' }, component: GerenciaSemestreComponent},
+  { path: 'cadastro-gerencia/cadastro-horario', data: { title: 'SIFES | Cadastrar Horário' }, component: CadastroHorarioComponent},
+  { path: 'cadastro-gerencia/gerencia-horario', data: { title: 'SIFES | Gerenciar Horário' }, component: GerenciaHorarioComponent},
+  { path: 'cadastro-gerencia/cadastro-professor', data: { title: 'SIFES | Cadastrar Professor' }, component: CadastroProfessorComponent},
+  { path: 'cadastro-gerencia/gerencia-professor', data: { title: 'SIFES | Gerenciar Professor' }, component: GerenciaProfessorComponent},
+  { path: 'cadastro-gerencia/cadastro-curso', data: { title: 'SIFES | Cadastrar Curso' }, component: CadastroCursoComponent},
+  { path: 'cadastro-gerencia/gerencia-curso', data: { title: 'SIFES | Gerenciar Curso' }, component: GerenciaCursoComponent},
 
-  { path: 'importar-dados', component: ImportDataComponent, canActivate: [AuthGuard] },
+  { path: 'importar-dados', component: ImportDataComponent},
 
-  { path: 'alocar-local', component: AllocateLocationComponent, canActivate: [AuthGuard] },
-  { path: 'alocar-local/cadastro-evento', data: { title: 'SIFES | Cadastrar Evento' }, component: CadastroEventoComponent, canActivate: [AuthGuard] },
-  { path: 'alocar-local/gerencia-evento', data: { title: 'SIFES | Gerenciar Evento' }, component: GerenciaEventoComponent, canActivate: [AuthGuard] },
-  { path: 'alocar-local/cadastro-aula', data: { title: 'SIFES | Cadastrar Aula' }, component: CadastroAulaComponent, canActivate: [AuthGuard] },
-  { path: 'alocar-local/gerencia-aula', data: { title: 'SIFES | Gerenciar Aula' }, component: GerenciaAulaComponent, canActivate: [AuthGuard] },
+  { path: 'alocar-local', component: AllocateLocationComponent},
+  { path: 'alocar-local/cadastro-evento', data: { title: 'SIFES | Cadastrar Evento' }, component: CadastroEventoComponent},
+  { path: 'alocar-local/gerencia-evento', data: { title: 'SIFES | Gerenciar Evento' }, component: GerenciaEventoComponent},
+  { path: 'alocar-local/cadastro-aula', data: { title: 'SIFES | Cadastrar Aula' }, component: CadastroAulaComponent},
+  { path: 'alocar-local/gerencia-aula', data: { title: 'SIFES | Gerenciar Aula' }, component: GerenciaAulaComponent},
 
-  { path: 'horarios', component: SchedulesComponent, canActivate: [AuthGuard] },
+  { path: 'horarios', component: SchedulesComponent},
  
   //{ path: '**',component: PageNotFoundComponent }, -- Caso queira criar uma pagina para NotFound
 ];
