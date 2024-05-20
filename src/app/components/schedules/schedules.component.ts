@@ -214,28 +214,30 @@ export class SchedulesComponent implements OnInit {
   preencheCelula(diaSemana: string, horario: string, i: number, j: number, tipo: string) {
     this.horarioIndividual.forEach((element) => {
       element.allocations.forEach((allocation) => {
-        if (allocation.weekDay === diaSemana) {
-          allocation.selectedTimes.forEach((time) => {
-            if (time.startTime === horario) {
-              if (tipo === 'Aluno'){
-                const firstName = element.teacher.name.split(' ')[0];
-                this.tabela[i][j] =
-                  firstName +
-                  '\n' +
-                  element.discipline.acronym +
-                  '\n' +
-                  allocation.location.name;
-              } else {
-                this.tabela[i][j] =
-                  allocation.classe.name +
-                  '\n' +
-                  element.discipline.acronym +
-                  '\n' +
-                  allocation.location.name;
+        if (allocation.weekDay === diaSemana) { 
+          if (allocation.active) { 
+            allocation.selectedTimes.forEach((time) => {
+              if (time.startTime === horario) {
+                if (tipo === 'Aluno'){
+                  const firstName = element.teacher.name.split(' ')[0];
+                  this.tabela[i][j] =
+                    firstName +
+                    '\n' +
+                    element.discipline.acronym +
+                    '\n' +
+                    allocation.location.name;
+                } else {
+                  this.tabela[i][j] =
+                    allocation.classe.name +
+                    '\n' +
+                    element.discipline.acronym +
+                    '\n' +
+                    allocation.location.name;
+                }
               }
-            }
-          });
+            });
         }
+      }
       });
     });
   }
