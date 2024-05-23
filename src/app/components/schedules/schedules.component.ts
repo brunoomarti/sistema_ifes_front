@@ -149,6 +149,8 @@ export class SchedulesComponent implements OnInit {
           }
         );
     }
+
+    console.log(this.horarioIndividual);
   }
 
   onFailed() {
@@ -214,8 +216,8 @@ export class SchedulesComponent implements OnInit {
   preencheCelula(diaSemana: string, horario: string, i: number, j: number, tipo: string) {
     this.horarioIndividual.forEach((element) => {
       element.allocations.forEach((allocation) => {
-        if (allocation.weekDay === diaSemana) { 
-          if (allocation.active) { 
+        if (allocation.weekDay === diaSemana) {
+          if (allocation.active) {
             allocation.selectedTimes.forEach((time) => {
               if (time.startTime === horario) {
                 if (tipo === 'Aluno'){
