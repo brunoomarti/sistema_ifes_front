@@ -101,7 +101,8 @@ export class SchedulesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.tipo === 'Aluno') {
-        this.alunoSelecionado = result;
+        console.log("aqui porra " + result.objetoSelecionado.studentCode)
+        // this.alunoSelecionado = result;
         this.form.get('scheduleStudent')?.setValue(result.objetoSelecionado.studentCode);
       } else {
         this.professorSelecionado = result;
@@ -111,6 +112,8 @@ export class SchedulesComponent implements OnInit {
   }
 
   onSubmit() {
+    console.log("apertou pra pesquisar")
+
     const scheduleType = this.form.get('scheduleType')?.value;
     const selectedSemester = this.periodos.find(
       (obj) => obj._id == this.form.value.schedulePeriod
@@ -122,6 +125,17 @@ export class SchedulesComponent implements OnInit {
 
     if (scheduleType === 'Aluno') {
       const code = this.form.get('scheduleStudent')?.value;
+
+      this.alunoService
+        .idByCode(code)
+        .subscribe(
+          (result) => {
+            this.alunoSelecionado = result;
+          },
+          (error) => {
+            console.log("não achou aluno")
+          }
+        );
 
       this.service
         .findLessonsByStudentCodeAndSemesterId(code, this.semesterId)
@@ -151,6 +165,7 @@ export class SchedulesComponent implements OnInit {
     }
 
     console.log(this.horarioIndividual);
+
   }
 
   onFailed() {
@@ -159,11 +174,13 @@ export class SchedulesComponent implements OnInit {
 
   onSuccess(tipo: string) {
     if (tipo === 'Aluno') {
-      const obj = { name: this.alunoSelecionado.objetoSelecionado.name, registration: this.alunoSelecionado.objetoSelecionado.studentCode, type: 'Aluno' };
+      const obj = { name: this.alunoSelecionado.name, registration: this.alunoSelecionado.studentCode, type: 'Aluno' };
       this.sharedService.setData(obj);
+      this.form.get('scheduleStudent')?.setValue('');
     } else {
       const obj = { name: this.professorSelecionado.objetoSelecionado.name, registration: this.professorSelecionado.objetoSelecionado.teacherCode, type: 'Professor' };
       this.sharedService.setData(obj);
+      this.form.get('scheduleTeacher')?.setValue('');
     }
     this.preencheVetor(tipo);
     this.preencheTabela();
