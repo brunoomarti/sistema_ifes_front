@@ -6,25 +6,25 @@
     <form [formGroup]="form">
 
       <div class="newInput">
-        <label for="name">Nome:</label>
+        <label for="name">Nome: *</label>
         <input type="text" formControlName="name" placeholder="Nome do local" required>
       </div>
 
       <div class="newInput">
-        <label for="capacity">Capacidade:</label>
+        <label for="capacity">Capacidade: *</label>
         <input type="number" formControlName="capacity" placeholder="Capacidade do local" required>
       </div>
 
       <div class="selectGroup">
         <div class="newInput">
-          <label for="equipments">Equipamento Disponível:</label>
+          <label for="equipments">Equipamento Disponível: *</label>
           <select formControlName="equipments" required>
             <option *ngFor="let equipamento of equipamentos; let i = index" [value]="i">{{equipamento.name}}</option>
           </select>
         </div>
 
         <div class="newInput">
-          <label for="amount">Quantidade:</label>
+          <label for="amount">Quantidade: *</label>
           <input type="number" formControlName="amount" placeholder="Quantidade" min="1" max="99" required>
         </div>
 

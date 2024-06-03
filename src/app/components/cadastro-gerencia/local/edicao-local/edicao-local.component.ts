@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { LocalService } from '../service/local.service';
@@ -11,6 +11,7 @@ import { Equipamento } from '../../../../models/Equipamento';
 import { EquipmentService } from '../../../new-edit-equip/services/new-edit-equip.service';
 import { NewEditEquipComponent } from '../../../new-edit-equip/component/new-edit-equip.component';
 import { EquipamentoLocal } from '../../../../models/EquipamentoLocal';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-edicao-local',
@@ -47,10 +48,10 @@ export class EdicaoLocalComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       _id: [0],
-      name: '',
-      capacity: '',
+      name: ['', Validators.required],
+      capacity: ['', Validators.required],
       equipments: null,
-      amount: ''
+      amount: ['', Validators.required]
     });
   }
 
@@ -115,7 +116,45 @@ export class EdicaoLocalComponent implements OnInit {
   onSubmit() {
     this.form.patchValue({ equipments: this.itensInseridos });
     console.log(this.form.value);
-    this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+    if (this.form.valid){
+      this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+    
+    } else {
+      const missingFields = [];
+      if (this.form.get('name')?.hasError('required')) {
+        missingFields.push('<li>Nome</li>');
+      } else if (this.form.get('name')?.value.length > 10) {
+        missingFields.push('<li>O nome do local deve ter no máximo 10 caracteres</li>'); 
+      }
+
+      if (this.form.get('capacity')?.hasError('required')) {
+        missingFields.push('<li>Capacidade</li>');
+      } else if (this.form.get('capacity')?.value < 0) {
+        missingFields.push('<li>Selecione um Capacidade maior que zero</li>');
+      } 
+
+      if (this.form.get('equipments')?.hasError('required')) {
+        missingFields.push('<li>Equipamento Disponível</li>');
+      } else if (this.form.get('equipments')?.value.length < 0) {
+        missingFields.push('<li>Selecione no mínimo UM Equipamento</li>');
+      }
+
+      if (this.form.get('amount')?.hasError('required')) {
+        missingFields.push('<li>Quantidade</li>');
+      } else if (this.form.get('amount')?.value < 0) {
+        missingFields.push('<li>Selecione um Quantidade maior que zero</li>');
+      } 
+
+      const dialogDataForm = {
+        title: 'Erro ao Salvar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+
+      this.dialog.open(ModalDialogOkComponent, {
+        data: dialogDataForm,
+        backdropClass: 'backdrop'
+      });
+    }
   }
 
   onCancel(): void {

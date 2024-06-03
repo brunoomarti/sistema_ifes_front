@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { NewEditEquipComponent } from '../../../new-edit-equip/component/new-edit-equip.component';
 import { MatDialog } from '@angular/material/dialog';
 import { EquipmentService } from '../../../new-edit-equip/services/new-edit-equip.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule, NgFor } from '@angular/common';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -13,6 +13,7 @@ import { Local } from '../../../../models/Local';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 import { EquipamentoLocal } from '../../../../models/EquipamentoLocal';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-cadastro-local',
@@ -49,10 +50,10 @@ export class CadastroLocalComponent implements OnInit {
               {
                 this.form = this.formBuilder.group({
                   id: [0],
-                  name: '',
-                  capacity: '',
+                  name: ['', Validators.required],
+                  capacity: ['', Validators.required],
                   equipments: null,
-                  amount: ''
+                  amount: ['', Validators.required]
                 });
               }
 
@@ -112,23 +113,60 @@ export class CadastroLocalComponent implements OnInit {
   }
 
   onSubmit() { 
+    if (this.form.valid){
     this.form.patchValue({ equipments: this.itensInseridos }); 
-    this.localService.save(this.form.value).subscribe(
-      result => {
-        const dialogData = {
-          title: 'Local Cadastrado',
-          message: `O local ${result.name} foi cadastrado.`,
-          buttons: {
-            cadastrarNovo: 'Cadastrar Novo Local',
-            irParaGerencia: 'Ver Locais Cadastrados'
-          }
-        };
-        this.openDialog(dialogData);
-      },
-      error => {
-        this.onFailed();
+      this.localService.save(this.form.value).subscribe(
+        result => {
+          const dialogData = {
+            title: 'Local Cadastrado',
+            message: `O local ${result.name} foi cadastrado.`,
+            buttons: {
+              cadastrarNovo: 'Cadastrar Novo Local',
+              irParaGerencia: 'Ver Locais Cadastrados'
+            }
+          };
+          this.openDialog(dialogData);
+        },
+        error => {
+          this.onFailed();
+        }
+      );
+    } else {
+      const missingFields = [];
+      if (this.form.get('name')?.hasError('required')) {
+        missingFields.push('<li>Nome</li>');
+      } else if (this.form.get('name')?.value.length > 10) {
+        missingFields.push('<li>O nome do local deve ter no máximo 10 caracteres</li>'); 
       }
-    );
+
+      if (this.form.get('capacity')?.hasError('required')) {
+        missingFields.push('<li>Capacidade</li>');
+      } else if (this.form.get('capacity')?.value < 0) {
+        missingFields.push('<li>Selecione um Capacidade maior que zero</li>');
+      } 
+
+      if (this.form.get('equipments')?.hasError('required')) {
+        missingFields.push('<li>Equipamento Disponível</li>');
+      } else if (this.form.get('equipments')?.value.length < 0) {
+        missingFields.push('<li>Selecione no mínimo UM Equipamento</li>');
+      }
+
+      if (this.form.get('amount')?.hasError('required')) {
+        missingFields.push('<li>Quantidade</li>');
+      } else if (this.form.get('amount')?.value < 0) {
+        missingFields.push('<li>Selecione um Quantidade maior que zero</li>');
+      } 
+
+      const dialogDataForm = {
+        title: 'Erro ao Cadastrar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+
+      this.dialog.open(ModalDialogOkComponent, {
+        data: dialogDataForm,
+        backdropClass: 'backdrop'
+      });
+    }
   }
 
   onCancel() {
