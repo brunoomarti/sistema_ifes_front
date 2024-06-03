@@ -108,6 +108,18 @@ export class CadastroLocalComponent implements OnInit {
     }
   }
 
+  relacaoQuantiadeCapacidade(){
+    const cadeira = this.itensInseridos.find(item => item.equipment.name === "Cadeira");
+    const computador = this.itensInseridos.find(item => item.equipment.name === "Computador");
+    
+    if (cadeira || computador) {
+      return true;
+    }
+    
+    return false;
+  
+  }
+
   excluirItemDaLista(index: number) {
     this.itensInseridos.splice(index, 1);
   }
@@ -132,6 +144,9 @@ export class CadastroLocalComponent implements OnInit {
         }
       );
     } else {
+      console.log(this.relacaoQuantiadeCapacidade());
+      console.log(this.form.get('amount')?.value);
+      console.log(this.form.get('capacity')?.value);
       const missingFields = [];
       if (this.form.get('name')?.hasError('required')) {
         missingFields.push('<li>Nome</li>');
@@ -155,7 +170,13 @@ export class CadastroLocalComponent implements OnInit {
         missingFields.push('<li>Quantidade</li>');
       } else if (this.form.get('amount')?.value < 0) {
         missingFields.push('<li>Selecione um Quantidade maior que zero</li>');
-      } 
+      }
+      
+      if (this.relacaoQuantiadeCapacidade()){
+        if (this.form.get('amount')?.value < this.form.get('capacity')?.value) {
+          missingFields.push('<li>A capacidade do local não corresponde à quantidade de computadores ou carteiras.</li>');
+        } 
+      }
 
       const dialogDataForm = {
         title: 'Erro ao Cadastrar',

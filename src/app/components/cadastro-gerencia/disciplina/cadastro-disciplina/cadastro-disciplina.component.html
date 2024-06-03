@@ -7,17 +7,17 @@
     <form [formGroup]="form">
 
       <div class="newInput">
-        <label for="name">Nome:</label>
+        <label for="name">Nome: *</label>
         <input type="text" formControlName="name" placeholder="Nome da disciplina" required>
       </div>
 
       <div class="newInput">
-        <label for="acronym">Sigla:</label>
+        <label for="acronym">Sigla: *</label>
         <input type="text" formControlName="acronym" placeholder="Sigla da disciplina" required>
       </div>
 
       <div class="newInput">
-        <label >Curso:</label>
+        <label >Curso: *</label>
         <select formControlName="course" required>
           <option *ngFor="let curso of cursos" [value]="curso._id">{{curso.name}}</option>
         </select>

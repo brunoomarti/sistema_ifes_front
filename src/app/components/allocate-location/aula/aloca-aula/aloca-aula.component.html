@@ -11,7 +11,7 @@
 
       <div class="selectGroup">
         <div class="newInput">
-          <label for="classe">Turma:</label>
+          <label for="classe">Turma: *</label>
           <select formControlName="classe" required>
             <option *ngFor="let turma of turmas" [value]="turma._id">
               {{ turma.name }}
@@ -20,7 +20,7 @@
         </div>
 
         <div class="newInput">
-          <label for="location">Local:</label>
+          <label for="location">Local: *</label>
           <select formControlName="location" required>
             <option *ngFor="let local of locais" [value]="local._id">
               {{ local.name }}
@@ -30,8 +30,8 @@
       </div>
 
       <div class="newInput">
-        <label for="periodo">Período:</label>
-        <select name="periodo" id="periodoSelect" (change)="toggleFields()">
+        <label for="periodo">Período: *</label>
+        <select name="periodo" id="periodoSelect" (change)="toggleFields()" formControlName="period">
           <option value="dia">Escolher</option>
           <option value="semestre">Semestre</option>
         </select>
@@ -50,7 +50,7 @@
       </div>
 
       <div class="newInput">
-        <label for="weekDay">Dia da semana:</label>
+        <label for="weekDay">Dia da semana: *</label>
         <select formControlName="weekDay" required>
           <option value="Domingo">Domingo</option>
           <option value="Segunda-feira">Segunda-feira</option>
@@ -64,7 +64,7 @@
 
       <div class="newInput">
         <div class="dropdown">
-          <label for="schedule">Horário: (Selecione um ou mais)</label>
+          <label for="schedule">Horário: (Selecione um ou mais) *</label>
           <div id="options" class="dropdown-content">
             <ng-container *ngFor="let horario of horarios">
               <label>

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { DisciplinaService } from '../service/disciplina.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,6 +11,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Disciplina } from '../../../../models/Disciplina';
 import { CursoService } from '../../curso/service/curso.service';
 import { Curso } from '../../../../models/Curso';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-edicao-disciplina',
@@ -35,6 +36,7 @@ export class EdicaoDisciplinaComponent implements OnInit {
     private formBuilder: FormBuilder,
     private service: DisciplinaService,
     private snackBar: MatSnackBar,
+    private dialog: MatDialog,
     private route: ActivatedRoute,
     private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -44,8 +46,8 @@ export class EdicaoDisciplinaComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       _id: 0,
-      name: '',
-      acronym: '',
+      name: ['', Validators.required],
+      acronym: ['', Validators.required],
       course: null
     });
   }
@@ -67,6 +69,7 @@ export class EdicaoDisciplinaComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.form.valid){
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
 
     if (selectedCourse) {
@@ -75,6 +78,34 @@ export class EdicaoDisciplinaComponent implements OnInit {
 
     console.log(this.form.value);
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+    } else {
+      const missingFields = [];
+      if (this.form.get('name')?.hasError('required')) {
+        missingFields.push('<li>Nome</li>');
+      }
+
+      if (this.form.get('acronym')?.hasError('required')) {
+        missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+      } else if (this.form.get('acronym')?.value.length < 3) {
+        missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+      } else if (this.form.get('acronym')?.value.length > 8) {
+        missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
+      }
+
+      if (this.form.get('course')?.hasError('required')) {
+        missingFields.push('<li>Selecione um Curso</li>');
+      }
+
+      const dialogDataForm = {
+        title: 'Erro ao Cadastrar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+
+      this.dialog.open(ModalDialogOkComponent, {
+        data: dialogDataForm,
+        backdropClass: 'backdropTwo'
+      });
+    }
   }
 
   onCancel(): void {

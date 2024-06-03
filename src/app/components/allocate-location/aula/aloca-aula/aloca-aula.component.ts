@@ -2,7 +2,7 @@ import { Turma } from './../../../../models/Turma';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { TurmaService } from '../../../cadastro-gerencia/turma/service/turma.service';
 import { AllocateService } from '../../allocate-main/service/allocate.service';
@@ -15,6 +15,7 @@ import { HorarioService } from '../../../cadastro-gerencia/horario/service/horar
 import { Horario } from '../../../../models/Horario';
 import { Semestre } from '../../../../models/Semestre';
 import { SemestreService } from '../../../cadastro-gerencia/semestre/service/semestre.service';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-aloca-aula',
@@ -48,6 +49,7 @@ export class AlocaAulaComponent implements OnInit {
     private horarioService: HorarioService,
     private semestreService: SemestreService,
     private allocateService: AllocateService,
+    public dialog: MatDialog,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
     private datePipe: DatePipe,
@@ -108,31 +110,68 @@ export class AlocaAulaComponent implements OnInit {
   }
 
   onSubmit() {
-    const selectedClasse = this.turmas.find(obj => obj._id == this.form.value.classe);
-    const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
+    if (this.form.valid){
+      const selectedClasse = this.turmas.find(obj => obj._id == this.form.value.classe);
+      const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
 
+      this.indexTimes.forEach(hr => {
+        const selectedHour = this.horarios.find(obj => obj._id == hr);
+        if (selectedHour){
+          this.selectedTimes.push(selectedHour);
+        }
+      })
 
-    this.indexTimes.forEach(hr => {
-      const selectedHour = this.horarios.find(obj => obj._id == hr);
-      if (selectedHour){
-        this.selectedTimes.push(selectedHour);
+      if(this.form.value.startDate === null || this.form.value.endDate === null){
+        this.form.patchValue({startDate: this.form.value.lesson.semester.startDate});
+        this.form.patchValue({endDate: this.form.value.lesson.semester.endDate});
       }
-    })
 
-    if(this.form.value.startDate === null || this.form.value.endDate === null){
-      this.form.patchValue({startDate: this.form.value.lesson.semester.startDate});
-      this.form.patchValue({endDate: this.form.value.lesson.semester.endDate});
+      if (selectedClasse && selectedLocation ) {
+        this.form.patchValue({ classe: selectedClasse });
+        this.form.patchValue({ location: selectedLocation });
+        this.form.patchValue({ selectedTimes: this.selectedTimes })
+      }
+
+      console.log(this.form.value)
+
+      this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+    } else {
+      const missingFields = [];
+      
+      if (this.form.get('classe')?.hasError('required')) {
+        missingFields.push('<li>Selecione uma Classe</li>');
+      }
+
+      if (this.form.get('location')?.hasError('required')) {
+        missingFields.push('<li>Selecione um Local</li>');
+      }
+
+      if (this.form.get('periodo')?.hasError('required')) {
+        missingFields.push('<li>Selecione um Período</li>');
+      }
+
+      if (this.form.get('weekDay')?.hasError('required')) {
+        missingFields.push('<li>Selecione o Dia da Semana</li>');
+      }
+      
+      // if (this.form.get('acronym')?.hasError('required')) {
+      //   missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+      // } else if (this.form.get('acronym')?.value.length < 3) {
+      //   missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+      // } else if (this.form.get('acronym')?.value.length > 8) {
+      //   missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
+      // }
+      
+      const dialogDataForm = {
+        title: 'Erro ao Alocar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+
+      this.dialog.open(ModalDialogOkComponent, {
+        data: dialogDataForm,
+        backdropClass: 'backdropTwo'
+      });
     }
-
-    if (selectedClasse && selectedLocation ) {
-      this.form.patchValue({ classe: selectedClasse });
-      this.form.patchValue({ location: selectedLocation });
-      this.form.patchValue({ selectedTimes: this.selectedTimes })
-    }
-
-    console.log(this.form.value)
-
-    this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 
   onCancel(): void {

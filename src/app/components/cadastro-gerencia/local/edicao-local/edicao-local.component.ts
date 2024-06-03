@@ -78,6 +78,18 @@ export class EdicaoLocalComponent implements OnInit {
     });
   }
 
+  relacaoQuantiadeCapacidade(){
+    const cadeira = this.itensInseridos.find(item => item.equipment.name === "Cadeira");
+    const computador = this.itensInseridos.find(item => item.equipment.name === "Computador");
+    
+    if (cadeira || computador) {
+      return true;
+    }
+    
+    return false;
+  
+  }
+
   novoEquipamento(): void {
     const dialogRef = this.dialog.open(NewEditEquipComponent, {
       disableClose: true,
@@ -145,8 +157,14 @@ export class EdicaoLocalComponent implements OnInit {
         missingFields.push('<li>Selecione um Quantidade maior que zero</li>');
       } 
 
+      if (this.relacaoQuantiadeCapacidade()){
+        if (this.form.get('amount')?.value < this.form.get('capacity')?.value) {
+          missingFields.push('<li>A capacidade do local não corresponde à quantidade de computadores ou carteiras.</li>');
+        } 
+      }
+
       const dialogDataForm = {
-        title: 'Erro ao Salvar',
+        title: 'Erro ao Editar',
         message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
       };
 
