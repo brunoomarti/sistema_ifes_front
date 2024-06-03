@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Coordenadoria } from '../../../../models/Coordenadoria';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 import { CoordenadoriaService } from '../service/coordenadoria.service';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-cadastro-coordenadoria',
@@ -22,6 +23,7 @@ import { CoordenadoriaService } from '../service/coordenadoria.service';
 })
 export class CadastroCoordenadoriaComponent implements OnInit {
 
+  coordenadorias: Coordenadoria[] = [];
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Coordenadoria cadastrada com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar coordenadoria.';
@@ -38,9 +40,9 @@ export class CadastroCoordenadoriaComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       id: [0],
-      name: [''],
-      acronym: [''],
-      description: ['']
+      name: ['', Validators.required],
+      acronym: ['', Validators.required],
+      description: ['', Validators.required]
     });
   }
 
@@ -57,6 +59,59 @@ export class CadastroCoordenadoriaComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.form.valid) {
+      const name = this.form.get('name')?.value;
+      const acronym = this.form.get('acronym')?.value;
+
+      this.service.listar().subscribe(coordenadorias => {
+        this.coordenadorias = coordenadorias;
+
+        const duplicateName = this.coordenadorias.some(coordenadoria => coordenadoria.name === name);
+        const duplicateAcronym = this.coordenadorias.some(coordenadoria => coordenadoria.acronym === acronym);
+
+        if (duplicateName || duplicateAcronym) {
+          const dialogData = {
+            title: 'Erro ao Cadastrar',
+            message: 'Já existe um registro com o mesmo nome ou sigla.'
+          };
+          this.dialog.open(ModalDialogOkComponent, {
+            data: dialogData,
+            disableClose: true,
+            backdropClass: 'backdrop'
+          });
+        } else {
+          this.saveCoordenadoria();
+        }
+      });
+    } else {
+      const missingFields = [];
+      if (this.form.get('name')?.hasError('required')) {
+        missingFields.push('<li>Nome</li>');
+      }
+      if (this.form.get('acronym')?.hasError('required')) {
+        missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+      } else if (this.form.get('acronym')?.value.length < 3) {
+        missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+      }
+      if (this.form.get('description')?.hasError('required')) {
+        missingFields.push('<li>Descrição (pelo menos 3 caracteres)</li>');
+      } else if (this.form.get('description')?.value.length < 3) {
+        missingFields.push('<li>Descrição (pelo menos 3 caracteres)</li>');
+      }
+      const dialogDataForm = {
+        title: 'Erro ao Cadastrar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+
+      this.dialog.open(ModalDialogOkComponent, {
+        data: dialogDataForm,
+        disableClose: true,
+        backdropClass: 'backdrop'
+      });
+    }
+  }
+
+  private saveCoordenadoria() {
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {
@@ -74,6 +129,7 @@ export class CadastroCoordenadoriaComponent implements OnInit {
       }
     );
   }
+
 
   onCancel() {
     if (confirm('Tem certeza que deseja cancelar?')) {
@@ -107,4 +163,10 @@ export class CadastroCoordenadoriaComponent implements OnInit {
     });
   }
 
+  formVerify() {
+
+  }
+
 }
+
+

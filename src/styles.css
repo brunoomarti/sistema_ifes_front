@@ -126,6 +126,10 @@ form {
   z-index: 1002;
 }
 
+.dialogOK {
+  z-index: 1010;
+}
+
 .button {
   width: 100%;
   padding: 8px;

@@ -53,7 +53,6 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
 
   editar(coordenadoria: { name: string }): void {
     const dialogRef = this.dialog.open(EdicaoCoordenadoriaComponent, {
-      disableClose: true,
       backdropClass: 'backdrop',
       data: { coordenadoria }
     });
