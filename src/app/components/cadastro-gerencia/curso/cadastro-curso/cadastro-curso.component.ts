@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CursoService } from '../service/curso.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
+import { Curso } from '../../../../models/Curso';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-cadastro-curso',
@@ -21,6 +23,7 @@ import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.compone
 })
 export class CadastroCursoComponent implements OnInit {
 
+  cursos: Curso[] = [];
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Curso cadastrado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar curso.';
@@ -28,7 +31,6 @@ export class CadastroCursoComponent implements OnInit {
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
     private service: CursoService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
@@ -37,7 +39,8 @@ export class CadastroCursoComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       id: [0],
-      name: ['']
+      name: ['', Validators.required],
+      identityNumber: ['0000', Validators.required]
     });
   }
 
@@ -49,6 +52,62 @@ export class CadastroCursoComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.form.valid) {
+      let name = this.form.get('name')?.value;
+      let identityNumber = this.form.get('identityNumber')?.value;
+      name = name.toLowerCase();
+
+      this.service.listar().subscribe(cursos => {
+          this.cursos = cursos;
+
+          const errors = [];
+
+          const duplicateName = this.cursos.some(curso => curso.name.toLowerCase() === name);
+          const duplicateIdentity = this.cursos.some(curso => curso.identityNumber === identityNumber);
+
+          if (duplicateName) {
+              errors.push('Já existe um registro com o mesmo nome.');
+          }
+          if (duplicateIdentity) {
+              errors.push('Já existe um registro com esse número de identificação.');
+          }
+
+          if (errors.length > 0) {
+              const dialogData = {
+                  title: 'Erro ao Cadastrar',
+                  message: errors.join('\n')
+              };
+              this.dialog.open(ModalDialogOkComponent, {
+                  data: dialogData,
+                  backdropClass: 'backdrop'
+              });
+          } else {
+              this.save();
+          }
+      });
+  } else {
+      const missingFields = [];
+      if (this.form.get('name')?.hasError('required')) {
+        missingFields.push('<li>Nome</li>');
+      }
+      if (this.form.get('identityNumber')?.hasError('required')) {
+        missingFields.push('<li>Número de identificação (4 caracteres)</li>');
+      } else if (this.form.get('identityNumber')?.value.length != 4) {
+        missingFields.push('<li>Número de identificação (4 caracteres)</li>');
+      }
+      const dialogDataForm = {
+        title: 'Erro ao Cadastrar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+
+      this.dialog.open(ModalDialogOkComponent, {
+        data: dialogDataForm,
+        backdropClass: 'backdrop'
+      });
+    }
+  }
+
+  save() {
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {

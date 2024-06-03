@@ -60,14 +60,16 @@ export class CadastroCoordenadoriaComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid) {
-      const name = this.form.get('name')?.value;
-      const acronym = this.form.get('acronym')?.value;
+      let name = this.form.get('name')?.value;
+      name = name.toLowerCase();
+      let acronym = this.form.get('acronym')?.value;
+      acronym = acronym.toLowerCase();
 
       this.service.listar().subscribe(coordenadorias => {
         this.coordenadorias = coordenadorias;
 
-        const duplicateName = this.coordenadorias.some(coordenadoria => coordenadoria.name === name);
-        const duplicateAcronym = this.coordenadorias.some(coordenadoria => coordenadoria.acronym === acronym);
+        const duplicateName = this.coordenadorias.some(coordenadoria => coordenadoria.name.toLowerCase() === name);
+        const duplicateAcronym = this.coordenadorias.some(coordenadoria => coordenadoria.acronym.toLowerCase() === acronym);
 
         if (duplicateName || duplicateAcronym) {
           const dialogData = {
@@ -76,11 +78,10 @@ export class CadastroCoordenadoriaComponent implements OnInit {
           };
           this.dialog.open(ModalDialogOkComponent, {
             data: dialogData,
-            disableClose: true,
             backdropClass: 'backdrop'
           });
         } else {
-          this.saveCoordenadoria();
+          this.save();
         }
       });
     } else {
@@ -105,13 +106,12 @@ export class CadastroCoordenadoriaComponent implements OnInit {
 
       this.dialog.open(ModalDialogOkComponent, {
         data: dialogDataForm,
-        disableClose: true,
         backdropClass: 'backdrop'
       });
     }
   }
 
-  private saveCoordenadoria() {
+  private save() {
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {

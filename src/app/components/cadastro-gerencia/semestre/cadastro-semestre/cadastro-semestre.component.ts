@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SemestreService } from '../service/semestre.service';
@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Semestre } from '../../../../models/Semestre';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-cadastro-semestre',
@@ -22,6 +23,7 @@ import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.compone
 })
 export class CadastroSemestreComponent implements OnInit {
 
+  semestres: Semestre[] = [];
   anoMaximo: number;
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Semestre cadastrado com sucesso.';
@@ -40,11 +42,11 @@ export class CadastroSemestreComponent implements OnInit {
     this.anoMaximo = new Date().getFullYear();
     this.form = this.formBuilder.group({
       id: [0],
-      semesterYear: [new Date().getFullYear()],
-      semesterPartition: '1',
+      semesterYear: [new Date().getFullYear(), Validators.required],
+      semesterPartition: ['1', Validators.required],
       semester: null,
-      startDate: [''],
-      endDate: ['']
+      startDate: ['', Validators.required],
+      endDate: ['', Validators.required]
     });
   }
 
@@ -63,12 +65,81 @@ export class CadastroSemestreComponent implements OnInit {
   }
 
   onSubmit() {
-
     const semesterYear = this.form.get('semesterYear')?.value;
     const semesterPartition = this.form.get('semesterPartition')?.value;
-    const semester = `${semesterYear}/${semesterPartition}`; 
+    const startDate = new Date(this.form.get('startDate')?.value);
+    const endDate = new Date(this.form.get('endDate')?.value);
+
+    const semester = `${semesterYear}/${semesterPartition}`;
     this.form.patchValue({ semester: semester });
 
+    if (this.form.valid) {
+      this.service.listar().subscribe(semestres => {
+        this.semestres = semestres;
+
+        const overlappingSemester = this.semestres.some(semestre => {
+          const semStartDate = new Date(semestre.startDate);
+          const semEndDate = new Date(semestre.endDate);
+          return (startDate >= semStartDate && startDate <= semEndDate) ||
+                 (endDate >= semStartDate && endDate <= semEndDate);
+        });
+
+        if (overlappingSemester) {
+          const dialogData = {
+            title: 'Erro ao Cadastrar',
+            message: 'Não é possível intercalar datas de semestres.'
+          };
+          this.openOkDialog(dialogData);
+        } else if (endDate <= startDate) {
+          const dialogData = {
+            title: 'Erro ao Cadastrar',
+            message: 'A data de término do semestre precisa ser maior que a data de início.'
+          };
+          this.openOkDialog(dialogData);
+        } else {
+          const duplicateSemester = this.semestres.some(semestre => semestre.semester === semester);
+
+          if (duplicateSemester) {
+            const dialogData = {
+              title: 'Erro ao Cadastrar',
+              message: 'Já existe um semestre com o mesmo ano e partição.'
+            };
+            this.openOkDialog(dialogData);
+          } else {
+            this.save();
+          }
+        }
+      });
+    } else {
+      const missingFields = [];
+      if (this.form.get('semesterYear')?.hasError('required')) {
+        missingFields.push('<li>Ano do semestre</li>');
+      }
+      if (this.form.get('semesterPartition')?.hasError('required')) {
+        missingFields.push('<li>Partição</li>');
+      }
+      if (this.form.get('startDate')?.hasError('required')) {
+        missingFields.push('<li>Data de início</li>');
+      }
+      if (this.form.get('endDate')?.hasError('required')) {
+        missingFields.push('<li>Data de finalização</li>');
+      }
+      const dialogDataForm = {
+        title: 'Erro ao Cadastrar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+      this.openOkDialog(dialogDataForm);
+    }
+  }
+
+  openOkDialog(data: any): void {
+    this.dialog.open(ModalDialogOkComponent, {
+      data: data,
+      backdropClass: 'backdrop'
+    });
+  }
+
+  save() {
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {

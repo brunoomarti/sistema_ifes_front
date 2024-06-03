@@ -63,16 +63,27 @@ export class EdicaoCoordenadoriaComponent implements OnInit {
       const name = this.form.get('name')?.value;
       const acronym = this.form.get('acronym')?.value;
 
+      const editedCoordenadoriaId = this.form.get('_id')?.value;
+
       this.service.listar().subscribe(coordenadorias => {
         this.coordenadorias = coordenadorias;
 
-        const duplicateName = this.coordenadorias.some(coordenadoria => coordenadoria.name === name);
-        const duplicateAcronym = this.coordenadorias.some(coordenadoria => coordenadoria.acronym === acronym);
+        const errors = [];
 
-        if (duplicateName || duplicateAcronym) {
+        const duplicateName = this.coordenadorias.some(coordenadoria => coordenadoria.name === name && coordenadoria._id !== editedCoordenadoriaId);
+        const duplicateAcronym = this.coordenadorias.some(coordenadoria => coordenadoria.acronym === acronym && coordenadoria._id !== editedCoordenadoriaId);
+
+        if (duplicateName) {
+          errors.push('Já existe um registro com o mesmo nome.');
+        }
+        if (duplicateAcronym) {
+          errors.push('Já existe um registro com essa sigla.');
+        }
+
+        if (errors.length > 0) {
           const dialogData = {
             title: 'Erro ao Cadastrar',
-            message: 'Já existe um registro com o mesmo nome ou sigla.'
+            message: errors.join('<br>')
           };
           this.dialog.open(ModalDialogOkComponent, {
             data: dialogData,

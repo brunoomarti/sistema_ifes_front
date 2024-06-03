@@ -7,8 +7,13 @@
     <form [formGroup]="form">
 
       <div class="newInput">
-        <label for="name">Nome:</label>
+        <label for="name">Nome: *</label>
         <input type="text" formControlName="name" placeholder="Nome do curso" required>
+      </div>
+
+      <div class="newInput">
+        <label for="name">Número de identificação: *</label>
+        <input type="text" minlength="4" maxlength="4" formControlName="identityNumber" required>
       </div>
 
       <div class="buttonGroupForm">
