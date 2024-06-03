@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { EventoService } from '../service/evento.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Evento } from '../../../../models/Evento';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-cadastro-evento',
@@ -38,8 +39,8 @@ export class CadastroEventoComponent {
   {
     this.form = this.formBuilder.group({
       _id: [0],
-      name: '',
-      description: '',
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      description: ['', [Validators.required, Validators.minLength(3)]],
       allocated: false
     });
   }
@@ -59,7 +60,38 @@ export class CadastroEventoComponent {
   }
 
   onSubmit() {
+    if (this.form.invalid) {
+        const missingFields = [];
+        if (this.form.get('name')?.hasError('required')) {
+            missingFields.push('<li>Nome do evento</li>');
+        }
+        if (this.form.get('description')?.hasError('required')) {
+            missingFields.push('<li>Descrição do evento</li>');
+        }
+        if (this.form.get('name')?.hasError('minlength')) {
+            missingFields.push('<li>O nome deve ter pelo menos 3 caracteres</li>');
+        }
+        if (this.form.get('description')?.hasError('minlength')) {
+            missingFields.push('<li>A descrição deve ter pelo menos 3 caracteres</li>');
+        }
+        const dialogDataForm = {
+            title: 'Erro ao Cadastrar',
+            message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+        };
+        this.openOkDialog(dialogDataForm);
+    } else {
+      this.save();
+    }
+  }
 
+  openOkDialog(data: any): void {
+    this.dialog.open(ModalDialogOkComponent, {
+      data: data,
+      backdropClass: 'backdrop'
+    });
+  }
+
+  save() {
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {

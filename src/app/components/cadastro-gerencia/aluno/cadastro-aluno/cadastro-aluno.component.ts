@@ -1,6 +1,6 @@
 import { Curso } from './../../../../models/Curso';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlunoService } from '../service/aluno.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -10,6 +10,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 import { CursoService } from '../../curso/service/curso.service';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-cadastro-aluno',
@@ -28,6 +29,7 @@ export class CadastroAlunoComponent implements OnInit {
   mensagemSnackbarAcerto: string = 'Aluno(a) cadastrado(a) com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar aluno(a).';
   cursos: Curso[] = [];
+  currentYear: number;
 
   constructor(
     private router: Router,
@@ -40,11 +42,14 @@ export class CadastroAlunoComponent implements OnInit {
   )
 
   {
+    this.currentYear = new Date().getFullYear();
+
     this.form = this.formBuilder.group({
       id: [0],
-      name: [''],
-      course: null,
-      studentCode: ['']
+      name: ['', Validators.required],
+      registrationYear: ['', [Validators.required, Validators.min(1960), Validators.max(this.currentYear)]],
+      course: [null, Validators.required],
+      studentCode: ['', Validators.required]
     });
     this.form.get('studentCode')?.setValue(this.gerarCodigo());
   }
@@ -55,6 +60,7 @@ export class CadastroAlunoComponent implements OnInit {
       this.form.setValue({
         id: obj._id,
         name: obj.name,
+        registrationYear: obj.registrationYear,
         course: obj.course,
         barcode: obj.studentCode
       });
@@ -66,6 +72,33 @@ export class CadastroAlunoComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.form.invalid) {
+      const missingFields = [];
+      if (this.form.get('name')?.hasError('required')) {
+        missingFields.push('<li>Nome</li>');
+      }
+      const selectedCourse = this.cursos.find(obj => obj._id == this.form. value.course);
+      if (!selectedCourse) {
+        missingFields.push('<li>Curso</li>');
+      }
+      if (this.form.get('registrationYear')?.hasError('required')) {
+        missingFields.push('<li>Ano de matrícula</li>');
+      }
+      const dialogDataForm = {
+        title: 'Erro ao Cadastrar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+
+      this.dialog.open(ModalDialogOkComponent, {
+        data: dialogDataForm,
+        backdropClass: 'backdrop'
+      });
+    } else {
+      this.save();
+    }
+  }
+
+  save() {
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
 
     if (selectedCourse) {

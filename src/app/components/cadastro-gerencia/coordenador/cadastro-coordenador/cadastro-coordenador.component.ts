@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Coordenador } from '../../../../models/Coordenador';
 import { CoordenadorService } from '../service/coordenador.service';
@@ -10,6 +10,8 @@ import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.compone
 import { MatDialog } from '@angular/material/dialog';
 import { CoordenadoriaService } from '../../coordenadoria/service/coordenadoria.service';
 import { Coordenadoria } from '../../../../models/Coordenadoria';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { Aula } from '../../../../models/Aula';
 
 @Component({
   selector: 'app-cadastro-coordenador',
@@ -24,6 +26,7 @@ import { Coordenadoria } from '../../../../models/Coordenadoria';
 })
 export class CadastroCoordenadorComponent {
 
+  aulas: Aula[] = [];
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Coordenador cadastrado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar coordenador.';
@@ -42,19 +45,19 @@ export class CadastroCoordenadorComponent {
   {
     this.form = this.formBuilder.group({
       _id: [0],
-      name: '',
-      coordination: new FormControl('')
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      coordination: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
     this.coordinationService.listar().subscribe(coordenadorias => {
       this.coordenadorias = coordenadorias;
-    }); 
+    });
 
     const coord: Coordenador = this.route.snapshot.data['coordenador'];
- 
-    if (coord) { 
+
+    if (coord) {
       this.form.setValue({
         _id: coord._id,
         name: coord.name,
@@ -63,9 +66,38 @@ export class CadastroCoordenadorComponent {
     }
   }
 
-  onSubmit() { 
+  onSubmit() {
+    if (this.form.invalid) {
+        const missingFields = [];
+        if (this.form.get('name')?.hasError('required')) {
+            missingFields.push('<li>Nome</li>');
+        }
+        if (this.form.get('name')?.hasError('minlength')) {
+            missingFields.push('<li>O nome deve ter pelo menos 3 caracteres</li>');
+        }
+        if (this.form.get('coordination')?.hasError('required')) {
+            missingFields.push('<li>Coordenadoria</li>');
+        }
+        const dialogDataForm = {
+            title: 'Erro ao Cadastrar',
+            message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+        };
+        this.openOkDialog(dialogDataForm);
+    } else {
+      this.save();
+    }
+  }
+
+  openOkDialog(data: any): void {
+    this.dialog.open(ModalDialogOkComponent, {
+      data: data,
+      backdropClass: 'backdrop'
+    });
+  }
+
+  save() {
     const selectedCoordination = this.coordenadorias.find(coord => coord._id == this.form.value.coordination);
- 
+
     if (selectedCoordination) {
         this.form.patchValue({ coordination: selectedCoordination });
     }

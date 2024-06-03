@@ -7,20 +7,25 @@
     <form [formGroup]="form">
 
       <div class="newInput">
-        <label for="name">Nome:</label>
+        <label for="name">Nome: *</label>
         <input type="text" formControlName="name" placeholder="Nome do(a) aluno(a)" required>
       </div>
 
       <div class="newInput">
-        <label >Curso:</label>
+        <label >Curso: *</label>
         <select formControlName="course" required>
           <option *ngFor="let curso of cursos" [value]="curso._id">{{curso.name}}</option>
         </select>
       </div>
 
       <div class="newInput">
+        <label for="registrationYear">Ano de matrícula: *</label>
+        <input type="number" formControlName="registrationYear" [min]="1960" [max]="currentYear" required>
+      </div>
+
+      <div class="newInput">
         <label for="studentCode">Código (gerado automaticamente):</label>
-        <input type="text" formControlName="studentCode" placeholder="Código automático" class="disabledInput" required>
+        <input type="text" formControlName="studentCode" placeholder="Código automático" class="disabledInput" [attr.readonly]="true">
       </div>
 
       <div class="buttonGroupForm">

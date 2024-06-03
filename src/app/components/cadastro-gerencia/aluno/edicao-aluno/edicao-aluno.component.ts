@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { AlunoService } from '../service/aluno.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -9,6 +9,7 @@ import { ReloadService } from '../../../../shared-services/reload.service';
 import { Aluno } from '../../../../models/Aluno';
 import { Curso } from '../../../../models/Curso';
 import { CursoService } from '../../curso/service/curso.service';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-edicao-aluno',
@@ -27,6 +28,7 @@ export class EdicaoAlunoComponent implements OnInit {
   mensagemSnackbarAcerto: string = 'Aluno editado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao editar aluno.';
   cursos: Curso[] = [];
+  currentYear: number;
 
   constructor(
     public dialogRef: MatDialogRef<EdicaoAlunoComponent>,
@@ -34,16 +36,20 @@ export class EdicaoAlunoComponent implements OnInit {
     private service: AlunoService,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private cursoService: CursoService
   )
 
   {
+    this.currentYear = new Date().getFullYear();
+
     this.form = this.formBuilder.group({
       _id: 0,
-      name: '',
+      name: [''],
+      registrationYear: ['', [Validators.required, Validators.min(1960), Validators.max(this.currentYear)]],
       course: null,
-      studentCode: ''
+      studentCode: ['']
     });
   }
 
@@ -53,6 +59,7 @@ export class EdicaoAlunoComponent implements OnInit {
       this.form.setValue({
         _id: obj._id,
         name: obj.name,
+        registrationYear: obj.registrationYear,
         course: obj.course,
         studentCode: obj.studentCode
       });
@@ -64,6 +71,33 @@ export class EdicaoAlunoComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.form.invalid) {
+      const missingFields = [];
+      if (this.form.get('name')?.hasError('required')) {
+        missingFields.push('<li>Nome</li>');
+      }
+      const selectedCourse = this.cursos.find(obj => obj._id == this.form. value.course);
+      if (!selectedCourse) {
+        missingFields.push('<li>Curso</li>');
+      }
+      if (this.form.get('registrationYear')?.hasError('required')) {
+        missingFields.push('<li>Ano de matrícula</li>');
+      }
+      const dialogDataForm = {
+        title: 'Erro ao Cadastrar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+
+      this.dialog.open(ModalDialogOkComponent, {
+        data: dialogDataForm,
+        backdropClass: 'backdropTwo'
+      });
+    } else {
+      this.save();
+    }
+  }
+
+  save() {
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
 
     if (selectedCourse) {

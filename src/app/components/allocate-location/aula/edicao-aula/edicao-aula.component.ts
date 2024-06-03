@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { Disciplina } from '../../../../models/Disciplina';
 import { Professor } from '../../../../models/Professor';
@@ -9,10 +9,11 @@ import { ProfessorService } from '../../../cadastro-gerencia/professor/service/p
 import { SemestreService } from '../../../cadastro-gerencia/semestre/service/semestre.service';
 import { AulaService } from '../service/aula.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Aula } from '../../../../models/Aula';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { CommonModule } from '@angular/common';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-edicao-aula',
@@ -33,6 +34,7 @@ export class EdicaoAulaComponent implements OnInit {
   disciplinas: Disciplina[] = [];
   professores: Professor[] = [];
   semestres: Semestre[] = [];
+  aulas: Aula[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<EdicaoAulaComponent>,
@@ -43,19 +45,27 @@ export class EdicaoAulaComponent implements OnInit {
     private aulaService: AulaService,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
   )
 
   {
     this.form = this.formBuilder.group({
       _id: [0],
-      discipline: new FormControl(''),
-      teacher: new FormControl(''),
-      semester: new FormControl(''),
-      weeklyQuantity: 0,
+      discipline: ['', Validators.required],
+      teacher: ['', Validators.required],
+      semester: ['', Validators.required],
+      weeklyQuantity: ['0', [Validators.required, this.greaterThanZeroValidator()]],
       students: null,
       allocated: false
     });
+  }
+
+  greaterThanZeroValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+        const valid = control.value > 0;
+        return valid ? null : { 'greaterThanZero': { value: control.value } };
+    };
   }
 
   ngOnInit(): void {
@@ -86,6 +96,65 @@ export class EdicaoAulaComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.form.invalid) {
+        const missingFields = [];
+        if (this.form.get('discipline')?.hasError('required')) {
+            missingFields.push('<li>Disciplina</li>');
+        }
+        if (this.form.get('teacher')?.hasError('required')) {
+            missingFields.push('<li>Professor</li>');
+        }
+        if (this.form.get('semester')?.hasError('required')) {
+            missingFields.push('<li>Semestre</li>');
+        }
+        if (this.form.get('weeklyQuantity')?.hasError('required')) {
+            missingFields.push('<li>Quantidade de aulas por semana</li>');
+        }
+        if (this.form.get('weeklyQuantity')?.value < 1) {
+            missingFields.push('<li>A quantidade de aulas por semana deve ser maior que 0</li>');
+        }
+        const dialogDataForm = {
+            title: 'Erro ao Cadastrar',
+            message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+        };
+        this.openOkDialog(dialogDataForm);
+    } else {
+      const selectedDiscipline = this.disciplinas.find(obj => obj._id == this.form.value.discipline);
+      const selectedTeacher = this.professores.find(obj => obj._id == this.form.value.teacher);
+      const selectedSemester = this.semestres.find(obj => obj._id == this.form.value.semester);
+
+      this.aulaService.listar().subscribe(aulas => {
+        this.aulas = aulas;
+
+        const exists = this.aulas.some(aula => aula.discipline._id === selectedDiscipline?._id && aula.teacher._id === selectedTeacher?._id && aula.semester._id === selectedSemester?._id);
+
+        const errors: string[] = [];
+
+        if (exists) {
+            errors.push('A disciplina ' + selectedDiscipline?.name + ' já está sendo ministrada pelo professor ' + selectedTeacher?.name + ' no período ' + selectedSemester?.semester + '.');
+        }
+
+        if (errors.length > 0) {
+            const dialogData = {
+                title: 'Erro ao Cadastrar',
+                message: errors.join('<br>')
+            };
+            this.openOkDialog(dialogData);
+        } else {
+            this.save();
+        }
+      });
+    }
+  }
+
+  openOkDialog(data: any): void {
+    this.dialog.open(ModalDialogOkComponent, {
+      data: data,
+      backdropClass: 'backdropTwo'
+    });
+  }
+
+  save() {
     const selectedDiscipline = this.disciplinas.find(obj => obj._id == this.form.value.discipline);
     const selectedTeacher = this.professores.find(obj => obj._id == this.form.value.teacher);
     const selectedSemester = this.semestres.find(obj => obj._id == this.form.value.semester);

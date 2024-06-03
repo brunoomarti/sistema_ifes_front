@@ -7,8 +7,8 @@
     <form [formGroup]="form">
 
       <div class="newInput">
-        <label for="name">Nome:</label>
-        <input type="text" formControlName="name" placeholder="Nome da turma" required>
+        <label for="name">Nome: *</label>
+        <input type="text" formControlName="name" placeholder="Nome da turma" maxlength="3" required>
       </div>
 
       <div class="buttonGroupForm">

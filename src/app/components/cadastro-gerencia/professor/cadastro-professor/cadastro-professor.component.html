@@ -7,12 +7,12 @@
     <form [formGroup]="form">
 
       <div class="newInput">
-        <label for="name">Nome:</label>
+        <label for="name">Nome: *</label>
         <input type="text" formControlName="name" placeholder="Nome do professor" required>
       </div>
 
       <div class="newInput">
-        <label for="educationLevel">Grau Acadêmico:</label>
+        <label for="educationLevel">Grau Acadêmico: *</label>
         <select formControlName="educationLevel" required>
           <option>Licenciatura</option>
           <option>Mestrado</option>
@@ -21,12 +21,7 @@
       </div>
 
       <div class="newInput">
-        <label for="specialty">Especialidade:</label>
-        <input type="text" formControlName="specialty" placeholder="Especialidade do professor" required>
-      </div>
-
-      <div class="newInput">
-        <label >Coordenadoria:</label>
+        <label >Coordenadoria: *</label>
         <select formControlName="coordination" required>
           <option *ngFor="let coordenadoria of coordenadorias" [value]="coordenadoria._id">{{coordenadoria.name}}</option>
         </select>
@@ -46,7 +41,7 @@
 
       <div class="newInput">
         <label for="teacherCode">Código (gerado automaticamente):</label>
-        <input type="text" formControlName="teacherCode" placeholder="Código automático" class="disabledInput" required>
+        <input type="text" formControlName="teacherCode" placeholder="Código automático" class="disabledInput" [attr.readonly]="true">
       </div>
 
       <div class="buttonGroupForm">

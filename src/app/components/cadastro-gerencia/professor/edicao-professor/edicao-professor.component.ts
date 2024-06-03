@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { ProfessorService } from '../service/professor.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,6 +11,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Professor } from '../../../../models/Professor';
 import { CoordenadoriaService } from '../../coordenadoria/service/coordenadoria.service';
 import { Coordenadoria } from '../../../../models/Coordenadoria';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-edicao-professor',
@@ -25,6 +26,7 @@ import { Coordenadoria } from '../../../../models/Coordenadoria';
 })
 export class EdicaoProfessorComponent implements OnInit {
 
+  professores: Professor[] = [];
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Professor editado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao editar professor.';
@@ -36,28 +38,27 @@ export class EdicaoProfessorComponent implements OnInit {
     private service: ProfessorService,
     private coordinationService: CoordenadoriaService,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
     private reloadService: ReloadService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
   )
 
   {
     this.form = this.formBuilder.group({
       _id: 0,
-      name: '',
-      educationLevel: '',
-      specialty: '',
-      coordinator: false,
-      coordination: null,
-      teacherCode: ''
+      name: ['', Validators.required],
+      educationLevel: ['Licenciatura', Validators.required],
+      coordinator: [false, Validators.required],
+      coordination: ['', Validators.required],
+      teacherCode: ['', Validators.required]
     });
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.coordinationService.listar().subscribe(coordenadorias => {
       this.coordenadorias = coordenadorias;
-    }); 
-    
+    });
+
     const obj: Professor = this.data.professor;
     if (obj) {
       console.log(obj)
@@ -65,7 +66,6 @@ export class EdicaoProfessorComponent implements OnInit {
         _id: obj._id,
         name: obj.name,
         educationLevel: obj.educationLevel,
-        specialty: obj.specialty,
         coordinator: obj.coordinator,
         coordination: obj.coordination,
         teacherCode: obj.teacherCode
@@ -74,8 +74,68 @@ export class EdicaoProfessorComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.form.valid) {
+        let coordenador = this.form.get('coordinator')?.value;
+        let coordenacao = this.form.get('coordination')?.value;
+
+        console.log(coordenacao);
+
+        const errors: string[] = [];
+
+        this.service.listar().subscribe(professores => {
+          this.professores = professores;
+
+          console.log(this.professores);
+
+          const professoresDaCoordenacao = this.professores.filter(professor => professor.coordination._id === coordenacao);
+
+          console.log(professoresDaCoordenacao);
+
+          const coordenadorPresente = professoresDaCoordenacao.find(professor => professor.coordinator === coordenador);
+
+          if (coordenadorPresente) {
+              errors.push(`Já existe um coordenador para este curso. Coordenador de curso atual: ${coordenadorPresente.name}`);
+          }
+
+          if (errors.length > 0) {
+              const dialogData = {
+                  title: 'Erro ao Cadastrar',
+                  message: errors.join('<br>')
+              };
+              this.openOkDialog(dialogData);
+          } else {
+              this.save();
+          }
+        });
+    } else {
+        const missingFields = [];
+        if (this.form.get('name')?.hasError('required')) {
+            missingFields.push('<li>Nome</li>');
+        }
+        if (this.form.get('educationLevel')?.hasError('required')) {
+            missingFields.push('<li>Grau acadêmico</li>');
+        }
+        if (this.form.get('coordination')?.hasError('required')) {
+            missingFields.push('<li>Coordenadoria</li>');
+        }
+        const dialogDataForm = {
+            title: 'Erro ao Cadastrar',
+            message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+        };
+        this.openOkDialog(dialogDataForm);
+    }
+  }
+
+  openOkDialog(data: any): void {
+    this.dialog.open(ModalDialogOkComponent, {
+      data: data,
+      backdropClass: 'backdropTwo'
+    });
+  }
+
+  save() {
     const selectedCoordination = this.coordenadorias.find(coord => coord._id == this.form.value.coordination);
- 
+
     if (selectedCoordination) {
         this.form.patchValue({ coordination: selectedCoordination });
     }

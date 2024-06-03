@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProfessorService } from '../service/professor.service';
@@ -10,6 +10,7 @@ import { Professor } from '../../../../models/Professor';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 import { Coordenadoria } from '../../../../models/Coordenadoria';
 import { CoordenadoriaService } from '../../coordenadoria/service/coordenadoria.service';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-cadastro-professor',
@@ -24,11 +25,12 @@ import { CoordenadoriaService } from '../../coordenadoria/service/coordenadoria.
 })
 export class CadastroProfessorComponent implements OnInit {
 
+  professores: Professor[] = [];
   form: FormGroup;
   mensagemSnackbarAcerto: string = 'Professor cadastrado com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao cadastrar professor.';
   coordenadorias: Coordenadoria[] = [];
-  
+
   constructor(
     private router: Router,
     private formBuilder: FormBuilder,
@@ -42,12 +44,11 @@ export class CadastroProfessorComponent implements OnInit {
   {
     this.form = this.formBuilder.group({
       _id: [0],
-      name: '',
-      educationLevel: 'Licenciatura',
-      specialty: '',
-      coordinator: false,
-      coordination: '',
-      teacherCode: ''
+      name: ['', Validators.required],
+      educationLevel: ['Licenciatura', Validators.required],
+      coordinator: [false, Validators.required],
+      coordination: ['', Validators.required],
+      teacherCode: ['', Validators.required]
     });
     this.form.get('teacherCode')?.setValue(this.gerarCodigo());
   }
@@ -55,7 +56,7 @@ export class CadastroProfessorComponent implements OnInit {
   ngOnInit(): void {
     this.coordinationService.listar().subscribe(coordenadorias => {
       this.coordenadorias = coordenadorias;
-    }); 
+    });
 
     const obj: Professor = this.route.snapshot.data['professor'];
     if (obj) {
@@ -63,7 +64,6 @@ export class CadastroProfessorComponent implements OnInit {
         _id: obj._id,
         name: obj.name,
         educationLevel: obj.educationLevel,
-        specialty: obj.specialty,
         coordinator: obj.coordinator,
         coordination: obj.coordination,
         teacherCode: obj.teacherCode
@@ -71,13 +71,73 @@ export class CadastroProfessorComponent implements OnInit {
     }
   }
 
-  onSubmit() { 
+  onSubmit() {
+    if (this.form.valid) {
+        let coordenador = this.form.get('coordinator')?.value;
+        let coordenacao = this.form.get('coordination')?.value;
+
+        console.log(coordenacao);
+
+        const errors: string[] = [];
+
+        this.service.listar().subscribe(professores => {
+          this.professores = professores;
+
+          console.log(this.professores);
+
+          const professoresDaCoordenacao = this.professores.filter(professor => professor.coordination._id === coordenacao);
+
+          console.log(professoresDaCoordenacao);
+
+          const coordenadorPresente = professoresDaCoordenacao.find(professor => professor.coordinator === coordenador);
+
+          if (coordenadorPresente) {
+              errors.push(`Já existe um coordenador para este curso. Coordenador de curso atual: ${coordenadorPresente.name}`);
+          }
+
+          if (errors.length > 0) {
+              const dialogData = {
+                  title: 'Erro ao Cadastrar',
+                  message: errors.join('<br>')
+              };
+              this.openOkDialog(dialogData);
+          } else {
+              this.save();
+          }
+        });
+    } else {
+        const missingFields = [];
+        if (this.form.get('name')?.hasError('required')) {
+            missingFields.push('<li>Nome</li>');
+        }
+        if (this.form.get('educationLevel')?.hasError('required')) {
+            missingFields.push('<li>Grau acadêmico</li>');
+        }
+        if (this.form.get('coordination')?.hasError('required')) {
+            missingFields.push('<li>Coordenadoria</li>');
+        }
+        const dialogDataForm = {
+            title: 'Erro ao Cadastrar',
+            message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+        };
+        this.openOkDialog(dialogDataForm);
+    }
+  }
+
+  openOkDialog(data: any): void {
+    this.dialog.open(ModalDialogOkComponent, {
+      data: data,
+      backdropClass: 'backdrop'
+    });
+  }
+
+  save() {
     const selectedCoordination = this.coordenadorias.find(coord => coord._id == this.form.value.coordination);
- 
+
     if (selectedCoordination) {
         this.form.patchValue({ coordination: selectedCoordination });
     }
-    
+
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {
@@ -158,5 +218,4 @@ export class CadastroProfessorComponent implements OnInit {
       }
     });
   }
-
 }
