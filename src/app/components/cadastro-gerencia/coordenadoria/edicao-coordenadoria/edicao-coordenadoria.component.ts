@@ -109,7 +109,7 @@ export class EdicaoCoordenadoriaComponent implements OnInit {
         missingFields.push('<li>Descrição (pelo menos 3 caracteres)</li>');
       }
       const dialogDataForm = {
-        title: 'Erro ao Cadastrar',
+        title: 'Erro ao Editar',
         message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
       };
 
