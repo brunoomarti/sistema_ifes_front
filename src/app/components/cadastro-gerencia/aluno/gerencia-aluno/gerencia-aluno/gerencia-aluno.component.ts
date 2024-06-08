@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Aluno } from '../../../../../models/Aluno';
 import { EdicaoAlunoComponent } from '../../edicao-aluno/edicao-aluno.component';
+import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-gerencia-aluno',
@@ -63,15 +64,50 @@ export class GerenciaAlunoComponent implements OnInit {
   }
 
   excluir(aluno: Aluno): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir este aluno?');
-    if (confirmacao) {
-      this.service.remove(aluno._id).subscribe(() => {
-        this.alunos = this.alunos.filter(e => e._id !== aluno._id);
-        this.onSucess(true);
-      }, error => {
-        this.onFailed();
-      });
-    }
+    this.service.getRegistrosUsandoAluno(aluno._id).subscribe(registros => {
+      if (registros.length > 0) {
+        this.mostrarMensagemErro(registros); 
+      } else {
+        const confirmacao = confirm('Tem certeza que deseja excluir este aluno?');
+        if (confirmacao) {
+          this.service.remove(aluno._id).subscribe(() => {
+            this.alunos = this.alunos.filter(e => e._id !== aluno._id);
+            this.onSucess(true);
+          }, error => {
+            this.onFailed();
+          });
+        }
+      }
+    });
+  }
+
+  mostrarMensagemErro(registros: any[]): void {
+    let cont = 1;
+
+    const itensLista = registros.map(registro => {
+        return `<span><strong>Aula ${cont++}</strong></span> <br>
+                Disciplina: ${registro.discipline.name} - (${registro.discipline.course.name})<br>
+                Professor: ${registro.teacher.name} <br>
+        `;
+    });
+
+    const dialogDataForm = {
+      title: 'Erro ao Excluir Aluno',
+      message: `
+    <div mat-dialog-content> 
+      <p>Exclua os seguintes registros primeiramente:</p>
+      <span>Total de aulas do aluno: <strong>${itensLista.length}</strong></span>
+      <ul> 
+        ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
+      </ul>
+    </div>
+  `,
+    };
+
+    this.dialog.open(ModalDialogOkComponent, {
+      data: dialogDataForm,
+      backdropClass: 'backdrop'
+    });
   }
 
   onFailed() {

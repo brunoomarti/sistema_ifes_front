@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Aluno } from '../../../../models/Aluno';
-import { first, tap } from 'rxjs';
+import { Observable, first, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -48,5 +48,9 @@ export class AlunoService {
 
   getStudentSchedule(studentCode: number) {
     return this.httpClient.get<any>(`${this.API}/schedule/${studentCode}`);
+  }
+
+  getRegistrosUsandoAluno(turmaId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.API}/${turmaId}/records`);
   }
 }

@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Horario } from '../../../../models/Horario';
 import { EdicaoHorarioComponent } from '../edicao-horario/edicao-horario.component';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-gerencia-horario',
@@ -63,16 +64,52 @@ export class GerenciaHorarioComponent implements OnInit {
   }
 
   excluir(horario: Horario): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir este horário?');
-    if (confirmacao) {
-      this.service.remove(horario._id).subscribe(() => {
-        this.horarios = this.horarios.filter(e => e._id !== horario._id);
-        this.onSucess(true);
-      }, error => {
-        this.onFailed();
-      });
-    }
+    this.service.getRegistrosUsandoHorario(horario._id).subscribe(registros => {
+      if (registros.length > 0) {
+        this.mostrarMensagemErro(registros); 
+      } else {
+        const confirmacao = confirm('Tem certeza que deseja excluir este horario?');
+        if (confirmacao) {
+          this.service.remove(horario._id).subscribe(() => {
+            this.horarios = this.horarios.filter(e => e._id !== horario._id);
+            this.onSucess(true);
+          }, error => {
+            this.onFailed();
+          });
+        }
+      }
+    });
   }
+
+  mostrarMensagemErro(registros: any[]): void {
+    let cont = 1;
+
+    const itensLista = registros.map(registro => {
+        return `<span><strong>Alocação ${cont++}</strong></span> <br>
+                Tipo: ${registro.type} - (${registro.weekDay})<br>
+                Responsável: ${registro.lesson.teacher.name} <br>
+        `;
+    });
+
+    const dialogDataForm = {
+      title: 'Erro ao Excluir Horário',
+      message: `
+    <div mat-dialog-content> 
+      <p>Exclua os seguintes registros primeiramente:</p>
+      <span>Total de Alocações: <strong>${itensLista.length}</strong></span>
+      <ul> 
+        ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
+      </ul>
+    </div>
+  `,
+    };
+
+    this.dialog.open(ModalDialogOkComponent, {
+      data: dialogDataForm,
+      backdropClass: 'backdrop'
+    });
+  }
+
 
   onFailed() {
     this.snackBar.open(this.mensagemSnackbarErro, '', { duration: 5000, panelClass: ['errorSnackbar'] });

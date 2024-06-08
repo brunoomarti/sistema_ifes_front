@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Turma } from '../../../../models/Turma';
 import { HttpClient } from '@angular/common/http';
-import { first, tap } from 'rxjs';
+import { Observable, first, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +40,9 @@ export class TurmaService {
 
   remove(_id: number) {
     return this.httpClient.delete(`${this.API}/${_id}`);
+  }
+
+  getRegistrosUsandoTurma(turmaId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.API}/${turmaId}/records`);
   }
 }

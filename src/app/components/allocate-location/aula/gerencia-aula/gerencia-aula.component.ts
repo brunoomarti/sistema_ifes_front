@@ -101,7 +101,7 @@ export class GerenciaAulaComponent implements OnInit {
   }
 
   excluir(aula: Aula): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir esta aula?');
+    const confirmacao = confirm(`Você está prestes a excluir uma aula. Com isso, todas as suas alocações também serão excluídas. Tem certeza que deseja continuar?`);
     if (confirmacao) {
       this.service.remove(aula._id).subscribe(() => {
         this.aulas = this.aulas.filter(e => e._id !== aula._id);

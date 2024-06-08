@@ -63,4 +63,8 @@ export class LocalService {
   getLocaisAtivos(): Observable<Local[]> {
     return this.httpClient.get<Local[]>(`${this.API}/availableLocal`);
   }
+
+  getRegistrosUsandoLocal(localId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.API}/${localId}/records`);
+  }
 }

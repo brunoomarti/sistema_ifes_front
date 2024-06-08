@@ -68,7 +68,7 @@ export class GerenciaEventoComponent implements OnInit {
   }
 
   excluir(evento: Evento): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir este evento?');
+    const confirmacao = confirm('Você está prestes a excluir um evento. Com isso, sua alocação também será excluída. Tem certeza que deseja continuar?');
     if (confirmacao) {
       this.service.remove(evento._id).subscribe(() => {
         this.eventos = this.eventos.filter(e => e._id !== evento._id);

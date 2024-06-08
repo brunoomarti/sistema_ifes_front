@@ -10,6 +10,7 @@ import { ReloadService } from '../../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Turma } from '../../../../../models/Turma';
 import { EdicaoTurmaComponent } from '../../edicao-turma/edicao-turma.component';
+import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-gerencia-turma',
@@ -68,16 +69,50 @@ export class GerenciaTurmaComponent implements OnInit {
   }
 
   excluir(turma: Turma): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir esta turma?');
-    if (confirmacao) {
-      this.service.remove(turma._id).subscribe(() => {
-        this.turmas = this.turmas.filter(e => e._id !== turma._id);
-        this.onSucess(true);
-      }, error => {
-        console.error('Erro ao excluir equipamento:', error);
-        this.onFailed();
-      });
-    }
+    this.service.getRegistrosUsandoTurma(turma._id).subscribe(registros => {
+      if (registros.length > 0) {
+        this.mostrarMensagemErro(registros); 
+      } else {
+        const confirmacao = confirm('Tem certeza que deseja excluir este turma?');
+        if (confirmacao) {
+          this.service.remove(turma._id).subscribe(() => {
+            this.turmas = this.turmas.filter(e => e._id !== turma._id);
+            this.onSucess(true);
+          }, error => {
+            this.onFailed();
+          });
+        }
+      }
+    });
+  }
+
+  mostrarMensagemErro(registros: any[]): void {
+    let cont = 1;
+
+    const itensLista = registros.map(registro => {
+        return `<span><strong>Alocação ${cont++}</strong></span> <br>
+                Tipo: ${registro.type} - (${registro.weekDay})<br>
+                Responsável: ${registro.lesson.teacher.name} <br>
+        `;
+    });
+
+    const dialogDataForm = {
+      title: 'Erro ao Excluir Turma',
+      message: `
+    <div mat-dialog-content> 
+      <p>Exclua os seguintes registros primeiramente:</p>
+      <span>Total de Alocações: <strong>${itensLista.length}</strong></span>
+      <ul> 
+        ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
+      </ul>
+    </div>
+  `,
+    };
+
+    this.dialog.open(ModalDialogOkComponent, {
+      data: dialogDataForm,
+      backdropClass: 'backdrop'
+    });
   }
 
   onFailed() {

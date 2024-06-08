@@ -10,6 +10,7 @@ import { ReloadService } from '../../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Disciplina } from '../../../../../models/Disciplina';
 import { EdicaoDisciplinaComponent } from '../../edicao-disciplina/edicao-disciplina.component';
+import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-gerencia-disciplina',
@@ -66,16 +67,50 @@ export class GerenciaDisciplinaComponent implements OnInit {
   }
 
   excluir(disciplina: Disciplina): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir esta disciplina?');
-    if (confirmacao) {
-      this.service.remove(disciplina._id).subscribe(() => {
-        this.disciplinas = this.disciplinas.filter(e => e._id !== disciplina._id);
-        this.onSucess(true);
-      }, error => {
-        console.error('Erro ao excluir equipamento:', error);
-        this.onFailed();
-      });
-    }
+    this.service.getRegistrosUsandoDisciplina(disciplina._id).subscribe(registros => {
+      if (registros.length > 0) {
+        this.mostrarMensagemErro(registros); 
+      } else {
+        const confirmacao = confirm('Tem certeza que deseja excluir este disciplina?');
+        if (confirmacao) {
+          this.service.remove(disciplina._id).subscribe(() => {
+            this.disciplinas = this.disciplinas.filter(e => e._id !== disciplina._id);
+            this.onSucess(true);
+          }, error => {
+            this.onFailed();
+          });
+        }
+      }
+    });
+  }
+
+  mostrarMensagemErro(registros: any[]): void {
+    let cont = 1;
+
+    const itensLista = registros.map(registro => {
+        return `<span><strong>Aula ${cont++}</strong></span> <br>
+                Disciplina: ${registro.discipline.name} (${registro.discipline.course.name})<br>
+                Professor: ${registro.teacher.name} (${registro.teacher.teacherCode})<br>
+        `;
+    });
+
+    const dialogDataForm = {
+      title: 'Erro ao Excluir Horário',
+      message: `
+    <div mat-dialog-content> 
+      <p>Exclua os seguintes registros primeiramente:</p>
+      <span>Total de Aula(s): <strong>${itensLista.length}</strong></span>
+      <ul> 
+        ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
+      </ul>
+    </div>
+  `,
+    };
+
+    this.dialog.open(ModalDialogOkComponent, {
+      data: dialogDataForm,
+      backdropClass: 'backdrop'
+    });
   }
 
   onFailed() {

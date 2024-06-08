@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Local } from '../../../../models/Local';
 import { EdicaoLocalComponent } from '../edicao-local/edicao-local.component';
 import { EquipamentoLocal } from '../../../../models/EquipamentoLocal';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-gerencia-local',
@@ -73,16 +74,51 @@ export class GerenciaLocalComponent implements OnInit {
   }
 
   excluir(local: Local): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir este local?');
-    if (confirmacao) {
-      this.service.remove(local._id).subscribe(() => {
-        this.locais = this.locais.filter(e => e._id !== local._id);
-        this.onSucess(true);
-      }, error => {
-        console.error('Erro ao excluir equipamento:', error);
-        this.onFailed();
-      });
-    }
+    this.service.getRegistrosUsandoLocal(local._id).subscribe(registros => {
+      if (registros.length > 0) {
+        this.mostrarMensagemErro(registros); 
+      } else {
+        const confirmacao = confirm('Tem certeza que deseja excluir este local?');
+        if (confirmacao) {
+          this.service.remove(local._id).subscribe(() => {
+            this.locais = this.locais.filter(e => e._id !== local._id);
+            this.onSucess(true);
+          }, error => {
+            this.onFailed();
+          });
+        }
+      }
+    });
+  }
+
+  mostrarMensagemErro(registros: any[]): void {
+    let cont = 1;
+
+    const itensLista = registros.map(registro => {
+        return `<span>Alocação <strong>${cont++}</strong></span> <br>
+                Tipo: ${registro.type} - (${registro.weekDay})<br>
+                Responsável: ${registro.lesson.teacher.name} <br>
+                Local: ${registro.location.name}
+        `;
+    });
+
+    const dialogDataForm = {
+      title: 'Erro ao Excluir Local',
+      message: `
+    <div mat-dialog-content>
+      <p>Exclua os seguintes registros primeiramente:</p>
+      <span>Total de Alocações: <strong>${itensLista.length}</strong></span>
+      <ul> 
+        ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
+      </ul>
+    </div>
+  `,
+    };
+
+    this.dialog.open(ModalDialogOkComponent, {
+      data: dialogDataForm,
+      backdropClass: 'backdrop'
+    });
   }
 
   onFailed() {

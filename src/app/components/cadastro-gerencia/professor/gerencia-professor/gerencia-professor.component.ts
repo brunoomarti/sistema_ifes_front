@@ -10,6 +10,7 @@ import { ReloadService } from '../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Professor } from '../../../../models/Professor';
 import { EdicaoProfessorComponent } from '../edicao-professor/edicao-professor.component';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-gerencia-professor',
@@ -66,17 +67,52 @@ export class GerenciaProfessorComponent implements OnInit {
   }
 
   excluir(professor: Professor): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir este professor?');
-    if (confirmacao) {
-      this.service.remove(professor._id).subscribe(() => {
-        this.professores = this.professores.filter(e => e._id !== professor._id);
-        this.onSucess(true);
-      }, error => {
-        console.error('Erro ao excluir professor:', error);
-        this.onFailed();
-      });
-    }
+    this.service.getRegistrosUsandoProfessor(professor._id).subscribe(registros => {
+      if (registros.length > 0) {
+        this.mostrarMensagemErro(registros); 
+      } else {
+        const confirmacao = confirm('Tem certeza que deseja excluir este professor?');
+        if (confirmacao) {
+          this.service.remove(professor._id).subscribe(() => {
+            this.professores = this.professores.filter(e => e._id !== professor._id);
+            this.onSucess(true);
+          }, error => {
+            this.onFailed();
+          });
+        }
+      }
+    });
   }
+
+  mostrarMensagemErro(registros: any[]): void {
+    let cont = 1;
+
+    const itensLista = registros.map(registro => {
+        return `<span><strong>Aula ${cont++}</strong></span> <br>
+                Disciplina: ${registro.discipline.name} - (${registro.discipline.course.name})<br>
+                Professor: ${registro.teacher.name} <br>
+        `;
+    });
+
+    const dialogDataForm = {
+      title: 'Erro ao Excluir Aluno',
+      message: `
+    <div mat-dialog-content> 
+      <p>Exclua os seguintes registros primeiramente:</p>
+      <span>Total de aulas do professor: <strong>${itensLista.length}</strong></span>
+      <ul> 
+        ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
+      </ul>
+    </div>
+  `,
+    };
+
+    this.dialog.open(ModalDialogOkComponent, {
+      data: dialogDataForm,
+      backdropClass: 'backdrop'
+    });
+  }
+
 
   onFailed() {
     this.snackBar.open(this.mensagemSnackbarErro, '', { duration: 5000, panelClass: ['errorSnackbar'] });
