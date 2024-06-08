@@ -5,11 +5,13 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CoordenadoriaService } from '../service/coordenadoria.service';
 import { Router } from '@angular/router';
+import { Coordenador } from '../../../../models/Coordenador';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Coordenadoria } from '../../../../models/Coordenadoria';
 import { EdicaoCoordenadoriaComponent } from '../edicao-coordenadoria/edicao-coordenadoria.component';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-gerencia-coordenadoria',
@@ -63,15 +65,53 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
   }
 
   excluir(coordenadoria: Coordenadoria): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir esta coordenadoria?');
-    if (confirmacao) {
-      this.service.remove(coordenadoria._id).subscribe(() => {
-        this.coordenadorias = this.coordenadorias.filter(e => e._id !== coordenadoria._id);
-        this.onSucess(true);
-      }, error => {
-        this.onFailed();
-      });
-    }
+    this.service.getRegistrosUsandoCoordenadoria(coordenadoria._id).subscribe(registros => {
+      if (registros.length > 0) {
+        this.mostrarMensagemErro(registros); 
+      } else {
+        const confirmacao = confirm('Tem certeza que deseja excluir esta coordenadoria?');
+        if (confirmacao) {
+          this.service.remove(coordenadoria._id).subscribe(() => {
+            this.coordenadorias = this.coordenadorias.filter(e => e._id !== coordenadoria._id);
+            this.onSucess(true);
+          }, error => {
+            this.onFailed();
+          });
+        }
+      }
+    });
+  }
+
+  
+  mostrarMensagemErro(registros: any[]): void {
+    registros.map((a) => { console.log(a.name)})
+    
+    const itensLista = registros.map(registro => {
+      if (!registro.specialty) {
+        return `Coordenador: ${registro.name}`;
+      } else{
+        return `Professor: ${registro.name} (${registro.teacherCode})`;
+      } 
+      
+    });
+
+    const dialogDataForm = {
+      title: 'Erro ao Excluir Coordenadoria',
+      message: `
+    <div mat-dialog-content>
+      <p>Exclua os seguintes registros primeiramente:</p>
+      <ul>
+        ${itensLista.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+    </div>
+  `,
+    };
+
+    this.dialog.open(ModalDialogOkComponent, {
+      data: dialogDataForm,
+      backdropClass: 'backdrop'
+    });
+    
   }
 
   onFailed() {

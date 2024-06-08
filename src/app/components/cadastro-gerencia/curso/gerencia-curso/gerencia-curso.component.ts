@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Curso } from '../../../../models/Curso';
 import { EdicaoCursoComponent } from '../edicao-curso/edicao-curso.component';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-gerencia-curso',
@@ -64,16 +65,64 @@ export class GerenciaCursoComponent implements OnInit {
     });
   }
 
+  // excluir(obj: Curso): void {
+  //   const confirmacao = confirm('Tem certeza que deseja excluir este curso?');
+  //   if (confirmacao) {
+  //     this.service.remove(obj._id).subscribe(() => {
+  //       this.cursos = this.cursos.filter(e => e._id !== obj._id);
+  //       this.onSucess(true);
+  //     }, error => {
+  //       this.onFailed();
+  //     });
+  //   }
+  // }
+
   excluir(obj: Curso): void {
-    const confirmacao = confirm('Tem certeza que deseja excluir este curso?');
-    if (confirmacao) {
-      this.service.remove(obj._id).subscribe(() => {
-        this.cursos = this.cursos.filter(e => e._id !== obj._id);
-        this.onSucess(true);
-      }, error => {
-        this.onFailed();
-      });
-    }
+    this.service.getRegistrosUsandoCurso(obj._id).subscribe(registros => {
+      if (registros.length > 0) {
+        this.mostrarMensagemErro(registros); 
+      } else {
+        const confirmacao = confirm('Tem certeza que deseja excluir este curso?');
+        if (confirmacao) {
+          this.service.remove(obj._id).subscribe(() => {
+            this.cursos = this.cursos.filter(e => e._id !== obj._id);
+            this.onSucess(true);
+          }, error => {
+            this.onFailed();
+          });
+        }
+      }
+    });
+  }
+
+  
+  mostrarMensagemErro(registros: any[]): void {
+    registros.map((a) => { console.log(a.name)})
+    
+    const itensLista = registros.map(registro => {
+      if (registro.acronym) {
+        return `Disciplina: ${registro.name}`;
+      } else{
+        return `Aluno: ${registro.name} (${registro.studentCode})`;
+      } 
+    });
+
+    const dialogDataForm = {
+      title: 'Erro ao Excluir Curso',
+      message: `
+    <div mat-dialog-content>
+      <p>Exclua os seguintes registros primeiramente:</p>
+      <ul>
+        ${itensLista.map(item => `<li>${item}</li>`).join('')}
+      </ul>
+    </div>
+  `,
+    };
+
+    this.dialog.open(ModalDialogOkComponent, {
+      data: dialogDataForm,
+      backdropClass: 'backdrop'
+    });
   }
 
   onFailed() {

@@ -115,54 +115,70 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
 
   onSubmit() {
 
-    const obj: Alocar = this.data;
+    if (this.form.valid) {  
+      const obj: Alocar = this.data;
 
-    const selectedTimesAsString = obj.alocacao.selectedTimes.map(time => ({
-      _id: time._id,
-      startTime: time.startTime.toString(),
-      endTime: time.endTime.toString()
-    }));
+      const selectedTimesAsString = obj.alocacao.selectedTimes.map(time => ({
+        _id: time._id,
+        startTime: time.startTime.toString(),
+        endTime: time.endTime.toString()
+      }));
 
-    this.formHistory.setValue({
-      _id: 0,
-      lesson: obj.alocacao.lesson,
-      classe: obj.alocacao.classe,
-      startDate: obj.alocacao.startDate,
-      endDate: obj.alocacao.endDate,
-      selectedTimes: JSON.stringify(selectedTimesAsString),
-      semester: obj.alocacao.lesson.semester,
-      location: obj.alocacao.location,
-      type: 'Aula',
-      weekDay: obj.alocacao.weekDay,
-      allocation: obj.alocacao,
-      date: new Date(),
-      authorName: 'Igor',
-      changeType: 'Edição',
-    });
+      this.formHistory.setValue({
+        _id: 0,
+        lesson: obj.alocacao.lesson,
+        classe: obj.alocacao.classe,
+        startDate: obj.alocacao.startDate,
+        endDate: obj.alocacao.endDate,
+        selectedTimes: JSON.stringify(selectedTimesAsString),
+        semester: obj.alocacao.lesson.semester,
+        location: obj.alocacao.location,
+        type: 'Aula',
+        weekDay: obj.alocacao.weekDay,
+        allocation: obj.alocacao,
+        date: new Date(),
+        authorName: 'Igor',
+        changeType: 'Edição',
+      });
 
-    console.log(this.formHistory.value);
+      console.log(this.formHistory.value);
 
-    this.historyService.save(this.formHistory.value).subscribe(result => this.onSucess(), error => this.onFailed());
+      this.historyService.save(this.formHistory.value).subscribe(result => this.onSucess(), error => this.onFailed());
 
-    const selectedClasse = this.turmas.find(findObj => findObj._id == this.form.value.classe);
-    const selectedLocation = this.locais.find(findObj => findObj._id == this.form.value.location);
+      const selectedClasse = this.turmas.find(findObj => findObj._id == this.form.value.classe);
+      const selectedLocation = this.locais.find(findObj => findObj._id == this.form.value.location);
 
-    this.indexTimes.forEach(hr => {
-      const selectedHour = this.horarios.find(obj => obj._id == hr);
-      if (selectedHour){
-        this.selectedTimes.push(selectedHour);
+      this.indexTimes.forEach(hr => {
+        const selectedHour = this.horarios.find(obj => obj._id == hr);
+        if (selectedHour){
+          this.selectedTimes.push(selectedHour);
+        }
+      })
+
+      if (selectedClasse && selectedLocation ) {
+        this.form.patchValue({ classe: selectedClasse });
+        this.form.patchValue({ location: selectedLocation });
+        this.form.patchValue({ selectedTimes: this.selectedTimes })
       }
-    })
 
-    if (selectedClasse && selectedLocation ) {
-      this.form.patchValue({ classe: selectedClasse });
-      this.form.patchValue({ location: selectedLocation });
-      this.form.patchValue({ selectedTimes: this.selectedTimes })
+      console.log(this.form.value);
+
+      this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+    } else {
+        const missingFields = [];
+        
+        if (this.form.get('classe')?.hasError('required')) {
+          missingFields.push('<li>Selecione uma Classe</li>');
+        }
+  
+        if (this.form.get('location')?.hasError('required')) {
+          missingFields.push('<li>Selecione um Local</li>');
+        }
+     
+        if (this.form.get('weekDay')?.hasError('required')) {
+          missingFields.push('<li>Selecione o Dia da Semana</li>');
+        }
     }
-
-    console.log(this.form.value);
-
-    this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 
   onCancel(): void {

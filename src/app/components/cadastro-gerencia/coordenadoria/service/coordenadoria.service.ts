@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Coordenadoria } from '../../../../models/Coordenadoria';
-import { first, tap } from 'rxjs';
+import { Observable, first, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -40,6 +40,10 @@ export class CoordenadoriaService {
 
   remove(_id: number) {
     return this.httpClient.delete(`${this.API}/${_id}`);
+  }
+ 
+  getRegistrosUsandoCoordenadoria(coordenadoriaId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.API}/${coordenadoriaId}/records`);
   }
 
 }

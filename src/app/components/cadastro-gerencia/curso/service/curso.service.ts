@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Curso } from '../../../../models/Curso';
-import { first, tap } from 'rxjs';
+import { Observable, first, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -40,5 +40,9 @@ export class CursoService {
 
   remove(_id: number) {
     return this.httpClient.delete(`${this.API}/${_id}`);
+  }
+  
+  getRegistrosUsandoCurso(courseId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${this.API}/${courseId}/records`);
   }
 }
