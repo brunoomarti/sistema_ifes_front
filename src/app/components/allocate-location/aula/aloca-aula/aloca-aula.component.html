@@ -30,7 +30,7 @@
       </div>
 
       <div class="newInput">
-        <label for="periodo">Período: *</label>
+        <label for="periodo">Período:</label>
         <select name="periodo" id="periodoSelect" (change)="toggleFields()" formControlName="period">
           <option value="dia">Escolher</option>
           <option value="semestre">Semestre</option>
@@ -40,12 +40,12 @@
       <div class="selectGroup">
         <div id="dataInicial" class="newInput">
           <label for="startDate">Data Inicio:</label>
-          <input type="date" formControlName="startDate" required />
+          <input type="date" formControlName="startDate" />
         </div>
 
         <div id="dataFim" class="newInput">
           <label for="endDate">Data Fim:</label>
-          <input type="date" formControlName="endDate" required />
+          <input type="date" formControlName="endDate" />
         </div>
       </div>
 
@@ -70,7 +70,7 @@
               <label>
                 <input type="checkbox"
                        [value]="horario._id"
-                       (change)="onCheckboxChange($event, horario)">
+                       (change)="onCheckboxChange($event, horario)" required>
                 {{ horario.startTime }} ~ {{ horario.endTime }}
               </label>
             </ng-container>

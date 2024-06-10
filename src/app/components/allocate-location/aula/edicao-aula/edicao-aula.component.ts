@@ -107,13 +107,15 @@ export class EdicaoAulaComponent implements OnInit {
     const aulasMap = new Map<number, number>();
 
     alocacoes.forEach(alocacao => {
-      const aulaId = alocacao.lesson._id;
-      const selectedTimesCount = alocacao.selectedTimes.length;
+      if (!alocacao.applicant){
+        const aulaId = alocacao.lesson._id;
+        const selectedTimesCount = alocacao.selectedTimes.length;
 
-      if (aulasMap.has(aulaId)) {
-        aulasMap.set(aulaId, aulasMap.get(aulaId)! + selectedTimesCount);
-      } else {
-        aulasMap.set(aulaId, selectedTimesCount);
+        if (aulasMap.has(aulaId)) {
+          aulasMap.set(aulaId, aulasMap.get(aulaId)! + selectedTimesCount);
+        } else {
+          aulasMap.set(aulaId, selectedTimesCount);
+        }
       }
     });
 
@@ -180,7 +182,7 @@ export class EdicaoAulaComponent implements OnInit {
   isLimiteMaximoAtingido(aula: Aula): boolean {
     const aulaId = aula._id;
     const aulasAlocadas = this.aulasAlocadasPorAula.get(aulaId) || 0;
-    return aulasAlocadas >= aula.weeklyQuantity;
+    return aulasAlocadas > this.form.value.weeklyQuantity;
 
   }
 

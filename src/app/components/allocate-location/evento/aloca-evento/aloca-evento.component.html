@@ -8,7 +8,7 @@
 
     <form [formGroup]="form">
       <div class="newInput">
-        <label for="location">Local:</label>
+        <label for="location">Local: *</label>
         <select formControlName="location" required>
           <option *ngFor="let local of locais" [value]="local._id">
             {{ local.name }}
@@ -17,24 +17,24 @@
       </div>
 
       <div class="newInput">
-        <label for="applicant">Nome do requerente:</label>
+        <label for="applicant">Nome do requerente: *</label>
         <input type="text" formControlName="applicant" placeholder="Nome do requerente" required>
       </div>
 
       <div class="newInput">
-        <label for="startDate">Data:</label>
+        <label for="startDate">Data: *</label>
         <input type="date" formControlName="startDate" required />
       </div>
 
       <div class="selectGroup">
         <div class="newInput">
-          <label for="startTime">Hora de início:</label>
-          <input type="time" formControlName="startTime" />
+          <label for="startTime">Hora de início: *</label>
+          <input type="time" formControlName="startTime" required/>
         </div>
 
         <div class="newInput">
-          <label for="endTime">Hora de fim:</label>
-          <input type="time" formControlName="endTime" />
+          <label for="endTime">Hora de fim: *</label>
+          <input type="time" formControlName="endTime" required/>
         </div>
       </div>
 

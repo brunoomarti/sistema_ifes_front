@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Time } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { Local } from '../../../../models/Local';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LocalService } from '../../../cadastro-gerencia/local/service/local.service';
 import { AllocateService } from '../../allocate-main/service/allocate.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,6 +12,8 @@ import { Evento } from '../../../../models/Evento';
 import { Horario } from '../../../../models/Horario';
 import { HorarioService } from '../../../cadastro-gerencia/horario/service/horario.service';
 import { EventoService } from '../service/evento.service';
+import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { Alocar } from '../../../../models/Alocar';
 
 @Component({
   selector: 'app-aloca-evento',
@@ -33,6 +35,7 @@ export class AlocaEventoComponent implements OnInit {
   horarios: Horario[] = [];
   selectedTimes: Horario[] = [];
   indexTimes: number[] = [];
+  alocacoes: Alocar[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<AlocaEventoComponent>,
@@ -42,6 +45,7 @@ export class AlocaEventoComponent implements OnInit {
     private allocateService: AllocateService,
     private eventoService: EventoService,
     private snackBar: MatSnackBar,
+    public dialog: MatDialog,
     private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   )
@@ -67,6 +71,10 @@ export class AlocaEventoComponent implements OnInit {
       this.locais = locais;
     });
 
+    this.allocateService.listar().subscribe(alocacoes => {
+      this.alocacoes = alocacoes;
+    });
+
     this.listarHorarios();
 
     const obj: Evento = this.data.evento;
@@ -88,18 +96,94 @@ export class AlocaEventoComponent implements OnInit {
   }
 
   onSubmit() {
+    if (this.form.valid){
+      let erros: string[] = [];
+      
+      const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
+
+      erros = this.verificarDataEHora();
+
+      if (selectedLocation && this.form.value.startDate) {
+        this.form.patchValue({ location: selectedLocation });
+        this.form.patchValue({ endDate: this.form.value.startDate });
+      }
+
+      this.data.evento.allocated = true;
+
+      if (erros.length > 0) {
+        const dialogData = {
+          title: 'Erro ao Alocar Evento',
+          message: erros.join('<br>')
+        };
+        this.dialog.open(ModalDialogOkComponent, {
+          data: dialogData,
+          backdropClass: 'backdropTwo'
+        });
+      } else {
+        this.eventoService.save(this.data.evento).subscribe(result => this.onSucess(), error => this.onFailed());
+        this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+      }
+    } else {
+      const missingFields = [];
+
+
+      if (this.form.get('location')?.hasError('required')) {
+        missingFields.push('<li>Selecione um Local</li>');
+      }
+
+      if (this.form.get('applicant')?.hasError('required')) {
+        missingFields.push('<li>Informe o requerente</li>');
+      }
+
+      if (this.form.get('startDate')?.hasError('required')) {
+        missingFields.push('<li>Selecione uma data</li>');
+      }
+
+      if (this.form.get('startTime')?.hasError('required')) {
+        missingFields.push('<li>Selecione uma Hora Inicio</li>');
+      }
+
+      if (this.form.get('endTime')?.hasError('required')) {
+        missingFields.push('<li>Selecione uma Hora de fim</li>');
+      }
+      
+      const dialogDataForm = {
+        title: 'Erro ao Alocar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+      };
+
+      this.dialog.open(ModalDialogOkComponent, {
+        data: dialogDataForm,
+        backdropClass: 'backdropTwo'
+      });
+    }
+  }
+
+
+  verificarDataEHora(){
+    const erros: string[] = [];
+
     const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
 
-    if (selectedLocation && this.form.value.startDate) {
-      this.form.patchValue({ location: selectedLocation });
-      this.form.patchValue({ endDate: this.form.value.startDate });
+    this.alocacoes.forEach((a) => {
+    if (selectedLocation?._id == a.location._id) {
+      console.log("Local Igual")
+      if (this.form.value.startDate == a.startDate) {
+        console.log("Data Igual")
+        if (this.form.value.startTime == a.startTime) {
+          console.log("HrInicio Igual")
+          if (this.form.value.endTime == a.endTime) {
+            console.log("HrFim Igual");
+            erros.push('<li>Já existe outra alocação para o mesmo período de tempo, data e local escolhidos.<li>');
+            return;
+          }
+        }
+      }
     }
-
-    this.data.evento.allocated = true;
-
-    this.eventoService.save(this.data.evento).subscribe(result => this.onSucess(), error => this.onFailed());
-    this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+    })
+    return erros;
   }
+
 
   listarHorarios(): void {
     this.horarioService.listar().subscribe(horarios => {

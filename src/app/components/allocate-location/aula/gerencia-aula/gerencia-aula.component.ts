@@ -53,13 +53,16 @@ export class GerenciaAulaComponent implements OnInit {
     const aulasMap = new Map<number, number>();
 
     alocacoes.forEach(alocacao => {
-      const aulaId = alocacao.lesson._id;
-      const selectedTimesCount = alocacao.selectedTimes.length;
+      if (!alocacao.applicant) {
+        const aulaId = alocacao.lesson._id;
+        const selectedTimesCount = alocacao.selectedTimes.length;
 
-      if (aulasMap.has(aulaId)) {
-        aulasMap.set(aulaId, aulasMap.get(aulaId)! + selectedTimesCount);
-      } else {
-        aulasMap.set(aulaId, selectedTimesCount);
+        if (aulasMap.has(aulaId)) {
+          aulasMap.set(aulaId, aulasMap.get(aulaId)! + selectedTimesCount);
+        } else {
+          aulasMap.set(aulaId, selectedTimesCount);
+        }
+
       }
     });
 

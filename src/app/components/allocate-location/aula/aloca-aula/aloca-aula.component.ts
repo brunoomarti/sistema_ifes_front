@@ -16,6 +16,7 @@ import { Horario } from '../../../../models/Horario';
 import { Semestre } from '../../../../models/Semestre';
 import { SemestreService } from '../../../cadastro-gerencia/semestre/service/semestre.service';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { Alocar } from '../../../../models/Alocar';
 
 @Component({
   selector: 'app-aloca-aula',
@@ -40,6 +41,8 @@ export class AlocaAulaComponent implements OnInit {
   selectedTimes: Horario[] = [];
   indexTimes: number[] = [];
   semestres: Semestre[] = [];
+  alocacoes: Alocar[] = [];
+  aulasAlocadasPorAula: Map<number, number> = new Map<number, number>();
 
   constructor(
     public dialogRef: MatDialogRef<AlocaAulaComponent>,
@@ -89,6 +92,14 @@ export class AlocaAulaComponent implements OnInit {
        this.semestres = semestres;
     });
 
+    this.allocateService.listar().subscribe(alocacoes => {
+      this.alocacoes = alocacoes;
+    });
+
+    this.allocateService.listar().subscribe(alocacoes => {
+      this.aulasAlocadasPorAula = this.calcularAulasAlocadas(alocacoes);
+    }); 
+
     this.listarHorarios();
 
     const obj: Aula = this.data.aula;
@@ -111,8 +122,12 @@ export class AlocaAulaComponent implements OnInit {
 
   onSubmit() {
     if (this.form.valid){
+      let erros: string[] = [];
+
       const selectedClasse = this.turmas.find(obj => obj._id == this.form.value.classe);
       const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
+
+      erros = this.verificarDataEHora();
 
       this.indexTimes.forEach(hr => {
         const selectedHour = this.horarios.find(obj => obj._id == hr);
@@ -121,7 +136,7 @@ export class AlocaAulaComponent implements OnInit {
         }
       })
 
-      if(this.form.value.startDate === null || this.form.value.endDate === null){
+      if (this.form.value.startDate === null || this.form.value.endDate === null){
         this.form.patchValue({startDate: this.form.value.lesson.semester.startDate});
         this.form.patchValue({endDate: this.form.value.lesson.semester.endDate});
       }
@@ -132,21 +147,34 @@ export class AlocaAulaComponent implements OnInit {
         this.form.patchValue({ selectedTimes: this.selectedTimes })
       }
 
-      console.log(this.form.value)
+      if (this.verificarDisponibilidade(this.data.aula) != ""){
+        erros.push(this.verificarDisponibilidade(this.data.aula));
+      }
 
-      this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+      if (erros.length > 0) {
+        const dialogData = {
+          title: 'Erro ao Alocar Aula',
+          message: erros.join('<br>')
+        };
+        this.dialog.open(ModalDialogOkComponent, {
+          data: dialogData,
+          backdropClass: 'backdropTwo'
+        });
+      } else {
+        this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+      }
     } else {
       const missingFields = [];
       
       if (this.form.get('classe')?.hasError('required')) {
-        missingFields.push('<li>Selecione uma Classe</li>');
+        missingFields.push('<li>Selecione uma Turma</li>');
       }
 
       if (this.form.get('location')?.hasError('required')) {
         missingFields.push('<li>Selecione um Local</li>');
       }
 
-      if (this.form.get('periodo')?.hasError('required')) {
+      if (this.form.get('period')?.hasError('required')) {
         missingFields.push('<li>Selecione um Período</li>');
       }
 
@@ -154,13 +182,9 @@ export class AlocaAulaComponent implements OnInit {
         missingFields.push('<li>Selecione o Dia da Semana</li>');
       }
       
-      // if (this.form.get('acronym')?.hasError('required')) {
-      //   missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
-      // } else if (this.form.get('acronym')?.value.length < 3) {
-      //   missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
-      // } else if (this.form.get('acronym')?.value.length > 8) {
-      //   missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
-      // }
+      if (this.selectedTimes.length <= 0) {
+        missingFields.push('<li>Selecione um horário</li>');
+      }
       
       const dialogDataForm = {
         title: 'Erro ao Alocar',
@@ -173,6 +197,74 @@ export class AlocaAulaComponent implements OnInit {
       });
     }
   }
+
+  verificarDisponibilidade(aula: Aula){
+    const aulaId = aula._id;
+    const aulasAlocadas = this.aulasAlocadasPorAula.get(aulaId) || 0;
+    const aulasRestantes = aula.weeklyQuantity - aulasAlocadas;
+
+    console.log("selectedTimes " + this.selectedTimes.length)
+    if (this.selectedTimes.length > aulasRestantes){
+      console.log("eae")
+      return `<li>Você não pode ultrapassar a quantidade de “Aulas por semana” pré-estabelecidas para essa aula. Quantidade de aulas não alocadas: <strong> ${aulasRestantes}</strong>.</li>`;
+    } 
+    return "";
+  }
+
+
+  verificarDataEHora() {
+    const erros: string[] = [];
+    const periodo = (document.getElementById("periodoSelect") as HTMLSelectElement).value;
+    const selectedLocation = this.locais.find(obj => obj._id == this.form.value.location);
+
+    for (const a of this.alocacoes) {
+      if (selectedLocation?._id === a.location._id && this.form.value.weekDay === a.weekDay) {
+        if (periodo === "dia") {
+          if (this.form.value.startDate === a.startDate && this.form.value.endDate === a.endDate) {
+            if (this.selectedTimes.length === a.selectedTimes.length && 
+                this.selectedTimes.every((time, index) => time.startTime === a.selectedTimes[index].startTime && time.endTime === a.selectedTimes[index].endTime)) {
+              erros.push('<li>Já existe outra alocação para o mesmo período de tempo, dia da semana e local escolhidos.</li>');
+              return erros; 
+            }
+          }
+        } else { 
+          if (this.selectedTimes.length > 0) {
+            console.log(this.selectedTimes.length);
+            for (const x of this.selectedTimes) {
+              for (const z of a.selectedTimes) {
+                if (x.startTime === z.startTime && x.endTime === z.endTime) {
+                  erros.push('<li>Já existe outra alocação para o mesmo período de tempo, dia da semana e local escolhidos.</li>');
+                  return erros;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  
+    return erros;
+  }
+  
+  calcularAulasAlocadas(alocacoes: Alocar[]): Map<number, number> {
+    const aulasMap = new Map<number, number>();
+
+    alocacoes.forEach(alocacao => {
+      if (!alocacao.applicant){
+        const aulaId = alocacao.lesson._id;
+        const selectedTimesCount = alocacao.selectedTimes.length;
+
+        if (aulasMap.has(aulaId)) {
+          aulasMap.set(aulaId, aulasMap.get(aulaId)! + selectedTimesCount);
+        } else {
+          aulasMap.set(aulaId, selectedTimesCount);
+        }
+      }
+    });
+
+    return aulasMap;
+  }
+
 
   onCancel(): void {
     this.dialogRef.close();
