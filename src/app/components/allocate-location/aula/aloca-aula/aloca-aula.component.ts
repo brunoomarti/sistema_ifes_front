@@ -203,8 +203,7 @@ export class AlocaAulaComponent implements OnInit {
     const aulasAlocadas = this.aulasAlocadasPorAula.get(aulaId) || 0;
     const aulasRestantes = aula.weeklyQuantity - aulasAlocadas;
 
-    console.log("selectedTimes " + this.selectedTimes.length)
-    if (this.selectedTimes.length > aulasRestantes){
+    if (this.indexTimes.length > aulasRestantes){
       console.log("eae")
       return `<li>Você não pode ultrapassar a quantidade de “Aulas por semana” pré-estabelecidas para essa aula. Quantidade de aulas não alocadas: <strong> ${aulasRestantes}</strong>.</li>`;
     } 
