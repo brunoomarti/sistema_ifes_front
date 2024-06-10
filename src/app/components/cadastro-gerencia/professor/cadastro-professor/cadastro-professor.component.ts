@@ -56,6 +56,11 @@ export class CadastroProfessorComponent implements OnInit {
   ngOnInit(): void {
     this.coordinationService.listar().subscribe(coordenadorias => {
       this.coordenadorias = coordenadorias;
+
+    this.service.listar().subscribe(professores => {
+      this.professores = professores;
+    });
+
     });
 
     const obj: Professor = this.route.snapshot.data['professor'];
@@ -72,39 +77,45 @@ export class CadastroProfessorComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid) {
+      if (this.form.valid) {
         let coordenador = this.form.get('coordinator')?.value;
         let coordenacao = this.form.get('coordination')?.value;
 
-        console.log(coordenacao);
-
         const errors: string[] = [];
 
-        this.service.listar().subscribe(professores => {
-          this.professores = professores;
-
-          console.log(this.professores);
-
-          const professoresDaCoordenacao = this.professores.filter(professor => professor.coordination._id === coordenacao);
+        if (coordenador){
+          const professoresDaCoordenacao = this.professores.filter(professor => professor.coordination._id == this.form.value.coordination);
+          let coordenadorPresente;
+          let nomeCoord;
 
           console.log(professoresDaCoordenacao);
 
-          const coordenadorPresente = professoresDaCoordenacao.find(professor => professor.coordinator === coordenador);
+          professoresDaCoordenacao.forEach(professor => {
+            if (professor.coordinator){
+              coordenadorPresente = professor.coordinator;
+              nomeCoord = professor.name;
+            }
+            
+          });
 
           if (coordenadorPresente) {
-              errors.push(`Já existe um coordenador para este curso. Coordenador de curso atual: ${coordenadorPresente.name}`);
+            errors.push(`Já existe um coordenador para este curso. Coordenador de curso atual: <strong>${nomeCoord}</strong>`);
           }
 
           if (errors.length > 0) {
-              const dialogData = {
-                  title: 'Erro ao Cadastrar',
-                  message: errors.join('<br>')
-              };
-              this.openOkDialog(dialogData);
+            const dialogData = {
+                title: 'Erro ao Cadastrar',
+                message: errors.join('<br>')
+            };
+            this.openOkDialog(dialogData);
           } else {
-              this.save();
+            this.save();
           }
-        });
+
+      } else {
+        this.save();
+      }
+        
     } else {
         const missingFields = [];
         if (this.form.get('name')?.hasError('required')) {

@@ -30,6 +30,7 @@ export class EdicaoDisciplinaComponent implements OnInit {
   mensagemSnackbarAcerto: string = 'Disciplina editada com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao editar disciplina.';
   cursos: Curso[] = [];
+  disciplinas: Disciplina[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<EdicaoDisciplinaComponent>,
@@ -66,18 +67,37 @@ export class EdicaoDisciplinaComponent implements OnInit {
     this.cursoService.listar().subscribe(cursos => {
       this.cursos = cursos;
     });
+
+    this.service.listar().subscribe(disciplinas => {
+      this.disciplinas = disciplinas;
+    });
   }
 
   onSubmit() {
     if (this.form.valid){
-    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
+      const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
+      let errors = [];
+      errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
 
-    if (selectedCourse) {
-        this.form.patchValue({ course: selectedCourse });
-    }
+      if (selectedCourse) {
+          this.form.patchValue({ course: selectedCourse });
+      }
 
-    console.log(this.form.value);
-    this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+      if (errors.length > 0) {
+        const dialogData = {
+          title: 'Erro ao Salvar',
+          message: errors.join('\n')
+        };
+        this.dialog.open(ModalDialogOkComponent, {
+            data: dialogData,
+            backdropClass: 'backdrop'
+        });
+        return;
+
+      } else {
+        this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+      }
+
     } else {
       const missingFields = [];
       if (this.form.get('name')?.hasError('required')) {
@@ -106,6 +126,27 @@ export class EdicaoDisciplinaComponent implements OnInit {
         backdropClass: 'backdropTwo'
       });
     }
+  }
+
+  validarDisciplinaCurso(disciplina: String, sigla: string){ 
+
+    const errors: string[] = [];
+    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
+
+    this.disciplinas.forEach((a) => {
+      if (a.course.name == selectedCourse?.name) {
+        if (disciplina == a.name){
+          errors.push('<li>Já existe uma Disciplina nesse curso com o mesmo Nome.</li>');
+          return;
+        }
+        if (sigla == a.acronym){
+          errors.push('<li>Já existe uma Disciplina nesse curso com a mesma Sigla.</li>');
+          return;
+        }
+      }
+    })
+
+    return errors;
   }
 
   onCancel(): void {

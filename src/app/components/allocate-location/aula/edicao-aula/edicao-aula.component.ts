@@ -14,6 +14,8 @@ import { Aula } from '../../../../models/Aula';
 import { ReloadService } from '../../../../shared-services/reload.service';
 import { CommonModule } from '@angular/common';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { Alocar } from '../../../../models/Alocar';
+import { AllocateService } from '../../allocate-main/service/allocate.service';
 
 @Component({
   selector: 'app-edicao-aula',
@@ -35,6 +37,7 @@ export class EdicaoAulaComponent implements OnInit {
   professores: Professor[] = [];
   semestres: Semestre[] = [];
   aulas: Aula[] = [];
+  aulasAlocadasPorAula: Map<number, number> = new Map<number, number>();
 
   constructor(
     public dialogRef: MatDialogRef<EdicaoAulaComponent>,
@@ -45,6 +48,7 @@ export class EdicaoAulaComponent implements OnInit {
     private aulaService: AulaService,
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
+    private allocateService: AllocateService,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any,
   )
@@ -81,6 +85,10 @@ export class EdicaoAulaComponent implements OnInit {
       this.semestres = semestres;
     });
 
+    this.allocateService.listar().subscribe(alocacoes => {
+      this.aulasAlocadasPorAula = this.calcularAulasAlocadas(alocacoes);
+    }); 
+
     const obj: Aula = this.data.aula;
     if (obj) {
       this.form.setValue({
@@ -95,9 +103,27 @@ export class EdicaoAulaComponent implements OnInit {
     }
   }
 
+  calcularAulasAlocadas(alocacoes: Alocar[]): Map<number, number> {
+    const aulasMap = new Map<number, number>();
+
+    alocacoes.forEach(alocacao => {
+      const aulaId = alocacao.lesson._id;
+      const selectedTimesCount = alocacao.selectedTimes.length;
+
+      if (aulasMap.has(aulaId)) {
+        aulasMap.set(aulaId, aulasMap.get(aulaId)! + selectedTimesCount);
+      } else {
+        aulasMap.set(aulaId, selectedTimesCount);
+      }
+    });
+
+    return aulasMap;
+  }
+
   onSubmit() {
     if (this.form.invalid) {
         const missingFields = [];
+        
         if (this.form.get('discipline')?.hasError('required')) {
             missingFields.push('<li>Disciplina</li>');
         }
@@ -122,7 +148,7 @@ export class EdicaoAulaComponent implements OnInit {
       const selectedDiscipline = this.disciplinas.find(obj => obj._id == this.form.value.discipline);
       const selectedTeacher = this.professores.find(obj => obj._id == this.form.value.teacher);
       const selectedSemester = this.semestres.find(obj => obj._id == this.form.value.semester);
-
+     
       this.aulaService.listar().subscribe(aulas => {
         this.aulas = aulas;
 
@@ -130,13 +156,17 @@ export class EdicaoAulaComponent implements OnInit {
 
         const errors: string[] = [];
 
+        if (this.isLimiteMaximoAtingido(this.data.aula)) {
+          errors.push('<li>O número de aulas por semana não pode ser menor que o número de aulas alocadas.</li>');
+        }
+
         if (exists) {
-            errors.push('A disciplina ' + selectedDiscipline?.name + ' já está sendo ministrada pelo professor ' + selectedTeacher?.name + ' no período ' + selectedSemester?.semester + '.');
+            errors.push('<li>A disciplina ' + selectedDiscipline?.name + ' já está sendo ministrada pelo professor ' + selectedTeacher?.name + ' no período ' + selectedSemester?.semester + '.</li>');
         }
 
         if (errors.length > 0) {
             const dialogData = {
-                title: 'Erro ao Cadastrar',
+                title: 'Erro ao Salvar',
                 message: errors.join('<br>')
             };
             this.openOkDialog(dialogData);
@@ -145,6 +175,13 @@ export class EdicaoAulaComponent implements OnInit {
         }
       });
     }
+  }
+
+  isLimiteMaximoAtingido(aula: Aula): boolean {
+    const aulaId = aula._id;
+    const aulasAlocadas = this.aulasAlocadasPorAula.get(aulaId) || 0;
+    return aulasAlocadas >= aula.weeklyQuantity;
+
   }
 
   openOkDialog(data: any): void {

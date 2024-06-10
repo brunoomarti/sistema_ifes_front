@@ -73,31 +73,42 @@ export class CadastroDisciplinaComponent implements OnInit {
   onSubmit() {
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
 
+    let errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
+
     if (this.form.valid) {
       if (selectedCourse) {
           this.form.patchValue({ course: selectedCourse });
       }
 
-      this.service.save(this.form.value).subscribe(
-        result => {
-          const dialogData = {
-            title: 'Disciplina Cadastrada',
-            message: `A disciplina ${result.name} foi cadastrada.`,
-            buttons: {
-              cadastrarNovo: 'Cadastrar Nova Disciplina',
-              irParaGerencia: 'Ver Disciplinas Cadastradas'
-            }
-          };
-          this.openDialog(dialogData);
-        },
-        error => {
-          this.onFailed();
-        }
-      );
+      if (errors.length > 0) {
+        const dialogData = {
+          title: 'Erro ao Cadastrar',
+          message: errors.join('\n')
+        };
+        this.dialog.open(ModalDialogOkComponent, {
+            data: dialogData,
+            backdropClass: 'backdrop'
+        });
+      } else {
+        this.service.save(this.form.value).subscribe(
+          result => {
+            const dialogData = {
+              title: 'Disciplina Cadastrada',
+              message: `A disciplina ${result.name} foi cadastrada.`,
+              buttons: {
+                cadastrarNovo: 'Cadastrar Nova Disciplina',
+                irParaGerencia: 'Ver Disciplinas Cadastradas'
+              }
+            };
+            this.openDialog(dialogData);
+          },
+          error => {
+            this.onFailed();
+          }
+        );
+      }
     } else {
       const missingFields = [];
-
-      console.log(selectedCourse)
       
       if (this.form.get('name')?.hasError('required')) {
         missingFields.push('<li>Nome</li>');
@@ -113,13 +124,7 @@ export class CadastroDisciplinaComponent implements OnInit {
 
       if (this.form.get('course')?.hasError('required')) {
         missingFields.push('<li>Selecione um Curso</li>');
-      } else if (selectedCourse) {
-          console.log(this.validarDisciplinaCurso(this.form.get('name')?.value, selectedCourse));
-  
-          if (!this.validarDisciplinaCurso(this.form.get('name')?.value, selectedCourse)){
-            missingFields.push('<li>Já existe uma disciplina com o mesmo nome destinado ao curso escolhido</li>');
-          }
-      }
+      }  
       
       const dialogDataForm = {
         title: 'Erro ao Cadastrar',
@@ -133,17 +138,23 @@ export class CadastroDisciplinaComponent implements OnInit {
     }
   }
 
-  validarDisciplinaCurso(disciplina: String, curso: Curso){
-    this.disciplinas.forEach((d) => {
-      if (d.name === disciplina){
-        if (d.course === curso){
-          return false;
+  validarDisciplinaCurso(disciplina: String, sigla: string){ 
+
+    const errors: string[] = [];
+    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
+
+    this.disciplinas.forEach((a) => {
+      if (a.course.name == selectedCourse?.name) {
+        if (disciplina == a.name){
+          errors.push('Já existe uma Disciplina nesse curso com o mesmo Nome.');
         }
-        return true;
+        if (sigla == a.acronym){
+          errors.push('Já existe uma Disciplina nesse curso com a mesma Sigla.');
+        }
       }
-      return true;
     })
-    return true;
+
+    return errors;
   }
 
   onCancel() {
