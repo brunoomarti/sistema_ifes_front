@@ -72,8 +72,9 @@ export class CadastroDisciplinaComponent implements OnInit {
   
   onSubmit() {
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
-
-    let errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
+    let errors = [];
+    console.log(this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym))
+    errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
 
     if (this.form.valid) {
       if (selectedCourse) {
@@ -138,21 +139,22 @@ export class CadastroDisciplinaComponent implements OnInit {
     }
   }
 
-  validarDisciplinaCurso(disciplina: String, sigla: string){ 
-
+  validarDisciplinaCurso(disciplina: String, sigla: string): string[] { 
     const errors: string[] = [];
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
 
-    this.disciplinas.forEach((a) => {
+    for (const a of this.disciplinas) {
       if (a.course.name == selectedCourse?.name) {
         if (disciplina == a.name){
-          errors.push('Já existe uma Disciplina nesse curso com o mesmo Nome.');
+          errors.push('<li>Já existe uma Disciplina nesse curso com o mesmo Nome.</li>');
+          break;
         }
         if (sigla == a.acronym){
-          errors.push('Já existe uma Disciplina nesse curso com a mesma Sigla.');
+          errors.push('<li>Já existe uma Disciplina nesse curso com a mesma Sigla.</li>');
+          break;
         }
       }
-    })
+    }
 
     return errors;
   }
