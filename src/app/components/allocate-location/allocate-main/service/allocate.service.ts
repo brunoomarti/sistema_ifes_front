@@ -20,11 +20,11 @@ export class AllocateService {
   }
 
   private create(record: Partial<Alocar>) {
-    return this.httpClient.post<Alocar>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Alocar>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Alocar>) {
-    return this.httpClient.put<Alocar>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Alocar>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {

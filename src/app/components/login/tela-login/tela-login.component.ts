@@ -29,7 +29,7 @@ export class TelaLoginComponent {
   )
 
   {
-    this.isLoggedIn();
+    
 
     this.form = this.formBuilder.group({
       _id: [0],
@@ -44,16 +44,6 @@ export class TelaLoginComponent {
       error: () => this.onFailed()
     })
     
-  }
-
-  isLoggedIn(): void{
-    if (typeof localStorage!== 'undefined') {
-      if (localStorage.getItem('auth-token')){
-        this.router.navigate(['/home']);
-      }
-    } else {
-      this.router.navigate(['/login']);
-    }
   }
 
   onSuccess() {

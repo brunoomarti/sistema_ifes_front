@@ -69,17 +69,13 @@ export class CadastroDisciplinaComponent implements OnInit {
       this.disciplinas = disciplinas;
     });
   }
-  
+
 
   onSubmit() {
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
-    const selectedCourse: Curso | undefined = this.cursos.find(obj => obj._id == this.form.value.course);
-
-    let errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
-    if (!selectedCourse) {
-      throw new Error('Curso não encontrado');
-    } else {
-      const errors: string[] = [];
+    let errors = [];
+    console.log(this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym))
+    errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
 
     if (this.form.valid) {
       if (selectedCourse) {
@@ -117,7 +113,7 @@ export class CadastroDisciplinaComponent implements OnInit {
       }
     } else {
       const missingFields = [];
-      
+
       if (this.form.get('name')?.hasError('required')) {
         missingFields.push('<li>Nome</li>');
       }
@@ -138,8 +134,8 @@ export class CadastroDisciplinaComponent implements OnInit {
 
       if (this.form.get('course')?.hasError('required')) {
         missingFields.push('<li>Selecione um Curso</li>');
-      }  
-      
+      }
+
       const dialogDataForm = {
         title: 'Erro ao Cadastrar',
         message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
@@ -155,7 +151,7 @@ export class CadastroDisciplinaComponent implements OnInit {
               errors.push('Já existe uma disciplina destinada a esse curso.');
           }
 
-  validarDisciplinaCurso(disciplina: String, sigla: string){ 
+  validarDisciplinaCurso(disciplina: String, sigla: string){
           if (errors.length > 0) {
               const dialogData = {
                   title: 'Erro ao Cadastrar',
@@ -165,29 +161,38 @@ export class CadastroDisciplinaComponent implements OnInit {
           } else {
               this.save();
           }
-        });
+        };
       } else {
         const missingFields = [];
 
+  validarDisciplinaCurso(disciplina: String, sigla: string): string[] {
     const errors: string[] = [];
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
         console.log(selectedCourse)
 
-    this.disciplinas.forEach((a) => {
+    for (const a of this.disciplinas) {
       if (a.course.name == selectedCourse?.name) {
         if (disciplina == a.name){
           errors.push('Já existe uma Disciplina nesse curso com o mesmo Nome.');
+        }
         if (this.form.get('name')?.hasError('required')) {
           missingFields.push('<li>Nome</li>');
         }
         if (sigla == a.acronym){
           errors.push('Já existe uma Disciplina nesse curso com a mesma Sigla.');
+        }
         if (this.form.get('acronym')?.hasError('required')) {
           missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
         } else if (this.form.get('acronym')?.value.length < 3) {
           missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
         } else if (this.form.get('acronym')?.value.length > 8) {
           missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
+          errors.push('<li>Já existe uma Disciplina nesse curso com o mesmo Nome.</li>');
+          break;
+        }
+        if (sigla == a.acronym){
+          errors.push('<li>Já existe uma Disciplina nesse curso com a mesma Sigla.</li>');
+          break;
         }
 
         if (this.form.get('course')?.hasError('required')) {
@@ -201,7 +206,6 @@ export class CadastroDisciplinaComponent implements OnInit {
 
         this.openOkDialog(dialogDataForm);
       }
-    })
     }
   }
 

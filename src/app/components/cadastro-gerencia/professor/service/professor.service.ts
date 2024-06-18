@@ -20,11 +20,11 @@ export class ProfessorService {
   }
 
   private create(record: Partial<Professor>) {
-    return this.httpClient.post<Professor>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Professor>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Professor>) {
-    return this.httpClient.put<Professor>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Professor>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {

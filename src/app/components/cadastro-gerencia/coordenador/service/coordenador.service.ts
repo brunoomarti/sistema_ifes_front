@@ -20,11 +20,11 @@ export class CoordenadorService {
   }
 
   private create(record: Partial<Coordenador>) {
-    return this.httpClient.post<Coordenador>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Coordenador>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Coordenador>) {
-    return this.httpClient.put<Coordenador>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Coordenador>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {

@@ -32,11 +32,11 @@ export class EquipmentService {
   }
 
   private create(record: Partial<Equipamento>) {
-    return this.httpClient.post<Equipamento>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Equipamento>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Equipamento>) {
-    return this.httpClient.put<Equipamento>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Equipamento>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   remove(_id: number) {

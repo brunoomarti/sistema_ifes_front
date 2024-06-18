@@ -6,9 +6,10 @@ import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
-import { provideHttpClient, withFetch } from '@angular/common/http';
-import { AuthGuard } from './auth.guard';
+import {  HTTP_INTERCEPTORS, HttpClientModule, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withFetch } from '@angular/common/http'; 
+import { JwtInterceptor } from './components/login/service/jwt-inteceptor';
+import { BrowserModule } from '@angular/platform-browser';
 
 @NgModule({
   declarations: [],
@@ -21,11 +22,11 @@ import { AuthGuard } from './auth.guard';
     MatDialogModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserModule
   ],
   providers: [
-    provideHttpClient(withFetch()),
-    AuthGuard
+    provideHttpClient(withInterceptors([JwtInterceptor]))
   ],
 })
 export class AppModule { }

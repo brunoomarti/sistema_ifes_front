@@ -20,11 +20,11 @@ export class HistoryService {
   }
 
   private create(record: Partial<Historico>) {
-    return this.httpClient.post<Historico>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Historico>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Historico>) {
-    return this.httpClient.put<Historico>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Historico>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {
