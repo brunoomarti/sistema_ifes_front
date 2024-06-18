@@ -20,11 +20,11 @@ export class EventoService {
   }
 
   private create(record: Partial<Evento>) {
-    return this.httpClient.post<Evento>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Evento>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Evento>) {
-    return this.httpClient.put<Evento>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Evento>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {

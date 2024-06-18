@@ -64,8 +64,8 @@ export class CadastroCoordenadoriaComponent implements OnInit {
       name = name.toLowerCase();
       let acronym = this.form.get('acronym')?.value;
       acronym = acronym.toLowerCase();
-
-      this.service.listar().subscribe(coordenadorias => {
+ 
+      this.service.listar().subscribe(coordenadorias => { 
         this.coordenadorias = coordenadorias;
 
         const duplicateName = this.coordenadorias.some(coordenadoria => coordenadoria.name.toLowerCase() === name);

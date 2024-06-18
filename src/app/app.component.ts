@@ -40,7 +40,6 @@ export class AppComponent implements OnInit {
   selectedButton: number | null = null;
   showPersonInfo: boolean = false;
   private delayTimeout: any;
-  isLogged: boolean = false;
 
   constructor(
     private sharedService: SharedService,
@@ -69,22 +68,8 @@ export class AppComponent implements OnInit {
     };
   } 
   
-  isLoggedIn(): boolean {
-    if (typeof localStorage!== 'undefined') {
-      if (!localStorage.getItem('auth-token')){
-        return false;
-      } 
-      return true;
-    } else { 
-      return false;
-    }
-    
-  }
 
   ngOnInit() {
-    if (this.isLoggedIn()){
-      this.isLogged = true
-    } 
     this.showPersonInfo = false;
   }
 }

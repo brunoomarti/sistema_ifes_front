@@ -20,11 +20,11 @@ export class TurmaService {
   }
 
   private create(record: Partial<Turma>) {
-    return this.httpClient.post<Turma>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Turma>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Turma>) {
-    return this.httpClient.put<Turma>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Turma>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {

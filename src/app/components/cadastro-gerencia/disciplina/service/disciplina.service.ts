@@ -20,11 +20,11 @@ export class DisciplinaService {
   }
 
   private create(record: Partial<Disciplina>) {
-    return this.httpClient.post<Disciplina>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Disciplina>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Disciplina>) {
-    return this.httpClient.put<Disciplina>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Disciplina>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {

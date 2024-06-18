@@ -20,11 +20,11 @@ export class CursoService {
   }
 
   private create(record: Partial<Curso>) {
-    return this.httpClient.post<Curso>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Curso>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Curso>) {
-    return this.httpClient.put<Curso>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Curso>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {

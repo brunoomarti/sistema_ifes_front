@@ -20,11 +20,11 @@ export class AlunoService {
   }
 
   private create(record: Partial<Aluno>) {
-    return this.httpClient.post<Aluno>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Aluno>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Aluno>) {
-    return this.httpClient.put<Aluno>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Aluno>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {

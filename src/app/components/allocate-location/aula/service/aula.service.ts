@@ -20,11 +20,11 @@ export class AulaService {
   }
 
   private create(record: Partial<Aula>) {
-    return this.httpClient.post<Aula>(`${this.API}/new`, record).pipe(first());
+    return this.httpClient.post<Aula>(`${this.API}`, record).pipe(first());
   }
 
   private update(record: Partial<Aula>) {
-    return this.httpClient.put<Aula>(`${this.API}/edit/${record._id}`, record).pipe(first());
+    return this.httpClient.put<Aula>(`${this.API}/${record._id}`, record).pipe(first());
   }
 
   listar() {

@@ -6,24 +6,20 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  isLogged: boolean = false;
   constructor(private router: Router) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const authToken = localStorage.getItem('auth-token');
 
-    if (authToken) {
-      if (state.url === '/login'){
-        this.router.navigate(['/home']);
+    if (typeof localStorage !== 'undefined') {
+      const authToken = localStorage.getItem('auth-token');
+      if (authToken) {
+        return true;
       }
-      this.isLogged = true;
-      return true;
-    } else {
-      this.router.navigate(['/login']);
-      this.isLogged = false;
-      return false;
     }
+    
+    this.router.navigate(['/login']);
+    return false;
   }
 }

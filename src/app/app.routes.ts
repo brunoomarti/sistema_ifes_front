@@ -29,6 +29,7 @@ import { CadastroEventoComponent } from './components/allocate-location/evento/c
 import { GerenciaLocalComponent } from './components/cadastro-gerencia/local/gerencia-local/gerencia-local.component';
 import { CadastroCursoComponent } from './components/cadastro-gerencia/curso/cadastro-curso/cadastro-curso.component';
 import { GerenciaCursoComponent } from './components/cadastro-gerencia/curso/gerencia-curso/gerencia-curso.component'; 
+import { AuthGuard } from './components/login/service/auth-guard.service';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
