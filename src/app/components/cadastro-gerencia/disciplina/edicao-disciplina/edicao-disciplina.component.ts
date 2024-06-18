@@ -1,14 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { DisciplinaService } from '../service/disciplina.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute } from '@angular/router';
 import { ReloadService } from '../../../../shared-services/reload.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Disciplina } from '../../../../models/Disciplina';
 import { CursoService } from '../../curso/service/curso.service';
 import { Curso } from '../../../../models/Curso';
@@ -75,30 +73,13 @@ export class EdicaoDisciplinaComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.form.valid){
-      const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
-      let errors = [];
-      errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
     const selectedCourse: Curso | undefined = this.cursos.find(obj => obj._id == this.form.value.course);
 
-      if (selectedCourse) {
-          this.form.patchValue({ course: selectedCourse });
-      }
     if (!selectedCourse) {
       throw new Error('Curso não encontrado');
     } else {
       const errors: string[] = [];
 
-      if (errors.length > 0) {
-        const dialogData = {
-          title: 'Erro ao Salvar',
-          message: errors.join('\n')
-        };
-        this.dialog.open(ModalDialogOkComponent, {
-            data: dialogData,
-            backdropClass: 'backdrop'
-        });
-        return;
       if (this.form.valid) {
         if (selectedCourse) {
             this.form.patchValue({ course: selectedCourse });
@@ -131,23 +112,8 @@ export class EdicaoDisciplinaComponent implements OnInit {
           }
         });
       } else {
-        this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
-      }
         const missingFields = [];
 
-    } else {
-      const missingFields = [];
-      if (this.form.get('name')?.hasError('required')) {
-        missingFields.push('<li>Nome</li>');
-      }
-
-      if (this.form.get('acronym')?.hasError('required')) {
-        missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
-      } else if (this.form.get('acronym')?.value.length < 3) {
-        missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
-      } else if (this.form.get('acronym')?.value.length > 8) {
-        missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
-      }
         if (this.form.get('name')?.hasError('required')) {
           missingFields.push('<li>Nome</li>');
         }
@@ -159,48 +125,20 @@ export class EdicaoDisciplinaComponent implements OnInit {
           missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
         }
 
-      if (this.form.get('course')?.hasError('required')) {
-        missingFields.push('<li>Selecione um Curso</li>');
-      }
         if (this.form.get('course')?.hasError('required')) {
           missingFields.push('<li>Selecione um Curso</li>');
         }
 
-      const dialogDataForm = {
-        title: 'Erro ao Cadastrar',
-        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
-      };
         const dialogDataForm = {
           title: 'Erro ao Cadastrar',
           message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
         };
 
-      this.dialog.open(ModalDialogOkComponent, {
-        data: dialogDataForm,
-        backdropClass: 'backdropTwo'
-      });
         this.openOkDialog(dialogDataForm);
       }
     }
   }
 
-  validarDisciplinaCurso(disciplina: String, sigla: string){ 
-
-    const errors: string[] = [];
-    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
-
-    this.disciplinas.forEach((a) => {
-      if (a.course.name == selectedCourse?.name) {
-        if (disciplina == a.name){
-          errors.push('<li>Já existe uma Disciplina nesse curso com o mesmo Nome.</li>');
-          return;
-        }
-        if (sigla == a.acronym){
-          errors.push('<li>Já existe uma Disciplina nesse curso com a mesma Sigla.</li>');
-          return;
-        }
-      }
-    })
   openOkDialog(data: any): void {
     this.dialog.open(ModalDialogOkComponent, {
       data: data,
@@ -208,7 +146,6 @@ export class EdicaoDisciplinaComponent implements OnInit {
     });
   }
 
-    return errors;
   save() {
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
