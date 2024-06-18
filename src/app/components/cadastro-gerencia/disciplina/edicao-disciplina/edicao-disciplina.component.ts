@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { DisciplinaService } from '../service/disciplina.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -78,10 +79,15 @@ export class EdicaoDisciplinaComponent implements OnInit {
       const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
       let errors = [];
       errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
+    const selectedCourse: Curso | undefined = this.cursos.find(obj => obj._id == this.form.value.course);
 
       if (selectedCourse) {
           this.form.patchValue({ course: selectedCourse });
       }
+    if (!selectedCourse) {
+      throw new Error('Curso não encontrado');
+    } else {
+      const errors: string[] = [];
 
       if (errors.length > 0) {
         const dialogData = {
@@ -93,10 +99,41 @@ export class EdicaoDisciplinaComponent implements OnInit {
             backdropClass: 'backdrop'
         });
         return;
+      if (this.form.valid) {
+        if (selectedCourse) {
+            this.form.patchValue({ course: selectedCourse });
+        }
 
+        this.service.listar().subscribe(disciplinas => {
+          this.disciplinas = disciplinas;
+
+          const currentDisciplineId = this.form.get('_id')?.value;
+
+          const duplicate = this.disciplinas.some(disciplina => {
+            const isDuplicate = disciplina.name.toLowerCase() === this.form.get('name')?.value.toLowerCase() &&
+                                disciplina.course._id === selectedCourse._id &&
+                                disciplina._id !== currentDisciplineId;
+            return isDuplicate;
+          });
+
+          if (duplicate) {
+              errors.push('Já existe uma disciplina destinada a esse curso.');
+          }
+
+          if (errors.length > 0) {
+              const dialogData = {
+                  title: 'Erro ao Cadastrar',
+                  message: errors.join('<br>')
+              };
+              this.openOkDialog(dialogData);
+          } else {
+              this.save();
+          }
+        });
       } else {
         this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
       }
+        const missingFields = [];
 
     } else {
       const missingFields = [];
@@ -111,20 +148,39 @@ export class EdicaoDisciplinaComponent implements OnInit {
       } else if (this.form.get('acronym')?.value.length > 8) {
         missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
       }
+        if (this.form.get('name')?.hasError('required')) {
+          missingFields.push('<li>Nome</li>');
+        }
+        if (this.form.get('acronym')?.hasError('required')) {
+          missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+        } else if (this.form.get('acronym')?.value.length < 3) {
+          missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+        } else if (this.form.get('acronym')?.value.length > 8) {
+          missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
+        }
 
       if (this.form.get('course')?.hasError('required')) {
         missingFields.push('<li>Selecione um Curso</li>');
       }
+        if (this.form.get('course')?.hasError('required')) {
+          missingFields.push('<li>Selecione um Curso</li>');
+        }
 
       const dialogDataForm = {
         title: 'Erro ao Cadastrar',
         message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
       };
+        const dialogDataForm = {
+          title: 'Erro ao Cadastrar',
+          message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+        };
 
       this.dialog.open(ModalDialogOkComponent, {
         data: dialogDataForm,
         backdropClass: 'backdropTwo'
       });
+        this.openOkDialog(dialogDataForm);
+      }
     }
   }
 
@@ -145,8 +201,16 @@ export class EdicaoDisciplinaComponent implements OnInit {
         }
       }
     })
+  openOkDialog(data: any): void {
+    this.dialog.open(ModalDialogOkComponent, {
+      data: data,
+      backdropClass: 'backdropTwo'
+    });
+  }
 
     return errors;
+  save() {
+    this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 
   onCancel(): void {

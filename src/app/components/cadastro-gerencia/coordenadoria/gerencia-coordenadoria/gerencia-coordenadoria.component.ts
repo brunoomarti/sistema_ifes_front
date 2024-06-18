@@ -5,13 +5,15 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CoordenadoriaService } from '../service/coordenadoria.service';
 import { Router } from '@angular/router';
-import { Coordenador } from '../../../../models/Coordenador';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { Coordenadoria } from '../../../../models/Coordenadoria';
 import { EdicaoCoordenadoriaComponent } from '../edicao-coordenadoria/edicao-coordenadoria.component';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { ProfessorService } from '../../professor/service/professor.service';
+import { CoordenadorService } from '../../coordenador/service/coordenador.service';
+import { Professor } from '../../../../models/Professor';
 
 @Component({
   selector: 'app-gerencia-coordenadoria',
@@ -28,6 +30,8 @@ import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/mo
 export class GerenciaCoordenadoriaComponent implements OnInit {
 
   coordenadorias: any[] = [];
+  professores: Professor[] = [];
+  coordenadores: any[] = [];
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Coordenadoria excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir coordenadoria.';
@@ -36,6 +40,8 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
 
   constructor(
     private service: CoordenadoriaService,
+    private professorService: ProfessorService,
+    private coordenadorService: CoordenadorService,
     private router: Router,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
@@ -68,6 +74,7 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
     this.service.getRegistrosUsandoCoordenadoria(coordenadoria._id).subscribe(registros => {
       if (registros.length > 0) {
         this.mostrarMensagemErro(registros); 
+        this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir esta coordenadoria?');
         if (confirmacao) {
@@ -83,9 +90,11 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
   }
 
   
+
   mostrarMensagemErro(registros: any[]): void {
     registros.map((a) => { console.log(a.name)})
     
+
     const itensLista = registros.map(registro => {
       if (!registro.specialty) {
         return `Coordenador: ${registro.name}`;
@@ -93,6 +102,8 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
         return `Professor: ${registro.name} (${registro.teacherCode})`;
       } 
       
+      }
+
     });
 
     const dialogDataForm = {
@@ -112,6 +123,7 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
       backdropClass: 'backdrop'
     });
     
+
   }
 
   onFailed() {

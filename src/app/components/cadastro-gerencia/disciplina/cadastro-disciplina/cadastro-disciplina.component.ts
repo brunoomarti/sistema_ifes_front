@@ -70,15 +70,23 @@ export class CadastroDisciplinaComponent implements OnInit {
     });
   }
   
+
   onSubmit() {
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
+    const selectedCourse: Curso | undefined = this.cursos.find(obj => obj._id == this.form.value.course);
 
     let errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
+    if (!selectedCourse) {
+      throw new Error('Curso não encontrado');
+    } else {
+      const errors: string[] = [];
 
     if (this.form.valid) {
       if (selectedCourse) {
-          this.form.patchValue({ course: selectedCourse });
-      }
+      if (this.form.valid) {
+        if (selectedCourse) {
+            this.form.patchValue({ course: selectedCourse });
+        }
 
       if (errors.length > 0) {
         const dialogData = {
@@ -113,6 +121,8 @@ export class CadastroDisciplinaComponent implements OnInit {
       if (this.form.get('name')?.hasError('required')) {
         missingFields.push('<li>Nome</li>');
       }
+        this.service.listar().subscribe(disciplinas => {
+          this.disciplinas = disciplinas;
 
       if (this.form.get('acronym')?.hasError('required')) {
         missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
@@ -121,6 +131,10 @@ export class CadastroDisciplinaComponent implements OnInit {
       } else if (this.form.get('acronym')?.value.length > 8) {
         missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
       }
+          const duplicate = this.disciplinas.some(disciplina => {
+            const isDuplicate = disciplina.name.toLowerCase() === this.form.get('name')?.value.toLowerCase() && disciplina.course._id === selectedCourse._id;
+            return isDuplicate;
+        });
 
       if (this.form.get('course')?.hasError('required')) {
         missingFields.push('<li>Selecione um Curso</li>');
@@ -137,24 +151,85 @@ export class CadastroDisciplinaComponent implements OnInit {
       });
     }
   }
+          if (duplicate) {
+              errors.push('Já existe uma disciplina destinada a esse curso.');
+          }
 
   validarDisciplinaCurso(disciplina: String, sigla: string){ 
+          if (errors.length > 0) {
+              const dialogData = {
+                  title: 'Erro ao Cadastrar',
+                  message: errors.join('<br>')
+              };
+              this.openOkDialog(dialogData);
+          } else {
+              this.save();
+          }
+        });
+      } else {
+        const missingFields = [];
 
     const errors: string[] = [];
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
+        console.log(selectedCourse)
 
     this.disciplinas.forEach((a) => {
       if (a.course.name == selectedCourse?.name) {
         if (disciplina == a.name){
           errors.push('Já existe uma Disciplina nesse curso com o mesmo Nome.');
+        if (this.form.get('name')?.hasError('required')) {
+          missingFields.push('<li>Nome</li>');
         }
         if (sigla == a.acronym){
           errors.push('Já existe uma Disciplina nesse curso com a mesma Sigla.');
+        if (this.form.get('acronym')?.hasError('required')) {
+          missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+        } else if (this.form.get('acronym')?.value.length < 3) {
+          missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+        } else if (this.form.get('acronym')?.value.length > 8) {
+          missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
         }
+
+        if (this.form.get('course')?.hasError('required')) {
+          missingFields.push('<li>Selecione um Curso</li>');
+        }
+
+        const dialogDataForm = {
+          title: 'Erro ao Cadastrar',
+          message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
+        };
+
+        this.openOkDialog(dialogDataForm);
       }
     })
+    }
+  }
 
     return errors;
+  openOkDialog(data: any): void {
+    this.dialog.open(ModalDialogOkComponent, {
+      data: data,
+      backdropClass: 'backdrop'
+    });
+  }
+
+  save() {
+    this.service.save(this.form.value).subscribe(
+      result => {
+        const dialogData = {
+          title: 'Disciplina Cadastrada',
+          message: `A disciplina ${result.name} foi cadastrada.`,
+          buttons: {
+            cadastrarNovo: 'Cadastrar Nova Disciplina',
+            irParaGerencia: 'Ver Disciplinas Cadastradas'
+          }
+        };
+        this.openDialog(dialogData);
+      },
+      error => {
+        this.onFailed();
+      }
+    );
   }
 
   onCancel() {
