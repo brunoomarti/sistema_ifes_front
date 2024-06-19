@@ -8,5 +8,5 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { JwtInterceptor } from './components/login/service/jwt-inteceptor';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideClientHydration(), provideHttpClient(withInterceptors([JwtInterceptor])), provideAnimations()]
+  providers: [provideRouter(routes), provideClientHydration(), provideHttpClient(withInterceptors([JwtInterceptor]), withFetch()), provideAnimations()]
 };

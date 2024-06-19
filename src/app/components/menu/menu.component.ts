@@ -3,11 +3,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs';
 import { SharedService } from '../../shared-services/shared.service';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-menu',
   standalone: true,
   imports: [
+    CommonModule,
     MatIconModule,
     RouterLink,
     RouterLinkActive
@@ -20,6 +23,8 @@ export class MenuComponent implements OnInit {
 
   selectedButton: number = 0;
   userName: string | null = '';
+  role: string | null = '';
+  tipoUsuario: string | null = '';
 
   constructor(
     private router: Router,
@@ -37,6 +42,15 @@ export class MenuComponent implements OnInit {
 
       if (typeof localStorage !== 'undefined'){
         this.userName = localStorage.getItem('username');
+        this.role = localStorage.getItem("role");
+      }
+
+      if (this.role === 'STUDENT'){
+        this.tipoUsuario = "Aluno";
+      } else if (this.role === 'TEACHER'){
+        this.tipoUsuario = "Professor";
+      } else {
+        this.tipoUsuario = "Coordenador de Curso";
       }
     }
 
@@ -59,6 +73,7 @@ export class MenuComponent implements OnInit {
   logout(){
     localStorage.removeItem('auth-token');
     localStorage.removeItem('username');
+    localStorage.removeItem("role");
     window.location.reload();
   }
 }
