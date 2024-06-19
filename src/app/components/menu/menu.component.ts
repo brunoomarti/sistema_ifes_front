@@ -19,6 +19,7 @@ import { SharedService } from '../../shared-services/shared.service';
 export class MenuComponent implements OnInit {
 
   selectedButton: number = 0;
+  userName: string | null = '';
 
   constructor(
     private router: Router,
@@ -33,6 +34,8 @@ export class MenuComponent implements OnInit {
       .subscribe((event: NavigationEnd) => {
         this.updateSelectedButton(event.url);
       });
+
+      this.userName = localStorage.getItem('username');
   }
 
   updateSelectedButton(url: string) {

@@ -73,7 +73,6 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
   excluir(coordenadoria: Coordenadoria): void {
     this.service.getRegistrosUsandoCoordenadoria(coordenadoria._id).subscribe(registros => {
       if (registros.length > 0) {
-        this.mostrarMensagemErro(registros); 
         this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir esta coordenadoria?');
@@ -89,19 +88,15 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
     });
   }
 
-  
 
   mostrarMensagemErro(registros: any[]): void {
     registros.map((a) => { console.log(a.name)})
-    
 
     const itensLista = registros.map(registro => {
       if (!registro.specialty) {
         return `Coordenador: ${registro.name}`;
       } else{
         return `Professor: ${registro.name} (${registro.teacherCode})`;
-      } 
-      
       }
 
     });
@@ -122,7 +117,6 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
       data: dialogDataForm,
       backdropClass: 'backdrop'
     });
-    
 
   }
 

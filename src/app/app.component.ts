@@ -4,7 +4,7 @@ import { CadastroCoordenadorComponent } from './components/cadastro-gerencia/coo
 import { CadastroTurmaComponent } from './components/cadastro-gerencia/turma/cadastro-turma/cadastro-turma.component';
 import { CadastroLocalComponent } from './components/cadastro-gerencia/local/cadastro-local/cadastro-local.component';
 import { Component, OnInit} from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd } from '@angular/router';
 import { MenuComponent } from './components/menu/menu.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { GuidePanelComponent } from './components/guide-panel/guide-panel.component';
@@ -14,7 +14,6 @@ import { PersonInfoComponent } from './components/schedules/person-info/person-i
 import { SharedService } from './shared-services/shared.service';
 import { CommonModule } from '@angular/common';
 import { AuthGuard } from './components/login/service/auth-guard.service';
-import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -34,18 +33,20 @@ import { BehaviorSubject, Observable } from 'rxjs';
             CommonModule
           ],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  title = 'SIFES';
   selectedButton: number | null = null;
   showPersonInfo: boolean = false;
   private delayTimeout: any;
+  isLoginPage: boolean = false;
 
   constructor(
     private sharedService: SharedService,
-    private authComponent: AuthGuard
-    
-  ) { 
+    private authComponent: AuthGuard,
+    private router: Router
+  ) {
     this.sharedService.selectedButton$.subscribe(button => {
       this.selectedButton = button;
       if (this.selectedButton === 5) {
@@ -59,6 +60,12 @@ export class AppComponent implements OnInit {
         this.sharedService.setData(obj)
       }
     });
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.isLoginPage = this.router.url === '/login';
+      }
+    });
   }
 
   getClasses() {
@@ -66,12 +73,10 @@ export class AppComponent implements OnInit {
       'menu-selected': this.selectedButton === 5,
       'menu-not-selected': this.selectedButton !== 5
     };
-  } 
-  
+  }
+
 
   ngOnInit() {
     this.showPersonInfo = false;
   }
 }
-
-

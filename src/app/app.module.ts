@@ -6,10 +6,9 @@ import { AppComponent } from './app.component';
 import { MenuComponent } from './components/menu/menu.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {  HTTP_INTERCEPTORS, HttpClientModule, withInterceptors } from '@angular/common/http';
-import { provideHttpClient, withFetch } from '@angular/common/http'; 
-import { JwtInterceptor } from './components/login/service/jwt-inteceptor';
+import {  HTTP_INTERCEPTORS, HttpClientModule, provideHttpClient, withFetch } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
+import { AuthInterceptor } from './auth.interceptor';
 
 @NgModule({
   declarations: [],
@@ -26,7 +25,12 @@ import { BrowserModule } from '@angular/platform-browser';
     BrowserModule
   ],
   providers: [
-    provideHttpClient(withInterceptors([JwtInterceptor]))
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
+    provideHttpClient(withFetch())
   ],
 })
 export class AppModule { }

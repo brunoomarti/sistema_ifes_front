@@ -21,7 +21,7 @@ import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/mo
     MatTableModule
   ],
   templateUrl: './cadastro-disciplina.component.html',
-  styleUrl: './cadastro-disciplina.component.css'
+  styleUrls: ['./cadastro-disciplina.component.css']
 })
 export class CadastroDisciplinaComponent implements OnInit {
 
@@ -39,14 +39,12 @@ export class CadastroDisciplinaComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private cursoService: CursoService
-  )
-
-  {
+  ) {
     this.form = this.formBuilder.group({
       id: [0],
       name: ['', Validators.required],
       acronym: ['', Validators.required],
-      course: null
+      course: [null, Validators.required]
     });
   }
 
@@ -70,146 +68,68 @@ export class CadastroDisciplinaComponent implements OnInit {
     });
   }
 
-
   onSubmit() {
-    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
-    let errors = [];
-    console.log(this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym))
-    errors = this.validarDisciplinaCurso(this.form.value.name, this.form.value.acronym);
+    const selectedCourse: Curso | undefined = this.cursos.find(obj => obj._id == this.form.value.course);
 
-    if (this.form.valid) {
-      if (selectedCourse) {
-      if (this.form.valid) {
-        if (selectedCourse) {
-            this.form.patchValue({ course: selectedCourse });
-        }
-
-      if (errors.length > 0) {
-        const dialogData = {
-          title: 'Erro ao Cadastrar',
-          message: errors.join('\n')
-        };
-        this.dialog.open(ModalDialogOkComponent, {
-            data: dialogData,
-            backdropClass: 'backdrop'
-        });
-      } else {
-        this.service.save(this.form.value).subscribe(
-          result => {
-            const dialogData = {
-              title: 'Disciplina Cadastrada',
-              message: `A disciplina ${result.name} foi cadastrada.`,
-              buttons: {
-                cadastrarNovo: 'Cadastrar Nova Disciplina',
-                irParaGerencia: 'Ver Disciplinas Cadastradas'
-              }
-            };
-            this.openDialog(dialogData);
-          },
-          error => {
-            this.onFailed();
-          }
-        );
-      }
+    if (!selectedCourse) {
+      throw new Error('Curso não encontrado');
     } else {
-      const missingFields = [];
+      const errors: string[] = [];
 
-      if (this.form.get('name')?.hasError('required')) {
-        missingFields.push('<li>Nome</li>');
-      }
-        this.service.listar().subscribe(disciplinas => {
-          this.disciplinas = disciplinas;
+      if (this.form.valid) {
+        this.form.patchValue({ course: selectedCourse });
 
-      if (this.form.get('acronym')?.hasError('required')) {
-        missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
-      } else if (this.form.get('acronym')?.value.length < 3) {
-        missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
-      } else if (this.form.get('acronym')?.value.length > 8) {
-        missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
-      }
-          const duplicate = this.disciplinas.some(disciplina => {
-            const isDuplicate = disciplina.name.toLowerCase() === this.form.get('name')?.value.toLowerCase() && disciplina.course._id === selectedCourse._id;
-            return isDuplicate;
-        });
+        if (this.isDuplicate()) {
+          errors.push('Já existe uma disciplina destinada a esse curso.');
+        }
 
-      if (this.form.get('course')?.hasError('required')) {
-        missingFields.push('<li>Selecione um Curso</li>');
-      }
-
-      const dialogDataForm = {
-        title: 'Erro ao Cadastrar',
-        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
-      };
-
-      this.dialog.open(ModalDialogOkComponent, {
-        data: dialogDataForm,
-        backdropClass: 'backdropTwo'
-      });
-    }
-  }
-          if (duplicate) {
-              errors.push('Já existe uma disciplina destinada a esse curso.');
-          }
-
-  validarDisciplinaCurso(disciplina: String, sigla: string){
-          if (errors.length > 0) {
-              const dialogData = {
-                  title: 'Erro ao Cadastrar',
-                  message: errors.join('<br>')
-              };
-              this.openOkDialog(dialogData);
-          } else {
-              this.save();
-          }
-        };
+        if (errors.length > 0) {
+          const dialogData = {
+            title: 'Erro ao Cadastrar',
+            message: errors.join('<br>')
+          };
+          this.openOkDialog(dialogData);
+        } else {
+          this.save();
+        }
       } else {
-        const missingFields = [];
-
-  validarDisciplinaCurso(disciplina: String, sigla: string): string[] {
-    const errors: string[] = [];
-    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
-        console.log(selectedCourse)
-
-    for (const a of this.disciplinas) {
-      if (a.course.name == selectedCourse?.name) {
-        if (disciplina == a.name){
-          errors.push('Já existe uma Disciplina nesse curso com o mesmo Nome.');
-        }
-        if (this.form.get('name')?.hasError('required')) {
-          missingFields.push('<li>Nome</li>');
-        }
-        if (sigla == a.acronym){
-          errors.push('Já existe uma Disciplina nesse curso com a mesma Sigla.');
-        }
-        if (this.form.get('acronym')?.hasError('required')) {
-          missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
-        } else if (this.form.get('acronym')?.value.length < 3) {
-          missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
-        } else if (this.form.get('acronym')?.value.length > 8) {
-          missingFields.push('<li>Sigla (Máximo de 8 caracteres) </li>');
-          errors.push('<li>Já existe uma Disciplina nesse curso com o mesmo Nome.</li>');
-          break;
-        }
-        if (sigla == a.acronym){
-          errors.push('<li>Já existe uma Disciplina nesse curso com a mesma Sigla.</li>');
-          break;
-        }
-
-        if (this.form.get('course')?.hasError('required')) {
-          missingFields.push('<li>Selecione um Curso</li>');
-        }
-
+        const missingFields = this.getMissingFields();
         const dialogDataForm = {
           title: 'Erro ao Cadastrar',
           message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
         };
-
         this.openOkDialog(dialogDataForm);
       }
     }
   }
 
-    return errors;
+  getMissingFields(): string[] {
+    const missingFields: string[] = [];
+
+    if (this.form.get('name')?.hasError('required')) {
+      missingFields.push('<li>Nome</li>');
+    }
+    if (this.form.get('acronym')?.hasError('required')) {
+      missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+    } else if (this.form.get('acronym')?.value.length < 3) {
+      missingFields.push('<li>Sigla (pelo menos 3 caracteres)</li>');
+    } else if (this.form.get('acronym')?.value.length > 8) {
+      missingFields.push('<li>Sigla (Máximo de 8 caracteres)</li>');
+    }
+    if (this.form.get('course')?.hasError('required')) {
+      missingFields.push('<li>Selecione um Curso</li>');
+    }
+
+    return missingFields;
+  }
+
+  isDuplicate(): boolean {
+    const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
+    return this.disciplinas.some(disciplina => {
+      return disciplina.name.toLowerCase() === this.form.get('name')?.value.toLowerCase() && disciplina.course._id === selectedCourse?._id;
+    });
+  }
+
   openOkDialog(data: any): void {
     this.dialog.open(ModalDialogOkComponent, {
       data: data,
@@ -259,9 +179,7 @@ export class CadastroDisciplinaComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'cadastrarNovo') {
-        this.form.get('name')?.setValue('');
-        this.form.get('course')?.setValue('');
-        this.form.get('acronym')?.setValue('');
+        this.form.reset();
       } else {
         this.router.navigate(['/cadastro-gerencia/gerencia-disciplina']);
       }

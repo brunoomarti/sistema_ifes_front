@@ -12,4 +12,10 @@ import { Component } from '@angular/core';
 })
 export class GuidePanelComponent {
 
+  userName: string | null = '';
+
+  ngOnInit() {
+    this.userName = localStorage.getItem('username');
+  }
+
 }

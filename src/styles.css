@@ -506,3 +506,41 @@ tr[mat-row].row-disabled {
 .bigHeight {
   height: 50vh;
 }
+
+.password-container {
+  position: relative;
+  width: 100%;
+}
+
+.password-container input {
+  width: 100%;
+  padding-right: 40px; /* Espaço para o ícone */
+  box-sizing: border-box; /* Inclui o padding no cálculo da largura */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  height: 100%;
+}
+
+.login-visibility {
+  font-variation-settings:
+  'opsz' 20,
+  'wght' 300;
+  color: #9a9a9a;
+  font-size: 5px;
+}
+
+.login-visibility.dark {
+  color: #555;
+}
