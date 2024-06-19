@@ -15,7 +15,9 @@ export class GuidePanelComponent {
   userName: string | null = '';
 
   ngOnInit() {
-    this.userName = localStorage.getItem('username');
+    if (typeof localStorage !== 'undefined'){
+      this.userName = localStorage.getItem('username');
+    }
   }
 
 }

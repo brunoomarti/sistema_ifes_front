@@ -35,8 +35,10 @@ export class MenuComponent implements OnInit {
         this.updateSelectedButton(event.url);
       });
 
-      this.userName = localStorage.getItem('username');
-  }
+      if (typeof localStorage !== 'undefined'){
+        this.userName = localStorage.getItem('username');
+      }
+    }
 
   updateSelectedButton(url: string) {
     if (url.includes('/home')) {

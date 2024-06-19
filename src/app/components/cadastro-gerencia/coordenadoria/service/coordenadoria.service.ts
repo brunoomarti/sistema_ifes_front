@@ -20,12 +20,6 @@ export class CoordenadoriaService {
   }
 
   private create(record: Partial<Coordenadoria>) {  
-    let token = localStorage.getItem('auth-token');
-    
-    const headers = new HttpHeaders({
-      'Authorization': `Bearer ${token}`
-    });
-    
     return this.httpClient.post<Coordenadoria>(`${this.API}`, record).pipe(first());
   }
 

@@ -30,7 +30,8 @@ import { GerenciaLocalComponent } from './components/cadastro-gerencia/local/ger
 import { CadastroCursoComponent } from './components/cadastro-gerencia/curso/cadastro-curso/cadastro-curso.component';
 import { GerenciaCursoComponent } from './components/cadastro-gerencia/curso/gerencia-curso/gerencia-curso.component';
 import { TelaLoginComponent } from './components/login/tela-login/tela-login.component';
-import { AuthGuard } from './auth.guard';
+import { AuthGuard } from './components/login/service/auth-guard.service';
+
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
