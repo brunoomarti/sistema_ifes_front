@@ -1,10 +1,16 @@
 .boxSize {
   width: 100%;
   height: fit-content;
-  padding: 0 var(--content-pading);
+  padding: 0 var(--content-padding);
   background-color: white;
   border-radius: var(--primary-boxes-radius);
   box-sizing: border-box;
+  overflow: hidden; /* Garantir que o texto não ultrapasse a caixa */
+}
+
+.initFill {
+  width: var(--content-padding);
+  height: 100%;
 }
 
 .boxContent {
@@ -15,8 +21,9 @@
 }
 
 p {
-  padding: 0;
+  padding: 0 var(--content-padding);
   margin: 0;
+  transition: all 0.3s ease-in-out; /* Transição para a animação */
 }
 
 .titles {
@@ -24,7 +31,8 @@ p {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: var(--content-pading) 0;
+  padding: 0 var(--content-padding);
+  position: relative;
 }
 
 .mainTitle {
@@ -46,4 +54,22 @@ p {
 
 img {
   width: 100%;
+}
+
+/* Classes de animação */
+.fade-out {
+  transform: translateX(-50%);
+  opacity: 0;
+}
+.fade-in {
+  transform: translateX(50%);
+  opacity: 0;
+}
+.fade-out-active {
+  transform: translateX(0);
+  opacity: 1;
+}
+.fade-in-active {
+  transform: translateX(0);
+  opacity: 1;
 }

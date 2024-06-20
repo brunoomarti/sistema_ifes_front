@@ -1,8 +1,11 @@
 <div class="boxSize">
   <div class="boxContent">
+    <div class="initFill"></div>
     <div class="titles">
-      <p class="mainTitle">Olá, {{ userName }}</p>
-      <p class="subTitle">O que deseja fazer hoje?</p>
+      <p class="mainTitle primary" [ngClass]="{'fade-out': fadingOut, 'fade-in': fadingInPrimary}">{{ mainTitle }}</p>
+      <p class="subTitle primary" [ngClass]="{'fade-out': fadingOut, 'fade-in': fadingInPrimary}">{{ subTitle }}</p>
+      <p class="mainTitle secondary" [ngClass]="{'fade-in': fadingInSecondary}" *ngIf="showSecondary">{{ newMainTitle }}</p>
+      <p class="subTitle secondary" [ngClass]="{'fade-in': fadingInSecondary}" *ngIf="showSecondary">{{ newSubTitle }}</p>
     </div>
     <div class="imageBox">
       <img src="./../../../assets/images/main-character.png" alt="">

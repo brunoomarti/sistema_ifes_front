@@ -1,6 +1,5 @@
-import { CommonModule } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { AlunoService } from '../../service/aluno.service';
@@ -10,6 +9,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { Aluno } from '../../../../../models/Aluno';
 import { EdicaoAlunoComponent } from '../../edicao-aluno/edicao-aluno.component';
 import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { CommonModule } from '@angular/common';
+import { JanelaSelectBarcodeComponent } from '../../janela-select-barcode/janela-select-barcode.component';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'app-gerencia-aluno',
@@ -17,11 +21,14 @@ import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok
   imports: [
     CommonModule,
     MatTableModule,
-    MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatFormField,
+    MatOption,
+    MatSelect,
+    MatLabel
   ],
   templateUrl: './gerencia-aluno.component.html',
-  styleUrl: './gerencia-aluno.component.css'
+  styleUrls: ['./gerencia-aluno.component.css']
 })
 export class GerenciaAlunoComponent implements OnInit {
 
@@ -29,6 +36,7 @@ export class GerenciaAlunoComponent implements OnInit {
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Aluno excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir aluno.';
+  selectedPosition: string = 'right';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -37,6 +45,7 @@ export class GerenciaAlunoComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
+    private http: HttpClient
   ) { }
 
   ngOnInit(): void {
@@ -66,7 +75,7 @@ export class GerenciaAlunoComponent implements OnInit {
   excluir(aluno: Aluno): void {
     this.service.getRegistrosUsandoAluno(aluno._id).subscribe(registros => {
       if (registros.length > 0) {
-        this.mostrarMensagemErro(registros); 
+        this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir este aluno?');
         if (confirmacao) {
@@ -85,19 +94,19 @@ export class GerenciaAlunoComponent implements OnInit {
     let cont = 1;
 
     const itensLista = registros.map(registro => {
-        return `<span><strong>Aula ${cont++}</strong></span> <br>
-                Disciplina: ${registro.discipline.name} - (${registro.discipline.course.name})<br>
-                Professor: ${registro.teacher.name} <br>
-        `;
+      return `<span><strong>Aula ${cont++}</strong></span> <br>
+              Disciplina: ${registro.discipline.name} - (${registro.discipline.course.name})<br>
+              Professor: ${registro.teacher.name} <br>
+      `;
     });
 
     const dialogDataForm = {
       title: 'Erro ao Excluir Aluno',
       message: `
-    <div mat-dialog-content> 
+    <div mat-dialog-content>
       <p>Exclua os seguintes registros primeiramente:</p>
       <span>Total de aulas do aluno: <strong>${itensLista.length}</strong></span>
-      <ul> 
+      <ul>
         ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
       </ul>
     </div>
@@ -131,4 +140,29 @@ export class GerenciaAlunoComponent implements OnInit {
     this.router.navigate(['/cadastro-gerencia/cadastro-aluno']);
   }
 
+  printBarcode() {
+    if (this.alunos.length > 0) {
+      const aluno = this.alunos[0];
+      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+      this.http.post('/api/print-barcode', { matricula: aluno.studentCode, position: 'center' }, { headers, responseType: 'blob' })
+        .subscribe(response => {
+          console.log('Código de barras enviado para impressão');
+          this.snackBar.open('Código de barras enviado para impressão', '', { duration: 5000, panelClass: ['successSnackbar'] });
+        }, error => {
+          console.error('Erro ao enviar código de barras para impressão', error);
+          this.snackBar.open('Erro ao enviar código de barras para impressão', '', { duration: 5000, panelClass: ['errorSnackbar'] });
+        });
+    }
+  }
+
+  setPosition(position: string) {
+    this.selectedPosition = position;
+  }
+
+  openBarcodePrintWindow() {
+    this.dialog.open(JanelaSelectBarcodeComponent, {
+      backdropClass: 'backdrop'
+    });
+  }
 }
