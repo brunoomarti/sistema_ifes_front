@@ -6,18 +6,26 @@
         <img src="../../../assets/images/user.jpg" class="userImage" alt="">
         <div>
           <p class="userName">{{ userName }}</p>
-          <p class="userOccupation">Coordenador de curso</p>
+          <p class="userOccupation">{{ tipoUsuario }}</p>
         </div>
       </div>
       <div class="menuButtonGroup">
-        <button class="menuButton" [class.clicked]="selectedButton === 1" routerLink="/home">
-          <span class="material-symbols-outlined">home</span>Página inicial</button>
-        <button class="menuButton" [class.clicked]="selectedButton === 2" routerLink="/cadastro-gerencia">
-          <span class="material-symbols-outlined" >add</span>Gerenciar</button>
-        <button class="menuButton" [class.clicked]="selectedButton === 3" routerLink="/importar-dados">
-          <span class="material-symbols-outlined">database</span>Importar dados</button>
-        <button class="menuButton" [class.clicked]="selectedButton === 4" routerLink="/alocar-local">
-          <span class="material-symbols-outlined">school</span>Alocar</button>
+        
+        <ng-container *ngIf="role == 'ADMIN' || role == 'COORDINATOR'">
+          <button class="menuButton" [class.clicked]="selectedButton === 1" routerLink="/home">
+            <span class="material-symbols-outlined">home</span>Página inicial
+          </button>
+          <button class="menuButton" [class.clicked]="selectedButton === 2" routerLink="/cadastro-gerencia">
+            <span class="material-symbols-outlined">add</span>Gerenciar
+          </button>
+          <button class="menuButton" [class.clicked]="selectedButton === 3" routerLink="/importar-dados">
+            <span class="material-symbols-outlined">database</span>Importar dados
+          </button>
+          <button class="menuButton" [class.clicked]="selectedButton === 4" routerLink="/alocar-local">
+            <span class="material-symbols-outlined">school</span>Alocar
+          </button>
+        </ng-container>
+        
         <button class="menuButton" [class.clicked]="selectedButton === 5" routerLink="/horarios">
           <span class="material-symbols-outlined">schedule</span>Horários</button>
         <button (click)="logout()" class="menuButton" id="logout"><span class="material-symbols-outlined"  id="logout" >logout</span>Sair</button>

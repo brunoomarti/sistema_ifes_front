@@ -28,6 +28,7 @@ export class SchedulesComponent implements OnInit {
   tabela: any[][] = [];
   alunoSelecionado: any;
   professorSelecionado: any;
+  userRole: string | null = ''; 
 
   constructor(
     private formBuilder: FormBuilder,
@@ -55,6 +56,10 @@ export class SchedulesComponent implements OnInit {
     });
 
     this.formInit();
+
+    if (typeof localStorage !== 'undefined') {
+      this.userRole = localStorage.getItem('role');
+    }
   }
 
   formInit() {
@@ -78,6 +83,7 @@ export class SchedulesComponent implements OnInit {
 
   onList() {
     const scheduleType = this.form.get('scheduleType')?.value;
+    console.log(scheduleType)
     if (scheduleType === 'Aluno') {
       const dialogData = {
         title: 'Listagem de alunos.',
@@ -101,7 +107,7 @@ export class SchedulesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.tipo === 'Aluno') {
-        console.log("aqui porra " + result.objetoSelecionado.studentCode)
+        console.log("aqui " + result.objetoSelecionado.studentCode)
         // this.alunoSelecionado = result;
         this.form.get('scheduleStudent')?.setValue(result.objetoSelecionado.studentCode);
       } else {

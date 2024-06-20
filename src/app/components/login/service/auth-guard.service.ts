@@ -14,11 +14,30 @@ export class AuthGuard implements CanActivate {
 
     if (typeof localStorage !== 'undefined') {
       const authToken = localStorage.getItem('auth-token');
-      if (authToken) {
-        return true;
+      const userRole = localStorage.getItem('role');
+      if (authToken && userRole) {
+        if (userRole === 'ADMIN' || userRole === 'COORDINATOR') {
+          return true;
+        } else if (userRole === 'STUDENT') {
+          const allowedRoutes = ['/horarios'];
+          if (allowedRoutes.includes(state.url)) {
+            return true;
+          } else {
+            this.router.navigate(['/horarios']);
+            return false;
+          }
+        } else if (userRole === 'TEACHER') {
+          const allowedRoutes = ['/horarios'];
+          if (allowedRoutes.includes(state.url)) {
+            return true;
+          } else {
+            this.router.navigate(['/horarios']);
+            return false;
+          }
+        }
       }
+  
     }
-    
     this.router.navigate(['/login']);
     return false;
   }

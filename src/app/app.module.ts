@@ -25,7 +25,7 @@ import { JwtInterceptor } from './components/login/service/jwt-inteceptor';
     BrowserModule
   ],
   providers: [ 
-    provideHttpClient(withInterceptors([JwtInterceptor]))
+    provideHttpClient(withInterceptors([JwtInterceptor]), withFetch())
   ],
 })
 export class AppModule { }

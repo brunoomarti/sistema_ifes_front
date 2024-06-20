@@ -7,13 +7,42 @@
         <div class="newInput">
           <label for="scheduleType">Pesquisar por:</label>
           <select formControlName="scheduleType" (change)="onScheduleTypeChange($event)">
-            <option>Aluno</option>
-            <option>Professor</option>
+            <option *ngIf="userRole === 'STUDENT' || userRole !== 'TEACHER'">Aluno</option>
+            <option *ngIf="userRole === 'TEACHER' || userRole !== 'STUDENT'">Professor</option>
           </select>
         </div>
+
+          <div class="newInput" *ngIf="userRole === 'ADMIN' || userRole === 'COORDINATOR'">
+            <div
+            class="newInput"
+            *ngIf="form.controls['scheduleType'].value === 'Aluno'"
+          >
+            <label for="scheduleStudent">Matrícula do aluno:</label>
+            <input
+              type="text"
+              formControlName="scheduleStudent"
+              placeholder="Matrícula do aluno"
+              required
+
+            />
+          </div>
+          <div
+            class="newInput"
+            *ngIf="form.controls['scheduleType'].value === 'Professor'"
+          >
+            <label for="scheduleTeacher">Código do professor:</label>
+            <input
+              type="text"
+              formControlName="scheduleTeacher"
+              placeholder="Código do professor"
+              required
+            />
+          </div>
+        </div>
+
         <div
           class="newInput"
-          *ngIf="form.controls['scheduleType'].value === 'Aluno'"
+          *ngIf="userRole === 'STUDENT'"
         >
           <label for="scheduleStudent">Matrícula do aluno:</label>
           <input
@@ -21,11 +50,12 @@
             formControlName="scheduleStudent"
             placeholder="Matrícula do aluno"
             required
+
           />
         </div>
         <div
           class="newInput"
-          *ngIf="form.controls['scheduleType'].value === 'Professor'"
+          *ngIf="userRole === 'TEACHER'"
         >
           <label for="scheduleTeacher">Código do professor:</label>
           <input

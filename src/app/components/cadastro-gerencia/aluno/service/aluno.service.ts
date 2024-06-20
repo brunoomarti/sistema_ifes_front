@@ -36,9 +36,10 @@ export class AlunoService {
 
   loadById(id: string) {
     return this.httpClient.get<Aluno>(`${this.API}/${id}`);
-  }
+  } 
 
   idByCode(studentCode: string) {
+    console.log(studentCode);
     return this.httpClient.get<Aluno>(`${this.API}/idByCode/${studentCode}`);
   }
 
