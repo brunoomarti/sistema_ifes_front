@@ -23,6 +23,7 @@ export class MenuComponent implements OnInit {
 
   selectedButton: number = 0;
   userName: string | null = '';
+  firstName: string | null = '';
   role: string | null = '';
   tipoUsuario: string | null = '';
 
@@ -44,6 +45,8 @@ export class MenuComponent implements OnInit {
         this.userName = localStorage.getItem('username');
         this.role = localStorage.getItem("role");
       }
+      
+      this.firstName = this.userName?.split(' ')[0] ?? '';
 
       if (this.role === 'STUDENT'){
         this.tipoUsuario = "Aluno";
