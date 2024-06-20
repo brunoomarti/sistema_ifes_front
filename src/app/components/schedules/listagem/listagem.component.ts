@@ -23,11 +23,15 @@ export class ListagemComponent implements OnInit {
   form: FormGroup;
   listagemAlunos: Aluno[] = [];
   listagemProfessores: Professor[] = [];
+  userRole: string | null = ''; 
+  userCode: string | null = ''; 
+  userLogado: any;
 
   constructor(
     public dialogRef: MatDialogRef<ListagemComponent>,
     private formBuilder: FormBuilder,
     private alunoService: AlunoService,
+    private profService: ProfessorService,
     private professorService: ProfessorService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
@@ -45,22 +49,58 @@ export class ListagemComponent implements OnInit {
       teacher: null,
     });
 
-    if (this.data.tipo === 'Aluno') {
-      this.alunoService.listar().subscribe((alunos) => {
-        this.listagemAlunos = alunos.sort((a, b) =>
-          a.name.localeCompare(b.name)
-        );
-        if (this.listagemAlunos.length > 0) {
-          this.form.get('student')?.setValue(this.listagemAlunos[0]._id);
+    if (typeof localStorage !== 'undefined') {
+      this.userRole = localStorage.getItem('role');
+      this.userCode = localStorage.getItem('user_code');
+    }
+
+    if (this.data.tipo === 'Aluno') { 
+      if (this.userRole === 'STUDENT'){
+        if (this.userCode){
+          this.alunoService.idByCode(this.userCode).subscribe(
+            (result) => { 
+              this.userLogado = result;
+              if (this.userLogado !== null) {
+                this.listagemAlunos.push(this.userLogado);
+              }
+            }, 
+          ); 
         }
-      });
+        
+      } 
+      if (this.userRole === 'ADMIN' || this.userRole === 'COORDINATOR') {
+        this.alunoService.listar().subscribe((alunos) => {
+          this.listagemAlunos = alunos.sort((a, b) =>
+            a.name.localeCompare(b.name)
+          );
+          if (this.listagemAlunos.length > 0) {
+            this.form.get('student')?.setValue(this.listagemAlunos[0]._id);
+          }
+        });
+      }
     } else if (this.data.tipo === 'Professor') {
-      this.professorService.listar().subscribe((professores) => {
-        this.listagemProfessores = professores;
-        if (this.listagemProfessores.length > 0) {
-          this.form.get('teacher')?.setValue(this.listagemProfessores[0]._id);
+      if (this.userRole === 'TEACHER'){
+        if (this.userCode){
+          this.profService.idByCode(this.userCode).subscribe(
+            (result) => { 
+              this.userLogado = result;
+              if (this.userLogado !== null) {
+                this.listagemProfessores.push(this.userLogado);
+              }
+            }, 
+          ); 
         }
-      });
+        
+      } 
+      if (this.userRole === 'ADMIN' || this.userRole === 'COORDINATOR') {
+        this.professorService.listar().subscribe((professores) => {
+          this.listagemProfessores = professores;
+          if (this.listagemProfessores.length > 0) {
+            this.form.get('teacher')?.setValue(this.listagemProfessores[0]._id);
+          }
+        
+        });
+      }
     }
   }
 

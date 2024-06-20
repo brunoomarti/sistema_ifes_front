@@ -74,6 +74,7 @@ export class MenuComponent implements OnInit {
     localStorage.removeItem('auth-token');
     localStorage.removeItem('username');
     localStorage.removeItem("role");
+    localStorage.removeItem("student_code");
     window.location.reload();
   }
 }

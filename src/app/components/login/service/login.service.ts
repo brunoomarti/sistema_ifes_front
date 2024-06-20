@@ -17,6 +17,7 @@ export class LoginService {
         localStorage.setItem("auth-token", value.token)
         localStorage.setItem("username", value.name)
         localStorage.setItem("role", value.role)
+        localStorage.setItem("user_code", value.user_code)
       })
     )
   }
