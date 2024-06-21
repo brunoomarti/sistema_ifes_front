@@ -125,7 +125,7 @@ export class CadastroAlunoComponent implements OnInit {
 
   onCancel() {
     if (confirm('Tem certeza que deseja cancelar?')) {
-      this.router.navigate(['/cadastro-gerencia']);
+      this.router.navigate(['/cadastro-gerencia/gerencia-aluno']);
     }
   }
 

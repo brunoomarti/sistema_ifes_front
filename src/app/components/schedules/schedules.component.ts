@@ -9,8 +9,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ListagemComponent } from './listagem/listagem.component';
 import { SharedService } from '../../shared-services/shared.service';
 import { AlunoService } from '../cadastro-gerencia/aluno/service/aluno.service';
-import { Aluno } from '../../models/Aluno';
-import { Curso } from '../../models/Curso';
 import { ProfessorService } from '../cadastro-gerencia/professor/service/professor.service';
 
 @Component({
@@ -28,7 +26,7 @@ export class SchedulesComponent implements OnInit {
   tabela: any[][] = [];
   alunoSelecionado: any;
   professorSelecionado: any;
-  userRole: string | null = ''; 
+  userRole: string | null = '';
 
   constructor(
     private formBuilder: FormBuilder,

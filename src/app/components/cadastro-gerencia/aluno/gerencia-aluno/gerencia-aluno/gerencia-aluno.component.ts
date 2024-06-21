@@ -1,4 +1,3 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -10,10 +9,12 @@ import { Aluno } from '../../../../../models/Aluno';
 import { EdicaoAlunoComponent } from '../../edicao-aluno/edicao-aluno.component';
 import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 import { CommonModule } from '@angular/common';
-import { JanelaSelectBarcodeComponent } from '../../janela-select-barcode/janela-select-barcode.component';
+import JsBarcode from 'jsbarcode';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
-import { MatOption } from '@angular/material/core';
-import { MatSelect } from '@angular/material/select';
+import { SelectionModel } from '@angular/cdk/collections';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input'; // Import MatInputModule
+import { catchError, tap, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-gerencia-aluno',
@@ -23,20 +24,22 @@ import { MatSelect } from '@angular/material/select';
     MatTableModule,
     MatPaginator,
     MatFormField,
-    MatOption,
-    MatSelect,
-    MatLabel
+    MatLabel,
+    MatCheckboxModule,
+    MatInputModule // Add MatInputModule to imports
   ],
   templateUrl: './gerencia-aluno.component.html',
   styleUrls: ['./gerencia-aluno.component.css']
 })
 export class GerenciaAlunoComponent implements OnInit {
-
   alunos: any[] = [];
   dataSource: any;
   mensagemSnackbarAcerto: string = 'Aluno excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir aluno.';
-  selectedPosition: string = 'right';
+  selectedQuantity: number = 1; // Quantidade de etiquetas a ser impressa
+  showBarcodeModal: boolean = false; // Controla a exibição do modal de seleção de quantidade de etiquetas
+  selection = new SelectionModel<Aluno>(true, []); // Permitir seleção múltipla
+  displayedColumns: string[] = ['select', 'name', 'course', 'studentCode', 'registrationYear', 'actions'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -44,8 +47,7 @@ export class GerenciaAlunoComponent implements OnInit {
     private service: AlunoService,
     private router: Router,
     private snackBar: MatSnackBar,
-    public dialog: MatDialog,
-    private http: HttpClient
+    public dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -60,6 +62,11 @@ export class GerenciaAlunoComponent implements OnInit {
     });
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
   editar(aluno: { name: string }): void {
     const dialogRef = this.dialog.open(EdicaoAlunoComponent, {
       disableClose: true,
@@ -72,22 +79,30 @@ export class GerenciaAlunoComponent implements OnInit {
     });
   }
 
-  excluir(aluno: Aluno): void {
-    this.service.getRegistrosUsandoAluno(aluno._id).subscribe(registros => {
-      if (registros.length > 0) {
-        this.mostrarMensagemErro(registros);
-      } else {
-        const confirmacao = confirm('Tem certeza que deseja excluir este aluno?');
-        if (confirmacao) {
-          this.service.remove(aluno._id).subscribe(() => {
-            this.alunos = this.alunos.filter(e => e._id !== aluno._id);
+  excluirSelecionados(): void {
+    const selectedAlunos = this.selection.selected;
+    if (selectedAlunos.length === 0) {
+      this.snackBar.open("Nenhum aluno selecionado.", '', { duration: 5000, panelClass: ['errorSnackbar'] });
+      return;
+    }
+
+    const confirmacao = confirm('Tem certeza que deseja excluir os alunos selecionados?');
+    if (confirmacao) {
+      const ids = selectedAlunos.map(aluno => aluno._id);
+      this.service.removeMultiple(ids).pipe(
+        tap(() => {
+            this.alunos = this.alunos.filter(aluno => !ids.includes(aluno._id));
             this.onSucess(true);
-          }, error => {
-            this.onFailed();
-          });
-        }
-      }
-    });
+            this.selection.clear();
+        }),
+        catchError((error: any) => {
+          this.onFailed();
+          this.selection.clear();
+          return throwError(() => new Error(error));
+        })
+      ).subscribe();
+
+    }
   }
 
   mostrarMensagemErro(registros: any[]): void {
@@ -140,29 +155,114 @@ export class GerenciaAlunoComponent implements OnInit {
     this.router.navigate(['/cadastro-gerencia/cadastro-aluno']);
   }
 
-  printBarcode() {
-    if (this.alunos.length > 0) {
-      const aluno = this.alunos[0];
-      const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-      this.http.post('/api/print-barcode', { matricula: aluno.studentCode, position: 'center' }, { headers, responseType: 'blob' })
-        .subscribe(response => {
-          console.log('Código de barras enviado para impressão');
-          this.snackBar.open('Código de barras enviado para impressão', '', { duration: 5000, panelClass: ['successSnackbar'] });
-        }, error => {
-          console.error('Erro ao enviar código de barras para impressão', error);
-          this.snackBar.open('Erro ao enviar código de barras para impressão', '', { duration: 5000, panelClass: ['errorSnackbar'] });
-        });
+  handleImprimirSelecionadosClick() {
+    const selectedAlunos = this.selection.selected;
+    if (selectedAlunos.length === 0) {
+      this.snackBar.open("Nenhum aluno selecionado.", '', { duration: 5000, panelClass: ['errorSnackbar'] });
+    } else {
+      this.imprimirEtiquetasSelecionados();
     }
+    this.showBarcodeModal = true; // Abre o modal de seleção de quantidade
   }
 
-  setPosition(position: string) {
-    this.selectedPosition = position;
+  imprimirEtiquetasSelecionados() {
+    const selectedAlunos = this.selection.selected;
+    if (selectedAlunos.length === 0) {
+      this.snackBar.open("Nenhum aluno selecionado.", '', { duration: 5000, panelClass: ['errorSnackbar'] });
+      return;
+    }
+
+    const larguraEtiqueta = 38; // Largura individual da etiqueta em mm
+    const larguraTotal = 3 * larguraEtiqueta; // Largura total em mm
+
+    const printWindow = window.open("", "_blank", `width=${larguraTotal}mm`);
+
+    let etiquetasContent = `
+        <html>
+            <head>
+                <title>Etiquetas</title>
+                <style>
+                    @media print {
+                        @page {
+                            size: ${larguraTotal}mm 22mm;
+                            margin: 0;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 0;
+                            display: flex;
+                            flex-wrap: wrap;
+                        }
+                        .etiqueta {
+                            width: ${larguraEtiqueta}mm;
+                            height: 22mm; /* Ajustar a altura para caber na página */
+                            box-sizing: border-box;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            justify-content: center;
+                            text-align: center;
+                            page-break-inside: avoid;
+                            page-break-after: auto;
+                        }
+                        img {
+                            width: 95%;
+                            height: 70%; /* Diminuir a altura do código de barras */
+                        }
+                        .matricula-text {
+                            font-size: 12px;
+                            font-weight: bold;
+                        }
+                    }
+                </style>
+            </head>
+            <body>
+    `;
+
+    for (const aluno of selectedAlunos) {
+      for (let i = 0; i < this.selectedQuantity; i++) {
+        const canvas = document.createElement("canvas");
+        JsBarcode(canvas, aluno.studentCode, {
+          format: "CODE128",
+          displayValue: false,
+        });
+
+        const imageData = canvas.toDataURL("image/png");
+
+        etiquetasContent += `
+            <div class="etiqueta">
+                <img src="${imageData}" />
+                <div class="matricula-text">${aluno.studentCode}</div>
+            </div>
+        `;
+      }
+    }
+
+    etiquetasContent += `
+            </body>
+        </html>
+    `;
+
+    printWindow?.document.write(etiquetasContent);
+    printWindow?.document.close();
+
+    // Adicione um pequeno atraso antes de chamar o print
+    setTimeout(() => {
+        printWindow?.print();
+    }, 500); // 500 milissegundos de atraso
   }
 
-  openBarcodePrintWindow() {
-    this.dialog.open(JanelaSelectBarcodeComponent, {
-      backdropClass: 'backdrop'
-    });
+  toggleSelection(aluno: Aluno) {
+    this.selection.toggle(aluno);
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.data.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ? this.selection.clear() : this.dataSource.data.forEach((row: Aluno) => this.selection.select(row));
   }
 }

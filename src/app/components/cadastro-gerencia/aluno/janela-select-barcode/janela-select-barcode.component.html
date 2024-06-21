@@ -1,12 +1,34 @@
 <div>
   <div class="dialog-container">
-
     <p class="pageTitle">Imprimir código de barras</p>
     <p class="pageBody">Selecione os alunos que deseja imprimir na tabela abaixo:</p>
-
-    <div class="buttonGroupForm">
-      <button class="button two" (click)="okButton()">OK</button>
+    <div *ngIf="alunos.length > 0; else noAlunos">
+      <table>
+        <thead>
+          <tr>
+            <th>Selecionar</th>
+            <th>Nome</th>
+            <th>Curso</th>
+            <th>Matrícula</th>
+            <th>Ano de matrícula</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let aluno of alunos">
+            <td><input type="checkbox" [(ngModel)]="aluno.selecionado"></td>
+            <td>{{ aluno.name }}</td>
+            <td>{{ aluno.course.name }}</td>
+            <td>{{ aluno.studentCode }}</td>
+            <td>{{ aluno.registrationYear }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
+    <ng-template #noAlunos>
+      <p>Nenhum aluno encontrado.</p>
+    </ng-template>
+    <div class="buttonGroupForm">
+      <button class="button two" (click)="printBarcode()">OK</button>
+    </div>
   </div>
 </div>

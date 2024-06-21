@@ -38,7 +38,7 @@ export class TelaLoginComponent {
         localStorage.removeItem("auth-token");
         localStorage.removeItem("userName");
         localStorage.removeItem("role");
-        localStorage.removeItem("student_code");
+        localStorage.removeItem("user_code");
       }
     }
   }

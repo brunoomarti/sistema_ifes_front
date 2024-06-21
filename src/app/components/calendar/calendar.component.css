@@ -1,8 +1,200 @@
 .boxSize {
   width: 100%;
   height: fit-content;
-  padding: var(--content-pading);
   background-color: white;
   border-radius: var(--primary-boxes-radius);
   box-sizing: border-box;
+  margin: 0 0 30px 0;
+}
+
+.completeCalendar {
+  display: flex;
+  flex-direction: column;
+}
+
+button:hover .left-arrow,
+button:hover .right-arrow {
+  animation: move-arrow 0.6s infinite alternate ease-in-out;
+}
+
+@keyframes move-arrow {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-5px);
+  }
+}
+
+button:hover .right-arrow {
+  animation: move-arrow-right 0.6s infinite alternate ease-in-out;
+}
+
+@keyframes move-arrow-right {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(5px);
+  }
+}
+
+.calendar {
+  max-width: 300px;
+  margin: 0;
+  font-size: var(--small-font-size);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 10px 0;
+}
+
+.calendar-header button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: var(--normal-font-size);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 5px;
+}
+
+.calendar-grid div {
+  text-align: center;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.day-header {
+  font-weight: bold;
+  color: var(--dark-gray);
+  font-size: var(--small-font-size);
+}
+
+.day {
+  color: var(--dark-gray);
+  font-size: var(--small-font-size);
+}
+
+.weekend {
+  color: var(--warn-color);
+  font-weight: 500;
+}
+
+.current-day {
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: bold;
+}
+
+.dayMonth {
+  color: var(--dark-gray);
+  font-weight: bold;
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+.material-symbols-outlined {
+  font-size: 20px;
+  line-height: normal;
+}
+
+.holidayTab {
+
+}
+
+.separator {
+  background-color: var(--light-gray);
+  width: 100%;
+  height: 2px;
+  margin: 15px 0;
+}
+
+.holidayTitle {
+  font-size: 18px;
+  padding: 0;
+  margin: 0 0 4px 0;
+  font-weight: 600;
+  color: var(--dark-gray);
+}
+
+.holidayRow {
+  font-size: 14px;
+  padding: 0;
+  margin: 0;
+}
+
+.holidayLegendTab {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: fit-content;
+}
+
+.legend-item {
+  border-radius: var(--secondary-boxes-radius);
+  height: 14px;
+  width: 14px;
+}
+
+.legendItemComp {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3px;
+  color: rgb(15, 15, 15);
+  font-size: 13px;
+}
+
+.legend-item.national,
+.holiday.national {
+  background-color: #FF5733;
+  color: white;
+}
+
+.legend-item.state,
+.holiday.state {
+  background-color: #3498DB;
+  color: white;
+}
+
+.legend-item.municipal,
+.holiday.municipal {
+  background-color: #F1C40F;
+  color: var(--dark-gray);
+}
+
+.calendar-grid .day {
+  position: relative;
+}
+
+.calendar-grid .day .holiday {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legendItemGroup {
+  gap: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+.legendItemGroupColumn {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }

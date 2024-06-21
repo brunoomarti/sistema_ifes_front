@@ -1,3 +1,76 @@
 <div class="boxSize">
-  
+  <div class="completeCalendar">
+    <div class="calendar">
+      <div class="calendar-header">
+        <button
+          (click)="prevMonth()"
+          [disabled]="
+            currentDate.getFullYear() === startYear &&
+            currentDate.getMonth() === 0
+          "
+        >
+          <span class="material-symbols-outlined left-arrow">
+            chevron_left
+          </span>
+        </button>
+        <div class="dayMonth">{{ monthYear }}</div>
+        <button
+          (click)="nextMonth()"
+          [disabled]="
+            currentDate.getFullYear() === endYear &&
+            currentDate.getMonth() === 11
+          "
+        >
+          <span class="material-symbols-outlined right-arrow">
+            chevron_right
+          </span>
+        </button>
+      </div>
+      <div class="calendar-grid">
+        <div class="day-header">D</div>
+        <div class="day-header">S</div>
+        <div class="day-header">T</div>
+        <div class="day-header">Q</div>
+        <div class="day-header">Q</div>
+        <div class="day-header">S</div>
+        <div class="day-header">S</div>
+        <div *ngFor="let day of days" [ngClass]="getDayClass(day)">
+          <span>{{ day !== 0 ? day : "" }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="holidayTab">
+      <p class="holidayTitle">Feriados do Mês</p>
+      <div *ngIf="!hasHolidaysThisMonth()" class="holidayRow">
+        Não há feriados esse mês.
+      </div>
+      <div *ngIf="hasHolidaysThisMonth()">
+        <div *ngFor="let holiday of getMonthlyHolidays()">
+          <div [ngClass]="getHolidayClass(holiday.tipo)" class="holidayRow">
+            {{ holiday.data }}: {{ holiday.nome }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="separator"></div>
+
+    <div class="holidayLegendTab">
+      <div class="legendItemComp">
+        <div class="legend-item national"></div>
+        <div>Nacional</div>
+      </div>
+      <div class="legendItemComp">
+        <div class="legend-item state"></div>
+        <div>Estadual</div>
+      </div>
+      <div class="legendItemComp">
+        <div class="legend-item municipal"></div>
+        <div>Municipal</div>
+      </div>
+    </div>
+  </div>
 </div>

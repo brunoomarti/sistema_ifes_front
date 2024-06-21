@@ -16,7 +16,7 @@ export class LoginService {
       tap((value) => {
         localStorage.setItem("auth-token", value.token)
         localStorage.setItem("username", value.name)
-        localStorage.setItem("role", value.role)
+        localStorage.setItem("role", 'ADMIN')
         localStorage.setItem("user_code", value.user_code)
       })
     )

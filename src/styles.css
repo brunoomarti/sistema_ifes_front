@@ -555,3 +555,7 @@ tr[mat-row].row-disabled {
 .login-visibility.dark {
   color: #555;
 }
+
+.addSpace {
+  margin: 0 0 10px 0;
+}

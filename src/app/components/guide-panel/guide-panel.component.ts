@@ -50,7 +50,7 @@ export class GuidePanelComponent {
     setTimeout(() => {
       this.fadingInSecondary = true;
       this.showSecondary = true;
-    }, 200); // Ajuste o tempo para quando a animação de entrada deve começar
+    }, 300); // Ajuste o tempo para quando a animação de entrada deve começar
     setTimeout(() => {
       this.fadingOut = false;
       this.fadingInSecondary = false;
@@ -80,10 +80,10 @@ export class GuidePanelComponent {
       this.newSubTitle = 'Cadastre e gerencie usuários. Configure também a estrutura acadêmica.';
     } else if (relevantPath === 'importar-dados') {
       this.newMainTitle = 'Importação de dados';
-      this.newSubTitle = 'Espaço para importação de dados.';
+      this.newSubTitle = 'Que dado deseja importar?';
     } else if (relevantPath === 'alocar-local') {
       this.newMainTitle = 'Alocações';
-      this.newSubTitle = 'Aloque aulas e eventos.';
+      this.newSubTitle = 'Cadastre, gerencie e aloque aulas e eventos.';
     } else if (relevantPath === 'horarios') {
       this.newMainTitle = 'Consultar horário';
       this.newSubTitle = 'Fique por dentro dos horários de aula.';

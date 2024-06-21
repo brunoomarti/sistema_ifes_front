@@ -1,5 +1,4 @@
 <div class="componentContent">
-
   <div class="backTitle">
     <p class="pageTitle">Alunos cadastrados</p>
     <div class="buttonGroup">
@@ -7,62 +6,81 @@
         <span class="material-symbols-outlined">arrow_back</span>
         <p class="pageTitle">Voltar</p>
       </button>
-      <button class="button one small-button" (click)="printBarcode()">
-        <span class="material-symbols-outlined">print</span>
-        Imprimir Código de Barras
-      </button>
     </div>
   </div>
 
   <div class="boxSize">
+    <div class="buttonGroup addSpace">
+      <button class="button two" (click)="cadastrar()">
+        <span class="material-symbols-outlined table-button-icon">person_add</span>
+        Cadastrar Aluno
+      </button>
+      <button mat-button (click)="handleImprimirSelecionadosClick()" class="button two">
+        <span class="material-symbols-outlined table-button-icon">print</span>
+        Imprimir Etiquetas Selecionadas
+      </button>
+      <button mat-button (click)="excluirSelecionados()" class="button two delete-button">
+        <span class="material-symbols-outlined table-button-icon">delete</span>
+        Excluir Selecionados
+      </button>
+    </div>
 
-    <table mat-table [dataSource]="alunos">
+    <div class="newInput addSpace">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Pesquise pelo nome ou matrícula do aluno">
+    </div>
+
+    <table mat-table [dataSource]="dataSource">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let aluno">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? toggleSelection(aluno) : null"
+                        [checked]="selection.isSelected(aluno)"
+                        (keyup)="toggleSelection(aluno)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Existing Columns -->
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>Nome</th>
-        <td mat-cell *matCellDef="let aluno">{{ aluno.name }}<td>
+        <td mat-cell *matCellDef="let aluno">{{ aluno.name }}</td>
       </ng-container>
 
       <ng-container matColumnDef="course">
         <th mat-header-cell *matHeaderCellDef>Curso</th>
-        <td mat-cell *matCellDef="let aluno">{{ aluno.course.name }}<td>
+        <td mat-cell *matCellDef="let aluno">{{ aluno.course.name }}</td>
       </ng-container>
 
       <ng-container matColumnDef="studentCode">
         <th mat-header-cell *matHeaderCellDef>Código</th>
-        <td mat-cell *matCellDef="let aluno">{{ aluno.studentCode }}<td>
+        <td mat-cell *matCellDef="let aluno">{{ aluno.studentCode }}</td>
       </ng-container>
 
       <ng-container matColumnDef="registrationYear">
         <th mat-header-cell *matHeaderCellDef>Ano de matrícula</th>
-        <td mat-cell *matCellDef="let aluno">{{ aluno.registrationYear }}<td>
+        <td mat-cell *matCellDef="let aluno">{{ aluno.registrationYear }}</td>
       </ng-container>
 
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="thButton">
-            <div>Ações</div>
-            <button class="subMenuButton newButton" (click)="cadastrar()">
-              <div class="subMenuButtonText">Cadastrar</div>
-            </button>
-          </div>
-        </th>
+        <th mat-header-cell *matHeaderCellDef></th>
         <td mat-cell *matCellDef="let aluno" class="buttonGroupForm">
           <button mat-button (click)="editar(aluno)" class="button two">
             <span class="material-symbols-outlined table-button-icon">edit</span>
             Editar
           </button>
-          <button mat-button (click)="excluir(aluno)" class="button two delete-button">
-            <span class="material-symbols-outlined table-button-icon">delete</span>
-            Excluir
-          </button>
         </td>
       </ng-container>
 
-      <tr class="header-row" mat-header-row *matHeaderRowDef="['name','course', 'studentCode', 'registrationYear', 'actions']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['name','course', 'studentCode', 'registrationYear', 'actions']"></tr>
+      <tr class="header-row" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
-
+    <mat-paginator pageSize="10" showFirstLastButtons></mat-paginator>
   </div>
 </div>

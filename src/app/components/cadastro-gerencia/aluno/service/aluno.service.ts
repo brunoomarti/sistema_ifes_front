@@ -36,15 +36,17 @@ export class AlunoService {
 
   loadById(id: string) {
     return this.httpClient.get<Aluno>(`${this.API}/${id}`);
-  } 
+  }
 
   idByCode(studentCode: string) {
     console.log(studentCode);
     return this.httpClient.get<Aluno>(`${this.API}/idByCode/${studentCode}`);
   }
 
-  remove(_id: number) {
-    return this.httpClient.delete(`${this.API}/${_id}`);
+  removeMultiple(ids: number[]): Observable<void> {
+    return this.httpClient.delete<void>(`${this.API}/delete-multiple`, {
+      body: ids
+    });
   }
 
   getStudentSchedule(studentCode: number) {
