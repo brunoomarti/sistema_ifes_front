@@ -1,6 +1,9 @@
 <div *ngIf="isLoginPage; else mainLayout">
   <router-outlet></router-outlet>
 </div>
+
+<input type="text" id="barcodeInput" style="position: absolute; top: -1000px;" />
+
 <ng-template #mainLayout>
   <div class="marginPage">
     <div class="flexContent">

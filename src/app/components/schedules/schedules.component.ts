@@ -36,9 +36,7 @@ export class SchedulesComponent implements OnInit {
     private dialog: MatDialog,
     private sharedService: SharedService,
     private professorService: ProfessorService
-  )
-
-  {
+  ) {
     this.form = this.formBuilder.group({
       _id: 0,
       scheduleType: null,
@@ -104,7 +102,6 @@ export class SchedulesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.tipo === 'Aluno') {
-        // this.alunoSelecionado = result;
         this.form.get('scheduleStudent')?.setValue(result.objetoSelecionado.studentCode);
       } else {
         this.professorSelecionado = result;
@@ -163,7 +160,6 @@ export class SchedulesComponent implements OnInit {
           }
         );
     }
-
   }
 
   onFailed() {
@@ -270,4 +266,100 @@ export class SchedulesComponent implements OnInit {
     }
   }
 
+  onPrint() {
+    const aluno = this.alunoSelecionado.name;
+    const matricula = this.alunoSelecionado.studentCode;
+    const dataImpressao = new Date().toLocaleString();
+
+    let printContent = `
+      <html>
+      <head>
+        <title>Horário do Aluno</title>
+        <style>
+          @media print {
+            @page {
+              size: 80mm 200mm;
+              margin: 0;
+            }
+            body {
+              margin: 10px;
+              font-family: Arial, sans-serif;
+              font-size: 12px;
+            }
+            .header {
+              margin-bottom: 10px;
+            }
+            .foot {
+              margin-bottom: 10px;
+            }
+            .schedule {
+              margin-top: 10px;
+            }
+            .day {
+              font-weight: bold;
+              margin-top: 10px;
+            }
+            .lesson {
+              margin-left: 15px;
+            }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="header">
+          <p>Aluno: ${aluno}</p>
+          <p>Matrícula: ${matricula}</p>
+        </div>
+        <div class="schedule">
+          <p>Horário:</p>
+    `;
+
+    const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+    const horarios = [
+      '07:00 - 07:50',
+      '07:50 - 08:40',
+      '08:40 - 09:30',
+      '09:50 - 10:40',
+      '10:40 - 11:30',
+      '11:30 - 12:20',
+      '13:00 - 13:50',
+      '13:50 - 14:40',
+      '14:40 - 15:30',
+      '15:50 - 16:40',
+      '16:40 - 17:30',
+      '17:30 - 18:20',
+      '18:50 - 19:35',
+      '19:35 - 20:20',
+      '20:30 - 21:15',
+      '21:15 - 22:00'
+    ];
+
+    diasSemana.forEach((dia, i) => {
+      const horariosDia = this.tabela[i].filter(h => h).map((h, j) => `${horarios[j]} - ${h}`).join('<br>');
+
+      if (horariosDia) {
+        printContent += `
+          <div class="day">${dia}:</div>
+          <div class="lesson">${horariosDia}</div>
+        `;
+      }
+    });
+
+    printContent += `
+        </div>
+        <div class="foot">
+          <p>Data de impressão: ${dataImpressao}</p>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+
+    if (printWindow) {
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      printWindow.print();
+    }
+  }
 }

@@ -1,38 +1,52 @@
 <div class="componentContent">
-
   <p class="pageTitle">Cadastrar Aluno(a)</p>
-
   <div class="boxSize">
-
     <form [formGroup]="form">
-
       <div class="newInput">
         <label for="name">Nome: *</label>
-        <input type="text" formControlName="name" placeholder="Nome do(a) aluno(a)" required>
+        <input
+          type="text"
+          formControlName="name"
+          placeholder="Nome do(a) aluno(a)"
+          required
+        />
       </div>
-
       <div class="newInput">
-        <label >Curso: *</label>
-        <select formControlName="course" required>
-          <option *ngFor="let curso of cursos" [value]="curso._id">{{curso.name}}</option>
+        <label>Curso: *</label>
+        <select formControlName="course" required (change)="onCourseChange()">
+          <option *ngFor="let curso of cursos" [value]="curso._id">
+            {{ curso.name }}
+          </option>
         </select>
       </div>
-
       <div class="newInput">
         <label for="registrationYear">Ano de matrícula: *</label>
-        <input type="number" formControlName="registrationYear" [min]="1960" [max]="currentYear" required>
+        <div class="input-container">
+          <input
+            type="number"
+            formControlName="registrationYear"
+            [min]="1960"
+            [max]="currentYear"
+            required
+            (change)="onYearChange()"
+          />
+          <button class="button two" type="button" (click)="setCurrentYear()">Ano atual</button>
+        </div>
       </div>
-
       <div class="newInput">
         <label for="studentCode">Código (gerado automaticamente):</label>
-        <input type="text" formControlName="studentCode" placeholder="Código automático" class="disabledInput" [attr.readonly]="true">
+        <input
+          type="text"
+          formControlName="studentCode"
+          placeholder="Código automático"
+          class="disabledInput"
+          [attr.readonly]="true"
+        />
       </div>
-
       <div class="buttonGroupForm">
         <button class="button two" (click)="onCancel()">Cancelar</button>
         <button class="button one" (click)="onSubmit()">Criar Aluno(a)</button>
       </div>
-
     </form>
   </div>
 </div>

@@ -5,23 +5,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AlunoService } from '../service/aluno.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Aluno } from '../../../../models/Aluno';
-import { CommonModule } from '@angular/common';
-import { MatTableModule } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 import { CursoService } from '../../curso/service/curso.service';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
 
 @Component({
   selector: 'app-cadastro-aluno',
+  templateUrl: './cadastro-aluno.component.html',
   standalone: true,
   imports: [
     ReactiveFormsModule,
     CommonModule,
     MatTableModule
   ],
-  templateUrl: './cadastro-aluno.component.html',
-  styleUrl: './cadastro-aluno.component.css'
+  styleUrls: ['./cadastro-aluno.component.css']
 })
 export class CadastroAlunoComponent implements OnInit {
 
@@ -30,6 +30,7 @@ export class CadastroAlunoComponent implements OnInit {
   mensagemSnackbarErro: string = 'Erro ao cadastrar aluno(a).';
   cursos: Curso[] = [];
   currentYear: number;
+  selectedCourse: any;
 
   constructor(
     private router: Router,
@@ -39,9 +40,7 @@ export class CadastroAlunoComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private cursoService: CursoService
-  )
-
-  {
+  ) {
     this.currentYear = new Date().getFullYear();
 
     this.form = this.formBuilder.group({
@@ -51,7 +50,6 @@ export class CadastroAlunoComponent implements OnInit {
       course: [null, Validators.required],
       studentCode: ['', Validators.required]
     });
-    this.form.get('studentCode')?.setValue(this.gerarCodigo());
   }
 
   ngOnInit(): void {
@@ -62,7 +60,7 @@ export class CadastroAlunoComponent implements OnInit {
         name: obj.name,
         registrationYear: obj.registrationYear,
         course: obj.course,
-        barcode: obj.studentCode
+        studentCode: obj.studentCode
       });
     }
 
@@ -71,13 +69,35 @@ export class CadastroAlunoComponent implements OnInit {
     });
   }
 
+  onCourseChange(): void {
+    this.checkAndGenerateCode();
+  }
+
+  onYearChange(): void {
+    this.checkAndGenerateCode();
+  }
+
+  setCurrentYear(): void {
+    this.form.get('registrationYear')?.setValue(this.currentYear);
+    this.checkAndGenerateCode();
+  }
+
+  checkAndGenerateCode(): void {
+    const studentYear = this.form.get('registrationYear')?.value;
+    const selectedCourseId = this.form.get('course')?.value;
+
+    if (studentYear && selectedCourseId) {
+      this.gerarCodigo();
+    }
+  }
+
   onSubmit() {
     if (this.form.invalid) {
-      const missingFields = [];
+      const missingFields: string[] = [];
       if (this.form.get('name')?.hasError('required')) {
         missingFields.push('<li>Nome</li>');
       }
-      const selectedCourse = this.cursos.find(obj => obj._id == this.form. value.course);
+      const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
       if (!selectedCourse) {
         missingFields.push('<li>Curso</li>');
       }
@@ -102,7 +122,7 @@ export class CadastroAlunoComponent implements OnInit {
     const selectedCourse = this.cursos.find(obj => obj._id == this.form.value.course);
 
     if (selectedCourse) {
-        this.form.patchValue({ course: selectedCourse });
+      this.form.patchValue({ course: selectedCourse });
     }
 
     this.service.save(this.form.value).subscribe(
@@ -137,32 +157,32 @@ export class CadastroAlunoComponent implements OnInit {
     this.snackBar.open(this.mensagemSnackbarAcerto, '', { duration: 5000, panelClass: ['successSnackbar'] });
   }
 
-  gerarCodigo(): string {
-    const codigoPais = '789';
-    const numeroEmpresa = '000000';
-    const idAlunoAleatorio = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
+  gerarCodigo(): void {
+    const studentYear = this.form.get('registrationYear')?.value;
+    const selectedCourseId = this.form.get('course')?.value;
 
-    const codigoBarrasSemVerificador = codigoPais + numeroEmpresa + idAlunoAleatorio;
-    const digitoVerificador = this.calcularDigitoVerificador(codigoBarrasSemVerificador);
+    if (!studentYear || !selectedCourseId) return;
 
-    const codigoBarrasCompleto = codigoBarrasSemVerificador + digitoVerificador;
+    this.cursoService.loadById(selectedCourseId).subscribe(selectedCourse => {
+      this.selectedCourse = selectedCourse;
+      const courseCode: string = this.selectedCourse.identityNumber;
 
-    return codigoBarrasCompleto;
-  }
+      const generateUniqueRandomNumbers = (alunos: Aluno[]): string => {
+        let randomNumbers: string = '';
+        let isUnique = false;
+        while (!isUnique) {
+          randomNumbers = Math.floor(10000 + Math.random() * 90000).toString();
+          isUnique = !alunos.some(aluno => aluno.studentCode.endsWith(randomNumbers));
+        }
+        return randomNumbers;
+      };
 
-  calcularDigitoVerificador(codigoBarras: string): string {
-      let soma = 0;
-      let peso = 1;
-
-      for (let i = codigoBarras.length - 1; i >= 0; i--) {
-          const digito = parseInt(codigoBarras.charAt(i), 10);
-          soma += digito * peso;
-          peso = peso === 1 ? 3 : 1;
-      }
-
-      const digitoVerificador = (10 - (soma % 10)) % 10;
-
-      return digitoVerificador.toString();
+      this.service.listar().subscribe((alunos: Aluno[]) => {
+        const randomNumbers: string = generateUniqueRandomNumbers(alunos);
+        const studentCode: string = `${studentYear}${courseCode}${randomNumbers}`;
+        this.form.get('studentCode')?.setValue(studentCode);
+      });
+    });
   }
 
   openDialog(data: any): void {
@@ -175,7 +195,7 @@ export class CadastroAlunoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result === 'cadastrarNovo') {
         this.form.get('name')?.setValue('');
-        this.form.get('studentCode')?.setValue(this.gerarCodigo());
+        this.form.get('studentCode')?.setValue('');
       } else {
         this.router.navigate(['/cadastro-gerencia/gerencia-aluno']);
       }

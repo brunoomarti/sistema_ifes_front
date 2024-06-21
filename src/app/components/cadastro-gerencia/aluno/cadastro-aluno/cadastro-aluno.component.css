@@ -1,0 +1,19 @@
+.newInput {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+}
+
+.input-container input {
+  width: 100%;
+}
+
+.input-container .button {
+  white-space: nowrap;
+}

@@ -559,3 +559,8 @@ tr[mat-row].row-disabled {
 .addSpace {
   margin: 0 0 10px 0;
 }
+
+#barcodeInput {
+  position: absolute;
+  top: -1000px;
+}
