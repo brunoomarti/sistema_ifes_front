@@ -161,8 +161,6 @@ export class AlocaAulaComponent implements OnInit {
           backdropClass: 'backdropTwo'
         });
       } else {
-        console.log(this.form.value)
-
         delete this.form.value.lesson.teacher.authorities;
 
         this.form.value.lesson.students.forEach((x: { authorities: any; }) => {
