@@ -81,7 +81,6 @@ export class SchedulesComponent implements OnInit {
 
   onList() {
     const scheduleType = this.form.get('scheduleType')?.value;
-    console.log(scheduleType)
     if (scheduleType === 'Aluno') {
       const dialogData = {
         title: 'Listagem de alunos.',
@@ -105,7 +104,6 @@ export class SchedulesComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.tipo === 'Aluno') {
-        console.log("aqui " + result.objetoSelecionado.studentCode)
         // this.alunoSelecionado = result;
         this.form.get('scheduleStudent')?.setValue(result.objetoSelecionado.studentCode);
       } else {
@@ -116,8 +114,6 @@ export class SchedulesComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("apertou pra pesquisar")
-
     const scheduleType = this.form.get('scheduleType')?.value;
     const selectedSemester = this.periodos.find(
       (obj) => obj._id == this.form.value.schedulePeriod
@@ -168,12 +164,10 @@ export class SchedulesComponent implements OnInit {
         );
     }
 
-    console.log(this.horarioIndividual);
-
   }
 
   onFailed() {
-    console.log('puts');
+    console.log('err');
   }
 
   onSuccess(tipo: string) {

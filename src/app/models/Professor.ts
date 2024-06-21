@@ -6,5 +6,6 @@ export interface Professor {
   educationLevel: String,
   coordinator: boolean,
   coordination: Coordenadoria
-  teacherCode: String
+  teacherCode: String,
+  role: string
 }

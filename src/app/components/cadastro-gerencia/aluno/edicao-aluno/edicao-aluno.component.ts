@@ -104,7 +104,6 @@ export class EdicaoAlunoComponent implements OnInit {
         this.form.patchValue({ course: selectedCourse });
     }
 
-    console.log(this.form.value);
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 

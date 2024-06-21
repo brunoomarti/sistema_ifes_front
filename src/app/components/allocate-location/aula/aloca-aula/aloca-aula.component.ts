@@ -161,6 +161,14 @@ export class AlocaAulaComponent implements OnInit {
           backdropClass: 'backdropTwo'
         });
       } else {
+        console.log(this.form.value)
+
+        delete this.form.value.lesson.teacher.authorities;
+
+        this.form.value.lesson.students.forEach((x: { authorities: any; }) => {
+          delete x.authorities;
+        });
+
         this.allocateService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
       }
     } else {
@@ -204,7 +212,6 @@ export class AlocaAulaComponent implements OnInit {
     const aulasRestantes = aula.weeklyQuantity - aulasAlocadas;
 
     if (this.indexTimes.length > aulasRestantes){
-      console.log("eae")
       return `<li>Você não pode ultrapassar a quantidade de “Aulas por semana” pré-estabelecidas para essa aula. Quantidade de aulas não alocadas: <strong> ${aulasRestantes}</strong>.</li>`;
     } 
     return "";
@@ -228,7 +235,6 @@ export class AlocaAulaComponent implements OnInit {
           }
         } else { 
           if (this.selectedTimes.length > 0) {
-            console.log(this.selectedTimes.length);
             for (const x of this.selectedTimes) {
               for (const z of a.selectedTimes) {
                 if (x.startTime === z.startTime && x.endTime === z.endTime) {
@@ -300,7 +306,6 @@ export class AlocaAulaComponent implements OnInit {
         this.indexTimes.splice(index, 1);
       }
     }
-    console.log(this.indexTimes);
   }
 
 

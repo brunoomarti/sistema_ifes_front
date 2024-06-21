@@ -65,7 +65,6 @@ export class EdicaoProfessorComponent implements OnInit {
 
     const obj: Professor = this.data.professor;
     if (obj) {
-      console.log(obj)
       this.form.setValue({
         _id: obj._id,
         name: obj.name,
@@ -85,13 +84,10 @@ export class EdicaoProfessorComponent implements OnInit {
         const errors: string[] = [];
 
         if (coordenador){
-          console.log("sssss")
           const professoresDaCoordenacao = this.professores.filter(professor => professor.coordination._id == this.form.value.coordination);
          
           let coordenadorPresente;
           let nomeCoord;
-
-          console.log(professoresDaCoordenacao);
 
           professoresDaCoordenacao.forEach(professor => {
             if (professor.coordinator){
@@ -151,7 +147,6 @@ export class EdicaoProfessorComponent implements OnInit {
         this.form.patchValue({ coordination: selectedCoordination });
     }
 
-    console.log(this.form.value)
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 

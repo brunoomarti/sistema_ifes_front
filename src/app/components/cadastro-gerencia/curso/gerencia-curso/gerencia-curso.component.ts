@@ -58,7 +58,6 @@ export class GerenciaCursoComponent implements OnInit {
       data: { obj }
     });
 
-    console.log(obj);
 
     dialogRef.afterClosed().subscribe(() => {
       this.atualizaTabela();
@@ -97,7 +96,7 @@ export class GerenciaCursoComponent implements OnInit {
 
   
   mostrarMensagemErro(registros: any[]): void {
-    registros.map((a) => { console.log(a.name)})
+    registros.map((a) => { console.log()})
     
     const itensLista = registros.map(registro => {
       if (registro.acronym) {

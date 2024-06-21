@@ -90,7 +90,7 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
 
 
   mostrarMensagemErro(registros: any[]): void {
-    registros.map((a) => { console.log(a.name)})
+    registros.map((a) => { console.log()})
 
     const itensLista = registros.map(registro => {
       if (!registro.specialty) {

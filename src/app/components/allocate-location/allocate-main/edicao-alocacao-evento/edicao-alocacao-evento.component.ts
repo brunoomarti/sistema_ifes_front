@@ -78,7 +78,6 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
 
   ngOnInit(): void {
     const obj: Alocar = this.data;
-    console.log(this.data);
 
     this.localService.getLocaisAtivos().subscribe(locais => {
       this.locais = locais;
@@ -109,8 +108,6 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
       endTime: time.endTime.toString()
     }));
 
-    console.log(obj);
-
     this.formHistory.setValue({
       _id: 0,
       event: obj.alocacao.event,
@@ -127,7 +124,6 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
       changeType: 'Edição',
     });
 
-    console.log(this.formHistory.value);
 
     this.historyService.save(this.formHistory.value).subscribe(result => this.onSucess(), error => this.onFailed());
 

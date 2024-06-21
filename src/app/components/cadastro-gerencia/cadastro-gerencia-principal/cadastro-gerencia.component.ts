@@ -26,7 +26,6 @@ export class CadastroGerenciaComponent {
   }
 
   toggleSubMenu(tipo: string) {
-    console.log("Botão clicado:", tipo);
     if (tipo === 'cadastro') {
       this.subMenuOpenCadastro = !this.subMenuOpenCadastro;
       if (this.subMenuOptionsCadastro) {

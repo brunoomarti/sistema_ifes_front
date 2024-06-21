@@ -103,10 +103,8 @@ export class EdicaoLocalComponent implements OnInit {
 
     const equipamentoSelecionado: Equipamento | undefined = this.equipamentos[equipamentoIndex];
 
-    console.log(equipamentoSelecionado);
 
     if (equipamentoSelecionado && quantidade > 0) {
-      console.log(quantidade);
       const itemExistente = this.itensInseridos.find(item => item.equipment === equipamentoSelecionado);
 
       if (itemExistente) {
@@ -127,7 +125,6 @@ export class EdicaoLocalComponent implements OnInit {
 
   onSubmit() {
     this.form.patchValue({ equipments: this.itensInseridos });
-    console.log(this.form.value);
     if (this.form.valid){
       this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
     

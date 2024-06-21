@@ -5,5 +5,6 @@ export interface Aluno {
   name: string,
   registrationYear: string,
   studentCode: string,
-  course: Curso
+  course: Curso,
+  role: string
 }

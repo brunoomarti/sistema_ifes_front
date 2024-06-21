@@ -58,7 +58,6 @@ export class GerenciaLocalComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
     });
 
-    console.log(this.service.listar())
   }
 
   editar(local: { name: string }): void {

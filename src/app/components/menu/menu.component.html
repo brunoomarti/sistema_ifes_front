@@ -11,16 +11,22 @@
       </div>
       <div class="menuButtonGroup">
         
+        <button class="menuButton" [class.clicked]="selectedButton === 1" routerLink="/home">
+          <span class="material-symbols-outlined">home</span>Página inicial
+        </button>
         <ng-container *ngIf="role == 'ADMIN' || role == 'COORDINATOR'">
-          <button class="menuButton" [class.clicked]="selectedButton === 1" routerLink="/home">
-            <span class="material-symbols-outlined">home</span>Página inicial
-          </button>
           <button class="menuButton" [class.clicked]="selectedButton === 2" routerLink="/cadastro-gerencia">
             <span class="material-symbols-outlined">add</span>Gerenciar
           </button>
           <button class="menuButton" [class.clicked]="selectedButton === 3" routerLink="/importar-dados">
             <span class="material-symbols-outlined">database</span>Importar dados
           </button>
+          <button class="menuButton" [class.clicked]="selectedButton === 4" routerLink="/alocar-local">
+            <span class="material-symbols-outlined">school</span>Alocar
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="role == 'TEACHER'">
           <button class="menuButton" [class.clicked]="selectedButton === 4" routerLink="/alocar-local">
             <span class="material-symbols-outlined">school</span>Alocar
           </button>

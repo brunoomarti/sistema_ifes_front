@@ -62,7 +62,6 @@ export class NewEditEquipComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form.value);
     this.service.save(this.form.value).subscribe(result => this.onSucess(false), error => this.onFailed());
   }
 

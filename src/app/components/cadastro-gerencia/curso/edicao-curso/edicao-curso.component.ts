@@ -46,7 +46,6 @@ export class EdicaoCursoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log(this.data);
     if (this.data) {
       this.form.setValue({
         _id: this.data.obj._id,
@@ -115,7 +114,6 @@ export class EdicaoCursoComponent implements OnInit {
   }
 
   save() {
-    console.log(this.form.value);
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 

@@ -39,8 +39,6 @@ export class VerHistoricoAulaComponent implements OnInit {
 
   atualizaTabelaHistoricoAula() {
     this.service.listar().subscribe(historico => {
-      console.log(historico);
-      console.log(this.data.alocacao._id);
       this.historicoAula = historico.filter(item => item.allocation._id === this.data.alocacao._id);
     });
   }

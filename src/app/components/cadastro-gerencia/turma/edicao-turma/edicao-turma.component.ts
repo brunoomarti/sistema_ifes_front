@@ -114,7 +114,6 @@ export class EdicaoTurmaComponent implements OnInit {
   }
 
   save() {
-    console.log(this.form.value);
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 

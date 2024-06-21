@@ -74,7 +74,6 @@ export class CadastroLocalComponent implements OnInit {
       this.equipmentService.listar().subscribe(equipamentos => this.equipamentos = equipamentos);
     });
 
-    console.log(this.form.value)
   }
 
   novoEquipamento(): void {
@@ -90,10 +89,8 @@ export class CadastroLocalComponent implements OnInit {
 
     const equipamentoSelecionado: Equipamento | undefined = this.equipamentos[equipamentoIndex];
 
-    console.log(equipamentoSelecionado); 
 
     if (equipamentoSelecionado && quantidade > 0) {
-      console.log(quantidade);
       const itemExistente = this.itensInseridos.find(item => item.equipment === equipamentoSelecionado);
       
       if (itemExistente) {
@@ -144,9 +141,6 @@ export class CadastroLocalComponent implements OnInit {
         }
       );
     } else {
-      console.log(this.relacaoQuantiadeCapacidade());
-      console.log(this.form.get('amount')?.value);
-      console.log(this.form.get('capacity')?.value);
       const missingFields = [];
       if (this.form.get('name')?.hasError('required')) {
         missingFields.push('<li>Nome</li>');

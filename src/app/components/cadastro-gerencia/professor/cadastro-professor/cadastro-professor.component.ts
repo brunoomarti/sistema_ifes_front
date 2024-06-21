@@ -88,8 +88,6 @@ export class CadastroProfessorComponent implements OnInit {
           let coordenadorPresente;
           let nomeCoord;
 
-          console.log(professoresDaCoordenacao);
-
           professoresDaCoordenacao.forEach(professor => {
             if (professor.coordinator){
               coordenadorPresente = professor.coordinator;

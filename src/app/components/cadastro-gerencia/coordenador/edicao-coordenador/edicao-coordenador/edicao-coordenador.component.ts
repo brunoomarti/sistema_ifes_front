@@ -94,7 +94,6 @@ export class EdicaoCoordenadorComponent implements OnInit {
   }
 
   save() {
-    console.log(this.form.value);
     const selectedCoordination = this.coordenadorias.find(coord => coord._id == this.form.value.coordination);
 
     if (selectedCoordination) {

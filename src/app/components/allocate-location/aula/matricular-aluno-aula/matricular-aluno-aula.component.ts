@@ -65,6 +65,7 @@ export class MatricularAlunoAulaComponent {
     });
 
     const obj: Aula = this.data.aula;
+    console.log(obj)
     if (obj) {
       this.form.setValue({
         _id: obj._id,
@@ -80,8 +81,7 @@ export class MatricularAlunoAulaComponent {
 
   onSubmit() {
     this.indexAlunos.forEach(id => {
-      const selectedStudent = this.alunos.find(obj => obj._id == id);
-      console.log(selectedStudent);
+      const selectedStudent = this.alunos.find(obj => obj._id == id); 
       if (selectedStudent){
         this.selectedStudents.push(selectedStudent);
       }
@@ -91,8 +91,8 @@ export class MatricularAlunoAulaComponent {
 
     this.form.patchValue({ students: mergedStudents })
 
-    console.log(this.form.value);
-
+    delete this.form.value.teacher.authorities;
+ 
     this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
 
@@ -118,7 +118,6 @@ export class MatricularAlunoAulaComponent {
       if (index !== -1) {
         this.indexAlunos.splice(index, 1);
       }
-    }
-    console.log(this.indexAlunos);
+    } 
   }
 }

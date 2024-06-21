@@ -167,13 +167,9 @@ export class AlocaEventoComponent implements OnInit {
 
     this.alocacoes.forEach((a) => {
     if (selectedLocation?._id == a.location._id) {
-      console.log("Local Igual")
       if (this.form.value.startDate == a.startDate) {
-        console.log("Data Igual")
         if (this.form.value.startTime == a.startTime) {
-          console.log("HrInicio Igual")
           if (this.form.value.endTime == a.endTime) {
-            console.log("HrFim Igual");
             erros.push('<li>Já existe outra alocação para o mesmo período de tempo, data e local escolhidos.<li>');
             return;
           }
@@ -204,7 +200,6 @@ export class AlocaEventoComponent implements OnInit {
         this.indexTimes.splice(index, 1);
       }
     }
-    console.log(this.indexTimes);
   }
 
   onCancel(): void {

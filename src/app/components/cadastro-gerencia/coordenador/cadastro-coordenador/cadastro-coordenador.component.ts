@@ -102,8 +102,6 @@ export class CadastroCoordenadorComponent {
         this.form.patchValue({ coordination: selectedCoordination });
     }
 
-    console.log(this.form.value)
-
     this.service.save(this.form.value).subscribe(
       result => {
         const dialogData = {

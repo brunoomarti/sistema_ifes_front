@@ -19,19 +19,19 @@ export class AuthGuard implements CanActivate {
         if (userRole === 'ADMIN' || userRole === 'COORDINATOR') {
           return true;
         } else if (userRole === 'STUDENT') {
-          const allowedRoutes = ['/horarios'];
+          const allowedRoutes = ['/home', '/horarios'];
           if (allowedRoutes.includes(state.url)) {
             return true;
           } else {
-            this.router.navigate(['/horarios']);
+            this.router.navigate(['/home']);
             return false;
           }
         } else if (userRole === 'TEACHER') {
-          const allowedRoutes = ['/horarios'];
+          const allowedRoutes = ['/home', '/horarios', '/alocar-local/gerencia-aula', '/alocar-local'];
           if (allowedRoutes.includes(state.url)) {
             return true;
           } else {
-            this.router.navigate(['/horarios']);
+            this.router.navigate(['/home']);
             return false;
           }
         }
