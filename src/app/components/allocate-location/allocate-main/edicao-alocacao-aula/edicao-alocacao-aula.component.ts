@@ -141,6 +141,12 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
         changeType: 'Edição',
       });
 
+      delete this.form.value.lesson.teacher.authorities;
+
+      this.form.value.lesson.students.forEach((x: { authorities: any; }) => {
+        delete x.authorities;
+      });
+
       this.historyService.save(this.formHistory.value).subscribe(result => this.onSucess(), error => this.onFailed());
 
       const selectedClasse = this.turmas.find(findObj => findObj._id == this.form.value.classe);
@@ -158,7 +164,7 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
         this.form.patchValue({ location: selectedLocation });
         this.form.patchValue({ selectedTimes: this.selectedTimes })
       }
-      console.log(this.form.value)
+
       this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
     } else {
         const missingFields = [];
