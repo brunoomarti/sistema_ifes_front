@@ -125,10 +125,10 @@ export class EdicaoLocalComponent implements OnInit {
 
   onSubmit() {
     this.form.patchValue({ equipments: this.itensInseridos });
-    if (this.form.valid){
+    //if (this.form.valid){
       this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
     
-    } else {
+    /*} else {
       const missingFields = [];
       if (this.form.get('name')?.hasError('required')) {
         missingFields.push('<li>Nome</li>');
@@ -141,7 +141,7 @@ export class EdicaoLocalComponent implements OnInit {
       } else if (this.form.get('capacity')?.value < 0) {
         missingFields.push('<li>Selecione um Capacidade maior que zero</li>');
       } 
-
+      /*
       if (this.form.get('equipments')?.hasError('required')) {
         missingFields.push('<li>Equipamento Disponível</li>');
       } else if (this.form.get('equipments')?.value.length < 0) {
@@ -158,18 +158,18 @@ export class EdicaoLocalComponent implements OnInit {
         if (this.form.get('amount')?.value < this.form.get('capacity')?.value) {
           missingFields.push('<li>A capacidade do local não corresponde à quantidade de computadores ou carteiras.</li>');
         } 
-      }
+      } 
 
       const dialogDataForm = {
         title: 'Erro ao Editar',
         message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
-      };
+      }; 
 
       this.dialog.open(ModalDialogOkComponent, {
         data: dialogDataForm,
         backdropClass: 'backdrop'
       });
-    }
+    }*/
   }
 
   onCancel(): void {
