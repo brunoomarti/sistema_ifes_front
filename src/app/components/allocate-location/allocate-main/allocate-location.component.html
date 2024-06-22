@@ -16,7 +16,7 @@
           </button>
         </div>
 
-        <div class="buttonContainer">
+        <div class="buttonContainer" *ngIf="userRole === 'ADMIN' || userRole === 'COORDINATOR'">
           <button
             class="subMenuButton"
             routerLink="/alocar-local/gerencia-evento"
@@ -125,7 +125,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="changeHistory">
+        <ng-container matColumnDef="changeHistory" *ngIf="userRole === 'ADMIN' || userRole === 'COORDINATOR'">
           <th mat-header-cell *matHeaderCellDef>Histórico de Alterações</th>
           <td mat-cell *matCellDef="let alocacao">
             <button mat-button (click)="verHistoricoAula(alocacao)" class="button two">
@@ -156,11 +156,8 @@
             </div>
           </td>
         </ng-container>
-
-
-
-        <tr class="header-row" mat-header-row *matHeaderRowDef="['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule', 'changeHistory', 'actions']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule',  'changeHistory', 'actions']" [ngClass]="{'row-disabled': !row.active}"></tr>
+        <tr class="header-row" mat-header-row *matHeaderRowDef="userRole === 'ADMIN' || userRole === 'COORDINATOR' ? ['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule', 'changeHistory', 'actions'] : ['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule', 'actions']"></tr>
+        <tr mat-row *matRowDef="let row; columns: userRole === 'ADMIN' || userRole === 'COORDINATOR' ? ['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule', 'changeHistory', 'actions'] : ['discipline', 'teacher', 'class', 'location', 'date', 'weekDay', 'schedule', 'actions'];" [ngClass]="{'row-disabled': !row.active}"></tr>
       </table>
       <br>
     </div>
@@ -224,7 +221,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="changeHistory">
+        <ng-container matColumnDef="changeHistory" *ngIf="userRole === 'ADMIN' || userRole === 'COORDINATOR'">
           <th mat-header-cell *matHeaderCellDef>Histórico de Alterações</th>
           <td mat-cell *matCellDef="let alocacao">
             <button mat-button (click)="verHistoricoEvento(alocacao)" class="button two">
@@ -255,9 +252,8 @@
             </div>
           </td>
         </ng-container>
-
-        <tr class="header-row" mat-header-row *matHeaderRowDef="['event', 'description', 'applicant', 'location', 'date', 'schedule', 'changeHistory', 'actions']"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['event', 'description', 'applicant', 'location', 'date', 'schedule', 'changeHistory', 'actions']" [ngClass]="{'row-disabled': !row.active}"></tr>
+        <tr class="header-row" mat-header-row *matHeaderRowDef="userRole === 'ADMIN' || userRole === 'COORDINATOR' ? ['event', 'description', 'applicant', 'location', 'date', 'schedule', 'changeHistory', 'actions'] : ['event', 'description', 'applicant', 'location', 'date', 'schedule']"></tr>
+        <tr mat-row *matRowDef="let row; columns: userRole === 'ADMIN' || userRole === 'COORDINATOR' ? ['event', 'description', 'applicant', 'location', 'date', 'schedule', 'changeHistory', 'actions'] : ['event', 'description', 'applicant', 'location', 'date', 'schedule'];" [ngClass]="{'row-disabled': !row.active}"></tr>
       </table>
     </div>
   </div>

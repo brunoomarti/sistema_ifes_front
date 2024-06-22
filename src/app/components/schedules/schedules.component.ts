@@ -79,18 +79,34 @@ export class SchedulesComponent implements OnInit {
 
   onList() {
     const scheduleType = this.form.get('scheduleType')?.value;
-    if (scheduleType === 'Aluno') {
+    if (this.userRole === 'ADMIN' || this.userRole === 'COORDINATOR'){
+      if (scheduleType === 'Aluno') {
+        const dialogData = {
+          title: 'Listagem de alunos.',
+          tipo: scheduleType
+        };
+        this.openDialog(dialogData);
+      } else if (scheduleType === 'Professor') {
+        const dialogData = {
+          title: 'Listagem de professores.',
+          tipo: scheduleType
+        };
+        this.openDialog(dialogData);
+      }
+    }
+
+    if (this.userRole === 'STUDENT') {
       const dialogData = {
-        title: 'Listagem de alunos.',
-        tipo: scheduleType
-      };
-      this.openDialog(dialogData);
-    } else if (scheduleType === 'Professor') {
-      const dialogData = {
-        title: 'Listagem de professores.',
-        tipo: scheduleType
-      };
-      this.openDialog(dialogData);
+          title: 'Listagem de alunos.',
+          tipo: 'Aluno'
+        };
+        this.openDialog(dialogData);
+    } else if (this.userRole === 'TEACHER') {
+        const dialogData = {
+          title: 'Listagem de professores.',
+          tipo: 'Professor'
+        };
+        this.openDialog(dialogData);
     }
   }
 
@@ -111,7 +127,14 @@ export class SchedulesComponent implements OnInit {
   }
 
   onSubmit() {
-    const scheduleType = this.form.get('scheduleType')?.value;
+    let scheduleType = this.form.get('scheduleType')?.value; 
+
+    if (this.userRole === 'STUDENT' || this.userRole !== 'TEACHER'){
+      scheduleType = 'Aluno';
+    } else  if (this.userRole === 'TEACHER' || this.userRole !== 'STUDENT'){
+      scheduleType = 'Professor'
+    }
+
     const selectedSemester = this.periodos.find(
       (obj) => obj._id == this.form.value.schedulePeriod
     );
@@ -119,7 +142,7 @@ export class SchedulesComponent implements OnInit {
     if (selectedSemester) {
       this.semesterId = selectedSemester._id;
     }
-
+    
     if (scheduleType === 'Aluno') {
       const code = this.form.get('scheduleStudent')?.value;
 
@@ -147,7 +170,8 @@ export class SchedulesComponent implements OnInit {
         );
     } else if (scheduleType === 'Professor') {
       const code = this.form.get('scheduleTeacher')?.value;
-
+      console.log(code)
+      console.log(this.semesterId)
       this.service
         .findLessonsByTeacherCodeAndSemesterId(code, this.semesterId)
         .subscribe(

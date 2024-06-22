@@ -33,6 +33,8 @@ export class GerenciaAulaComponent implements OnInit {
   mensagemSnackbarAcerto: string = 'Disciplina excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir disciplina.';
   hoverText: string = 'Não alocado';
+  userRole: string | null = '';
+
   aulasAlocadasPorAula: Map<number, number> = new Map<number, number>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -78,6 +80,10 @@ export class GerenciaAulaComponent implements OnInit {
       aula.limiteMaximoAtingido = this.isLimiteMaximoAtingido(aula);
     });
 
+    if (typeof localStorage !== 'undefined') {
+      this.userRole = localStorage.getItem('role');
+    }
+    
     this.service.listar().subscribe(aulas => {
       this.aulas = aulas;
       this.dataSource = new MatTableDataSource<Aula>(this.aulas);

@@ -64,7 +64,7 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="actions">
+      <ng-container matColumnDef="actions" *ngIf="userRole === 'ADMIN' || userRole === 'COORDINATOR'">
         <th mat-header-cell *matHeaderCellDef>
           <div class="thButton">
             <div>Ações</div>
@@ -81,10 +81,10 @@
             <span class="material-symbols-outlined table-button-icon">delete</span>
           </button>
         </td>
-      </ng-container>
+      </ng-container> 
 
-      <tr class="header-row" mat-header-row *matHeaderRowDef="['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students', 'actions']"></tr>
-      <tr mat-row *matRowDef="let row; columns: ['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students', 'actions']"></tr>
+        <tr class="header-row" mat-header-row *matHeaderRowDef="userRole === 'ADMIN' || userRole === 'COORDINATOR' ? ['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students', 'actions'] : ['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students']"></tr>
+        <tr mat-row *matRowDef="let row; columns: userRole === 'ADMIN' || userRole === 'COORDINATOR' ? ['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students',  'actions'] : ['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students'];"></tr>
     </table>
 
     <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->

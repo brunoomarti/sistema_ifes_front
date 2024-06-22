@@ -39,6 +39,7 @@ export class AllocateLocationComponent implements OnInit {
   mensagemSnackbarAcerto: string = 'Alocação excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir alocação.';
   selectedFilter: string = 'Ambos';
+  userRole: string | null = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -87,6 +88,10 @@ export class AllocateLocationComponent implements OnInit {
   ngOnInit(): void {
     this.atualizaTabelaAula();
     this.atualizaTabelaEvento();
+
+    if (typeof localStorage !== 'undefined') {
+      this.userRole = localStorage.getItem('role');
+    }
   }
 
   atualizaTabelaAula() {
