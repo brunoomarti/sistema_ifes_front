@@ -122,13 +122,14 @@ export class EdicaoLocalComponent implements OnInit {
   excluirItemDaLista(index: number) {
     this.itensInseridos.splice(index, 1);
   }
+  
 
   onSubmit() {
     this.form.patchValue({ equipments: this.itensInseridos });
-    //if (this.form.valid){
+    if (this.form.valid){
       this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
     
-    /*} else {
+    } else {
       const missingFields = [];
       if (this.form.get('name')?.hasError('required')) {
         missingFields.push('<li>Nome</li>');
@@ -140,18 +141,6 @@ export class EdicaoLocalComponent implements OnInit {
         missingFields.push('<li>Capacidade</li>');
       } else if (this.form.get('capacity')?.value < 0) {
         missingFields.push('<li>Selecione um Capacidade maior que zero</li>');
-      } 
-      /*
-      if (this.form.get('equipments')?.hasError('required')) {
-        missingFields.push('<li>Equipamento Disponível</li>');
-      } else if (this.form.get('equipments')?.value.length < 0) {
-        missingFields.push('<li>Selecione no mínimo UM Equipamento</li>');
-      }
-
-      if (this.form.get('amount')?.hasError('required')) {
-        missingFields.push('<li>Quantidade</li>');
-      } else if (this.form.get('amount')?.value < 0) {
-        missingFields.push('<li>Selecione um Quantidade maior que zero</li>');
       } 
 
       if (this.relacaoQuantiadeCapacidade()){
@@ -169,7 +158,7 @@ export class EdicaoLocalComponent implements OnInit {
         data: dialogDataForm,
         backdropClass: 'backdrop'
       });
-    }*/
+    }
   }
 
   onCancel(): void {
