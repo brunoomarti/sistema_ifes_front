@@ -521,7 +521,7 @@ tr[mat-row].row-disabled {
 .password-container {
   position: relative;
   width: 100%;
-  margin-bottom: 15px; /* Adiciona espaço suficiente para a mensagem de erro */
+  margin-bottom: 10px; /* Adiciona espaço suficiente para a mensagem de erro */
 }
 
 .password-container input {
@@ -557,7 +557,7 @@ tr[mat-row].row-disabled {
 
 .error {
   position: absolute;
-  bottom: -20px; /* Ajuste conforme necessário */
+  bottom: -14px; /* Ajuste conforme necessário */
   left: 0;
   color: red;
   font-size: 12px;
