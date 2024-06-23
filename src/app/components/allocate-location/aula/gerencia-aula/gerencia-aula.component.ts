@@ -30,16 +30,14 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
     MatDialogModule,
     MatCheckboxModule,
     MatInputModule,
-    MatSort,
     MatSortModule
   ],
   templateUrl: './gerencia-aula.component.html',
   styleUrls: ['./gerencia-aula.component.css']
 })
-
 export class GerenciaAulaComponent implements OnInit {
-  aulas: any[] = [];
-  dataSource: any;
+  aulas: Aula[] = [];
+  dataSource = new MatTableDataSource<Aula>(this.aulas);
   displayedColumns: string[] = ['select', 'discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students', 'actions'];
   selection = new SelectionModel<Aula>(true, []);
   userRole: string | null = '';
@@ -63,6 +61,10 @@ export class GerenciaAulaComponent implements OnInit {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   calcularAulasAlocadas(alocacoes: Alocar[]): Map<number, number> {
@@ -87,12 +89,25 @@ export class GerenciaAulaComponent implements OnInit {
   atualizaTabela() {
     this.service.listar().subscribe(aulas => {
       this.aulas = aulas;
-      this.dataSource = new MatTableDataSource<Aula>(this.aulas);
+      this.dataSource.data = this.aulas;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
+      this.dataSource.sortingDataAccessor = (item: Aula, property: string) => {
+        console.log('Sorting', property, item);
+        switch (property) {
+          case 'discipline': return item.discipline.name.toLowerCase();
+          case 'teacher': return item.teacher.name.toLowerCase();
+          case 'semester': return item.semester.semester.toLowerCase()
+          default: return (item as any)[property];
+        }
+      };
 
-    console.log(this.aulas);
+      this.dataSource.filterPredicate = (data: Aula, filter: string) => {
+        return data.discipline.name.toLowerCase().includes(filter) ||
+                data.teacher.name.toLowerCase().includes(filter) ||
+                data.discipline.name.toLowerCase().includes(filter);
+      };
+    });
 
     this.allocateService.listar().subscribe(alocacoes => {
       this.aulasAlocadasPorAula = this.calcularAulasAlocadas(alocacoes);

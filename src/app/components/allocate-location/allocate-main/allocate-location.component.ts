@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AllocateService } from './service/allocate.service';
 import { Alocar } from '../../../models/Alocar';
 import { EventoService } from '../evento/service/evento.service';
@@ -14,6 +14,7 @@ import { EdicaoAlocacaoEventoComponent } from './edicao-alocacao-evento/edicao-a
 import { VerHistoricoAulaComponent } from './ver-historico-aula/ver-historico-aula.component';
 import { VerHistoricoEventoComponent } from './ver-historico-evento/ver-historico-evento.component';
 import { HistoryService } from './historyService/history.service';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-allocate-location',
@@ -24,10 +25,11 @@ import { HistoryService } from './historyService/history.service';
     MatTableModule,
     RouterLink,
     RouterLinkActive,
-    FormsModule
+    FormsModule,
+    MatSortModule
   ],
   templateUrl: './allocate-location.component.html',
-  styleUrl: './allocate-location.component.css'
+  styleUrls: ['./allocate-location.component.css']
 })
 export class AllocateLocationComponent implements OnInit {
 
@@ -35,13 +37,16 @@ export class AllocateLocationComponent implements OnInit {
   formHistoryEvento: FormGroup;
   alocacoesAula: any[] = [];
   alocacoesEvento: any[] = [];
-  dataSource: any;
+  dataSourceAula: any
+  dataSourceEvento: any;
   mensagemSnackbarAcerto: string = 'Alocação excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir alocação.';
   selectedFilter: string = 'Ambos';
   userRole: string | null = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatSort) sortEvento!: MatSort;
 
   constructor(
     private service: AllocateService,
@@ -83,7 +88,7 @@ export class AllocateLocationComponent implements OnInit {
       authorName: null,
       changeType: null,
     });
-   }
+  }
 
   ngOnInit(): void {
     this.atualizaTabelaAula();
@@ -94,19 +99,64 @@ export class AllocateLocationComponent implements OnInit {
     }
   }
 
+  applyFilterAula(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSourceAula.filterPredicate = (data: Alocar, filter: string) => {
+      return data.lesson.discipline.name.toLowerCase().includes(filter) ||
+             data.lesson.teacher.name.toLowerCase().includes(filter) ||
+             data.classe.name.toLowerCase().includes(filter) ||
+             data.location.name.toLowerCase().includes(filter) ||
+             data.weekDay.toLowerCase().includes(filter);
+    };
+    this.dataSourceAula.filter = filterValue;
+  }
+
+  applyFilterEvento(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.dataSourceEvento.filterPredicate = (data: Alocar, filter: string) => {
+      return data.event.name.toLowerCase().includes(filter) ||
+             data.applicant.toLowerCase().includes(filter) ||
+             data.location.name.toLowerCase().includes(filter);
+    };
+    this.dataSourceEvento.filter = filterValue;
+  }
+
   atualizaTabelaAula() {
     this.service.listar().subscribe(alocacoes => {
       this.alocacoesAula = alocacoes.filter(alocacao => alocacao.type === 'Aula');
-      this.dataSource = new MatTableDataSource<Alocar>(this.alocacoesAula);
-      this.dataSource.paginator = this.paginator;
+      this.dataSourceAula = new MatTableDataSource<Alocar>(this.alocacoesAula);
+      this.dataSourceAula.paginator = this.paginator;
+      this.dataSourceAula.sort = this.sort;
+      this.dataSourceAula.sortingDataAccessor = (item: Alocar, property: string) => {
+        console.log('Sorting', property, item);
+        switch (property) {
+          case 'discipline': return item.lesson.discipline.name.toLowerCase();
+          case 'teacher': return item.lesson.teacher.name.toLowerCase();
+          case 'class': return item.classe.name.toLowerCase();
+          case 'location': return item.location.name.toLowerCase();
+          case 'weekDay': return item.weekDay.toLowerCase();
+          default: return (item as any)[property];
+        }
+      };
     });
   }
 
   atualizaTabelaEvento() {
     this.service.listar().subscribe(alocacoes => {
       this.alocacoesEvento = alocacoes.filter(alocacao => alocacao.type === 'Evento');
-      this.dataSource = new MatTableDataSource<Alocar>(this.alocacoesEvento);
-      this.dataSource.paginator = this.paginator;
+      this.dataSourceEvento = new MatTableDataSource<Alocar>(this.alocacoesEvento);
+      this.dataSourceEvento.paginator = this.paginator;
+      this.dataSourceEvento.sortEvento = this.sortEvento;
+      this.dataSourceEvento.sortingDataAccessor = (item: Alocar, property: string) => {
+        console.log('Sorting', property, item);
+        switch (property) {
+          case 'event': return item.event.name.toLowerCase();
+          case 'applicant': return item.applicant.toLowerCase();
+          case 'location': return item.location.name.toLowerCase();
+          case 'schedule': return item.startTime;
+          default: return (item as any)[property];
+        }
+      };
     });
   }
 
@@ -204,7 +254,7 @@ export class AllocateLocationComponent implements OnInit {
   }
 
   deleteSuccess() {
-    this.snackBar.open('Alocação desativada com sucesso.', '', { duration: 5000, panelClass: ['errorSnackbar'] });
+    this.snackBar.open('Alocação desativada com sucesso.', '', { duration: 5000, panelClass: ['successSnackbar'] });
   }
 
   onSucess(excluir: boolean = false, evento: boolean) {

@@ -2,14 +2,14 @@ import { EdicaoCoordenadorComponent } from './../../edicao-coordenador/edicao-co
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CoordenadorService } from '../../service/coordenador.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ReloadService } from '../../../../../shared-services/reload.service';
+import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatIcon } from '@angular/material/icon';
 import { Coordenador } from '../../../../../models/Coordenador';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-coordenador',
@@ -18,7 +18,9 @@ import { MatPaginator } from '@angular/material/paginator';
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatSort,
+    MatSortModule
   ],
   templateUrl: './gerencia-coordenador.component.html',
   styleUrl: './gerencia-coordenador.component.css'
@@ -33,6 +35,7 @@ export class GerenciaCoordenadorComponent implements OnInit {
   mensagemSnackbarErro: string = 'Erro ao excluir coordenador.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: CoordenadorService,
@@ -51,7 +54,13 @@ export class GerenciaCoordenadorComponent implements OnInit {
       this.coordenadores = coordenadores;
       this.dataSource = new MatTableDataSource<Coordenador>(this.coordenadores);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   editar(coordenador: { name: string }): void {

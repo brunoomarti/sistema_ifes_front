@@ -98,7 +98,7 @@ export class AlocaAulaComponent implements OnInit {
 
     this.allocateService.listar().subscribe(alocacoes => {
       this.aulasAlocadasPorAula = this.calcularAulasAlocadas(alocacoes);
-    }); 
+    });
 
     this.listarHorarios();
 
@@ -171,7 +171,7 @@ export class AlocaAulaComponent implements OnInit {
       }
     } else {
       const missingFields = [];
-      
+
       if (this.form.get('classe')?.hasError('required')) {
         missingFields.push('<li>Selecione uma Turma</li>');
       }
@@ -187,11 +187,11 @@ export class AlocaAulaComponent implements OnInit {
       if (this.form.get('weekDay')?.hasError('required')) {
         missingFields.push('<li>Selecione o Dia da Semana</li>');
       }
-      
+
       if (this.selectedTimes.length <= 0) {
         missingFields.push('<li>Selecione um horário</li>');
       }
-      
+
       const dialogDataForm = {
         title: 'Erro ao Alocar',
         message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join('')}`,
@@ -211,7 +211,7 @@ export class AlocaAulaComponent implements OnInit {
 
     if (this.indexTimes.length > aulasRestantes){
       return `<li>Você não pode ultrapassar a quantidade de “Aulas por semana” pré-estabelecidas para essa aula. Quantidade de aulas não alocadas: <strong> ${aulasRestantes}</strong>.</li>`;
-    } 
+    }
     return "";
   }
 
@@ -225,13 +225,13 @@ export class AlocaAulaComponent implements OnInit {
       if (selectedLocation?._id === a.location._id && this.form.value.weekDay === a.weekDay) {
         if (periodo === "dia") {
           if (this.form.value.startDate === a.startDate && this.form.value.endDate === a.endDate) {
-            if (this.selectedTimes.length === a.selectedTimes.length && 
+            if (this.selectedTimes.length === a.selectedTimes.length &&
                 this.selectedTimes.every((time, index) => time.startTime === a.selectedTimes[index].startTime && time.endTime === a.selectedTimes[index].endTime)) {
               erros.push('<li>Já existe outra alocação para o mesmo período de tempo, dia da semana e local escolhidos.</li>');
-              return erros; 
+              return erros;
             }
           }
-        } else { 
+        } else {
           if (this.selectedTimes.length > 0) {
             for (const x of this.selectedTimes) {
               for (const z of a.selectedTimes) {
@@ -245,10 +245,10 @@ export class AlocaAulaComponent implements OnInit {
         }
       }
     }
-  
+
     return erros;
   }
-  
+
   calcularAulasAlocadas(alocacoes: Alocar[]): Map<number, number> {
     const aulasMap = new Map<number, number>();
 
@@ -291,9 +291,9 @@ export class AlocaAulaComponent implements OnInit {
         startTime: horario.startTime,
         endTime: horario.endTime
       }));
+      console.log(this.horarios);
     });
   }
-
 
   onCheckboxChange(event: any, horario: any) {
     if (event.target.checked) {

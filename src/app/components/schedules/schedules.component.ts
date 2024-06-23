@@ -10,6 +10,7 @@ import { ListagemComponent } from './listagem/listagem.component';
 import { SharedService } from '../../shared-services/shared.service';
 import { AlunoService } from '../cadastro-gerencia/aluno/service/aluno.service';
 import { ProfessorService } from '../cadastro-gerencia/professor/service/professor.service';
+import { ModalDialogOkComponent } from '../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
 
 @Component({
   selector: 'app-schedules',
@@ -79,17 +80,17 @@ export class SchedulesComponent implements OnInit {
 
   onList() {
     const scheduleType = this.form.get('scheduleType')?.value;
-    if (this.userRole === 'ADMIN' || this.userRole === 'COORDINATOR'){
+    if (this.userRole === 'ADMIN' || this.userRole === 'COORDINATOR') {
       if (scheduleType === 'Aluno') {
         const dialogData = {
           title: 'Listagem de alunos.',
-          tipo: scheduleType
+          tipo: scheduleType,
         };
         this.openDialog(dialogData);
       } else if (scheduleType === 'Professor') {
         const dialogData = {
           title: 'Listagem de professores.',
-          tipo: scheduleType
+          tipo: scheduleType,
         };
         this.openDialog(dialogData);
       }
@@ -97,35 +98,40 @@ export class SchedulesComponent implements OnInit {
 
     if (this.userRole === 'STUDENT') {
       const dialogData = {
-          title: 'Listagem de alunos.',
-          tipo: 'Aluno'
-        };
-        this.openDialog(dialogData);
+        title: 'Listagem de alunos.',
+        tipo: 'Aluno',
+      };
+      this.openDialog(dialogData);
     } else if (this.userRole === 'TEACHER') {
-        const dialogData = {
-          title: 'Listagem de professores.',
-          tipo: 'Professor'
-        };
-        this.openDialog(dialogData);
+      const dialogData = {
+        title: 'Listagem de professores.',
+        tipo: 'Professor',
+      };
+      this.openDialog(dialogData);
     }
   }
 
   openDialog(data: any): void {
     const dialogRef = this.dialog.open(ListagemComponent, {
       data: data,
-      backdropClass: 'backdrop'
+      backdropClass: 'backdrop',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result && result.tipo === 'Aluno') {
-        this.form.get('scheduleStudent')?.setValue(result.objetoSelecionado.studentCode);
+        this.form
+          .get('scheduleStudent')
+          ?.setValue(result.objetoSelecionado.studentCode);
       } else {
         this.professorSelecionado = result;
-        this.form.get('scheduleTeacher')?.setValue(result.objetoSelecionado.teacherCode);
+        this.form
+          .get('scheduleTeacher')
+          ?.setValue(result.objetoSelecionado.teacherCode);
       }
     });
   }
 
+<<<<<<< Updated upstream
   onSubmit() {
     let scheduleType = "";
 
@@ -136,6 +142,18 @@ export class SchedulesComponent implements OnInit {
     } else {
       scheduleType = this.form.get('scheduleType')?.value;
     }
+=======
+  openDialogOk(data: any): void {
+    this.dialog.open(ModalDialogOkComponent, {
+      data: data,
+      backdropClass: 'backdrop',
+    });
+  }
+
+  onSubmit() {
+    const scheduleType = this.form.get('scheduleType')?.value;
+    const missingFields: string[] = [];
+>>>>>>> Stashed changes
 
     console.log(scheduleType)
 
@@ -143,23 +161,52 @@ export class SchedulesComponent implements OnInit {
       (obj) => obj._id == this.form.value.schedulePeriod
     );
 
-    if (selectedSemester) {
-      this.semesterId = selectedSemester._id;
+    if (scheduleType === 'Aluno') {
+      if (this.form.get('scheduleStudent')?.value === null) {
+        missingFields.push('<li>Matrícula do aluno</li>');
+      }
+    } else if (scheduleType === 'Professor') {
+      if (this.form.get('scheduleTeacher')?.value === null) {
+        missingFields.push('<li>Código do professor</li>');
+      }
     }
 
+<<<<<<< Updated upstream
     if (scheduleType === 'Aluno') {
       const code = this.form.get('scheduleStudent')?.value;
       this.alunoService
         .idByCode(code)
         .subscribe(
+=======
+    if (selectedSemester) {
+      this.semesterId = selectedSemester._id;
+    } else {
+      missingFields.push('<li>Semestre</li>');
+    }
+
+    if (missingFields.length > 0) {
+      const dialogDataForm = {
+        title: 'Erro ao pesquisar',
+        message: `É necessário que os seguintes campos sejam preenchidos: ${missingFields.join(
+          ''
+        )}`,
+      };
+      this.openDialogOk(dialogDataForm);
+    } else {
+      if (scheduleType === 'Aluno') {
+        const code = this.form.get('scheduleStudent')?.value;
+
+        this.alunoService.idByCode(code).subscribe(
+>>>>>>> Stashed changes
           (result) => {
             this.alunoSelecionado = result;
           },
           (error) => {
-            console.log("não achou aluno")
+            console.log('não achou aluno');
           }
         );
 
+<<<<<<< Updated upstream
       this.service
         .findLessonsByStudentCodeAndSemesterId(code, this.semesterId)
         .subscribe(
@@ -187,6 +234,35 @@ export class SchedulesComponent implements OnInit {
             this.onFailed();
           }
         );
+=======
+        this.service
+          .findLessonsByStudentCodeAndSemesterId(code, this.semesterId)
+          .subscribe(
+            (result) => {
+              this.horarioIndividual = result;
+              this.onSuccess(scheduleType);
+            },
+            (error) => {
+              this.onFailed();
+            }
+          );
+      } else if (scheduleType === 'Professor') {
+        const code = this.form.get('scheduleTeacher')?.value;
+        console.log(code);
+        console.log(this.semesterId);
+        this.service
+          .findLessonsByTeacherCodeAndSemesterId(code, this.semesterId)
+          .subscribe(
+            (result) => {
+              this.horarioIndividual = result;
+              this.onSuccess(scheduleType);
+            },
+            (error) => {
+              this.onFailed();
+            }
+          );
+      }
+>>>>>>> Stashed changes
     }
   }
 
@@ -196,11 +272,19 @@ export class SchedulesComponent implements OnInit {
 
   onSuccess(tipo: string) {
     if (tipo === 'Aluno') {
-      const obj = { name: this.alunoSelecionado.name, registration: this.alunoSelecionado.studentCode, type: 'Aluno' };
+      const obj = {
+        name: this.alunoSelecionado.name,
+        registration: this.alunoSelecionado.studentCode,
+        type: 'Aluno',
+      };
       this.sharedService.setData(obj);
       this.form.get('scheduleStudent')?.setValue('');
     } else {
-      const obj = { name: this.professorSelecionado.objetoSelecionado.name, registration: this.professorSelecionado.objetoSelecionado.teacherCode, type: 'Professor' };
+      const obj = {
+        name: this.professorSelecionado.objetoSelecionado.name,
+        registration: this.professorSelecionado.objetoSelecionado.teacherCode,
+        type: 'Professor',
+      };
       this.sharedService.setData(obj);
       this.form.get('scheduleTeacher')?.setValue('');
     }
@@ -229,30 +313,47 @@ export class SchedulesComponent implements OnInit {
     ];
 
     const diasSemana = [
-      'Domingo',
       'Segunda-feira',
       'Terça-feira',
       'Quarta-feira',
       'Quinta-feira',
       'Sexta-feira',
       'Sábado',
+      'Domingo',
     ];
 
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 6; i++) { // Corrigido para considerar somente dias úteis
       this.tabela[i] = [];
-      const diaSemana = diasSemana[i-1];
-      for (let j = 0; j < 17; j++) {
-        const horario = horarios[j-1];
-        if (i !== 0 && i !== 7) {
-          this.preencheCelula(diaSemana, horario, i, j, tipo);
-        } else {
-          this.tabela[i][j] = '';
+      const diaSemana = diasSemana[i];
+      for (let j = 0; j < 16; j++) {
+        const horario = horarios[j];
+        this.preencheCelula(diaSemana, horario, i, j, tipo);
+      }
+    }
+  }
+
+  preencheTabela() {
+    const table = document.querySelector('.scheduleTable') as HTMLTableElement;
+
+    for (let i = 0; i < 6; i++) { // Ajustado para considerar somente dias úteis
+      const row = table.querySelectorAll(`.tableContent:nth-child(${i + 3}) td`);
+
+      for (let j = 0; j < 16; j++) {
+        if (row[j]) {
+          row[j].textContent = this.tabela[i][j];
         }
       }
     }
   }
 
   preencheCelula(diaSemana: string, horario: string, i: number, j: number, tipo: string) {
+  preencheCelula(
+    diaSemana: string,
+    horario: string,
+    i: number,
+    j: number,
+    tipo: string
+  ) {
     this.horarioIndividual.forEach((element) => {
       element.allocations.forEach((allocation) => {
         if (allocation.weekDay === diaSemana) {
@@ -260,6 +361,7 @@ export class SchedulesComponent implements OnInit {
             allocation.selectedTimes.forEach((time) => {
               if (time.startTime === horario) {
                 if (tipo === 'Aluno'){
+                if (tipo === 'Aluno') {
                   const firstName = element.teacher.name.split(' ')[0];
                   this.tabela[i][j] =
                     firstName +
@@ -277,33 +379,41 @@ export class SchedulesComponent implements OnInit {
                 }
               }
             });
+          }
         }
-      }
       });
     });
   }
 
-  preencheTabela() {
-    const table = document.querySelector('.scheduleTable') as HTMLTableElement;
-
-    for (let i = 2; i < 7; i++) {
-      for (let j = 1; j < 17; j++) {
-        const cell = table.rows[i].cells[j];
-        cell.textContent = this.tabela[i][j];
-      }
-    }
-  }
-
   onPrint() {
-    const aluno = this.alunoSelecionado.name;
-    const matricula = this.alunoSelecionado.studentCode;
+    const scheduleType = this.form.get('scheduleType')?.value;
+    const aluno = this.alunoSelecionado?.name;
+    const matricula = this.alunoSelecionado?.studentCode;
+    const professor = this.professorSelecionado?.objetoSelecionado?.name;
+    const professorCode = this.professorSelecionado?.objetoSelecionado?.teacherCode;
     const dataImpressao = new Date().toLocaleString();
+    const missingFields: string[] = [];
 
-    let printContent = `
+    if ((scheduleType === 'Aluno' && !aluno) || (scheduleType === 'Professor' && !professor)) {
+      missingFields.push('<li>Pesquise por um aluno ou professor antes de imprimir.</li>');
+    }
+
+    if (missingFields.length > 0) {
+      const dialogDataForm = {
+        title: 'Erro ao pesquisar',
+        message: `${missingFields.join(
+          ''
+        )}`,
+      };
+      this.openDialogOk(dialogDataForm);
+    } else {
+      let printContent = `
       <!DOCTYPE html>
       <html>
       <head>
-        <title>Horário do Aluno</title>
+        <title>Horário do ${
+          scheduleType === 'Aluno' ? 'Aluno' : 'Professor'
+        }</title>
         <style>
           @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
           @import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
@@ -448,23 +558,44 @@ export class SchedulesComponent implements OnInit {
           </div>
           <div class="header">
             <h1>RELATÓRIO DE AULAS</h1>
-            <h2>Aluno: ${aluno}</h2>
-            <h2>Matrícula: ${matricula}</h2>
+            <h2>${
+              scheduleType === 'Aluno'
+                ? 'Aluno: ' + aluno
+                : 'Professor: ' + professor
+            }</h2>
+            ${
+              scheduleType === 'Aluno'
+                ? `<h2>Matrícula: ${matricula}</h2>`
+                : `<h2>Código: ${professorCode}</h2>`
+            }
           </div>
           <div class="separator"></div>
           <p class="bodyText">Data de requisição: ${dataImpressao}</p>
           <div class="separator"></div>
     `;
 
-    const diasSemanaOrdenados = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
+      const diasSemanaOrdenados = [
+        'Segunda-feira',
+        'Terça-feira',
+        'Quarta-feira',
+        'Quinta-feira',
+        'Sexta-feira',
+        'Sábado',
+        'Domingo',
+      ];
 
-    diasSemanaOrdenados.forEach(dia => {
-        const aulasDoDia = this.horarioIndividual.filter(item =>
-            item.allocations.some(aula => aula.weekDay === dia)
+      const timeToMinutes = (time: String): number => {
+        const [hours, minutes] = time.split(':').map(Number);
+        return hours * 60 + minutes;
+      };
+
+      diasSemanaOrdenados.forEach((dia) => {
+        const aulasDoDia = this.horarioIndividual.filter((item) =>
+          item.allocations.some((aula) => aula.weekDay === dia)
         );
 
         if (aulasDoDia.length > 0) {
-            printContent += `
+          printContent += `
             <h2>${dia}</h2>
             <div class="tabelaDia">
               <table>
@@ -475,41 +606,50 @@ export class SchedulesComponent implements OnInit {
                 </tr>
             `;
 
-            aulasDoDia.forEach(item => {
-                item.allocations.forEach(aula => {
-                    const horarios = aula.selectedTimes.map(time =>
-                        `<tr class="tableBody">
-                          <td class="horarioCol">${time.startTime} - ${time.endTime}</td>
-                          <td>${item.discipline.name}</td>
-                          <td>${aula.location.name}</td>
-                        </tr>`
-                    ).join('');
-                    printContent += horarios;
-                });
-            });
+          // Ordenar as aulas por horário de início
+          const sortedAulas = aulasDoDia.flatMap(item =>
+            item.allocations
+              .filter(aula => aula.weekDay === dia)
+              .flatMap(aula => aula.selectedTimes.map(time => ({
+                startTime: time.startTime,
+                endTime: time.endTime,
+                discipline: item.discipline.name,
+                location: aula.location.name
+              })))
+          ).sort((a, b) => timeToMinutes(a.startTime) - timeToMinutes(b.startTime));
 
+          sortedAulas.forEach(aula => {
             printContent += `
+              <tr class="tableBody">
+                <td class="horarioCol">${aula.startTime} - ${aula.endTime}</td>
+                <td>${aula.discipline}</td>
+                <td>${aula.location}</td>
+              </tr>`;
+          });
+
+          printContent += `
               </table>
             </div>
             <div class="separator"></div>
             `;
         }
-    });
+      });
 
-    printContent += `
+      printContent += `
         </div>
       </body>
       </html>
     `;
 
-    const printWindow = window.open('', '_blank', 'width=800,height=600');
+      const printWindow = window.open('', '_blank', 'width=800,height=600');
 
-    if (printWindow) {
-      printWindow.document.write(printContent);
-      printWindow.document.close();
-      setTimeout(() => {
-        printWindow?.print();
-      }, 500); // 500 milissegundos de atraso
+      if (printWindow) {
+        printWindow.document.write(printContent);
+        printWindow.document.close();
+        setTimeout(() => {
+          printWindow?.print();
+        }, 500); // 500 milissegundos de atraso
+      }
     }
   }
 }

@@ -10,15 +10,19 @@
 
   <div class="boxSize">
 
-    <table mat-table [dataSource]="professores">
+    <div class="newInput addSpace">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Pesquise pelo nome, grau de formação ou matrícula do professor">
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
         <td mat-cell *matCellDef="let professor"> {{ professor.name }} <td>
       </ng-container>
 
       <ng-container matColumnDef="educationLevel">
-        <th mat-header-cell *matHeaderCellDef>Grau de Formação</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Grau de Formação</th>
         <td mat-cell *matCellDef="let professor"> {{ professor.educationLevel }} <td>
       </ng-container>
 
@@ -30,7 +34,7 @@
       </ng-container>
 
       <ng-container matColumnDef="coordination">
-        <th mat-header-cell *matHeaderCellDef>Coordenação</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Coordenação</th>
         <td mat-cell *matCellDef="let professor">
           {{ professor.coordination ? professor.coordination.name : 'Sem Coordenação'}}
         <td>
@@ -64,7 +68,7 @@
       <tr mat-row *matRowDef="let row; columns: ['name', 'educationLevel', 'coordinator', 'coordination', 'teacherCode', 'actions']"></tr>
     </table>
 
-    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
+    <mat-paginator pageSize="10" showFirstLastButtons></mat-paginator>
 
   </div>
 </div>

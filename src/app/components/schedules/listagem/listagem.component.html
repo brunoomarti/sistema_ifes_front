@@ -3,24 +3,85 @@
 
   <form [formGroup]="form">
     <div class="newInput" *ngIf="data.tipo === 'Aluno'">
-      <select formControlName="student" required>
-        <option *ngFor="let aluno of listagemAlunos" [value]="aluno._id">
-          {{ aluno.name }} ({{ aluno.studentCode }})
-        </option>
-      </select>
+
+      <div class="newInput addSpace">
+        <input matInput (keyup)="applyFilterStudent($event)" placeholder="Pesquise pelo nome ou matrícula do aluno">
+      </div>
+
+      <table mat-table [dataSource]="listagemAlunos">
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let aluno">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="$event ? toggleSelection(aluno, 'student') : null"
+              [checked]="selectionStudent.isSelected(aluno)"
+              [attr.disabled]="selectionStudent.hasValue() && !selectionStudent.isSelected(aluno) ? true : null"
+            >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let aluno">{{ aluno.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="course">
+          <th mat-header-cell *matHeaderCellDef>Curso</th>
+          <td mat-cell *matCellDef="let aluno">{{ aluno.course.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="studentCode">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let aluno">{{ aluno.studentCode }}</td>
+        </ng-container>
+
+        <tr class="header-row" mat-header-row *matHeaderRowDef="displayedColumnsAlunos"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsAlunos;"></tr>
+      </table>
+      <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator>
     </div>
 
     <div class="newInput" *ngIf="data.tipo === 'Professor'">
-      <select formControlName="teacher" required>
-        <option *ngFor="let professor of listagemProfessores" [value]="professor._id">
-          {{ professor.name }} ({{ professor.teacherCode }})
-        </option>
-      </select>
+
+      <div class="newInput addSpace">
+        <input matInput (keyup)="applyFilterTeacher($event)" placeholder="Pesquise pelo nome ou matrícula do professor">
+      </div>
+
+      <table mat-table [dataSource]="listagemProfessores">
+        <ng-container matColumnDef="select">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let professor">
+            <mat-checkbox
+              (click)="$event.stopPropagation()"
+              (change)="$event ? toggleSelection(professor, 'teacher') : null"
+              [checked]="selectionTeacher.isSelected(professor)"
+              [attr.disabled]="selectionTeacher.hasValue() && !selectionTeacher.isSelected(professor) ? true : null"
+            >
+            </mat-checkbox>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nome</th>
+          <td mat-cell *matCellDef="let professor">{{ professor.name }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="teacherCode">
+          <th mat-header-cell *matHeaderCellDef>Código</th>
+          <td mat-cell *matCellDef="let professor">{{ professor.teacherCode }}</td>
+        </ng-container>
+
+        <tr class="header-row" mat-header-row *matHeaderRowDef="displayedColumnsProfessores"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumnsProfessores;"></tr>
+      </table>
+      <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator>
     </div>
 
     <div class="buttonGroupForm">
       <button class="button two" (click)="onCancel()">Cancelar</button>
-      <button class="button one" (click)="onSubmit()">Inserir</button>
+      <button class="button one" [disabled]="!form.valid" (click)="onSubmit()">Inserir</button>
     </div>
   </form>
 </div>

@@ -10,15 +10,19 @@
 
   <div class="boxSize">
 
-    <table mat-table [dataSource]="coordenadores">
+    <div class="newInput addSpace">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Pesquise pelo nome do coordenador">
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
         <td mat-cell *matCellDef="let coordenador"> {{ coordenador.name }} <td>
       </ng-container>
 
       <ng-container matColumnDef="coordination">
-        <th mat-header-cell *matHeaderCellDef>Coordenadoria</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Coordenadoria</th>
         <td mat-cell *matCellDef="let coordenador"> {{ coordenador.coordination.name }} <td>
       </ng-container>
 
@@ -47,7 +51,7 @@
       <tr mat-row *matRowDef="let row; columns: ['name', 'coordination', 'actions']"></tr>
     </table>
 
-    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
+    <mat-paginator pageSize="10" showFirstLastButtons></mat-paginator>
 
   </div>
 </div>

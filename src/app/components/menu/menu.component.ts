@@ -4,7 +4,9 @@ import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/ro
 import { filter } from 'rxjs';
 import { SharedService } from '../../shared-services/shared.service';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogSimNaoComponent } from '../modal-dialog/modal-dialog-sim-nao/modal-dialog-sim-nao.component';
+import { ModalDialogPasswordChangeComponent } from '../modal-dialog/modal-dialog-password-change/modal-dialog-password-change.component';
 
 @Component({
   selector: 'app-menu',
@@ -29,7 +31,9 @@ export class MenuComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private dialog: MatDialog,
+    private dialogPassword: MatDialog
   ) {}
 
   ngOnInit() {
@@ -45,7 +49,7 @@ export class MenuComponent implements OnInit {
         this.userName = localStorage.getItem('username');
         this.role = localStorage.getItem("role");
       }
-      
+
       this.firstName = this.userName?.split(' ')[0] ?? '';
 
       if (this.role === 'STUDENT'){
@@ -74,10 +78,14 @@ export class MenuComponent implements OnInit {
   }
 
   logout(){
-    localStorage.removeItem('auth-token');
-    localStorage.removeItem('username');
-    localStorage.removeItem("role");
-    localStorage.removeItem("student_code");
-    window.location.reload();
+    this.dialog.open(ModalDialogSimNaoComponent, {
+      backdropClass: 'backdropTwo'
+    });
+  }
+
+  passwordChange(){
+    this.dialogPassword.open(ModalDialogPasswordChangeComponent, {
+      backdropClass: 'backdropTwo'
+    });
   }
 }

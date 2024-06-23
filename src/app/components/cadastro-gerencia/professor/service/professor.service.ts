@@ -45,9 +45,12 @@ export class ProfessorService {
   remove(_id: number) {
     return this.httpClient.delete(`${this.API}/${_id}`);
   }
-  
+
   getRegistrosUsandoProfessor(localId: number): Observable<any[]> {
     return this.httpClient.get<any[]>(`${this.API}/${localId}/records`);
   }
 
+  listarPaginado(page: number, size: number): Observable<Professor[]> {
+    return this.httpClient.get<Professor[]>(`${this.API}?page=${page}&size=${size}`);
+  }
 }

@@ -4,13 +4,13 @@ import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ProfessorService } from '../service/professor.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReloadService } from '../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Professor } from '../../../../models/Professor';
 import { EdicaoProfessorComponent } from '../edicao-professor/edicao-professor.component';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-professor',
@@ -19,7 +19,9 @@ import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/mo
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatSort,
+    MatSortModule
   ],
   templateUrl: './gerencia-professor.component.html',
   styleUrl: './gerencia-professor.component.css'
@@ -32,13 +34,12 @@ export class GerenciaProfessorComponent implements OnInit {
   mensagemSnackbarErro: string = 'Erro ao excluir professor.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: ProfessorService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private reloadService: ReloadService,
     public dialog: MatDialog,
   ) { }
 
@@ -51,7 +52,13 @@ export class GerenciaProfessorComponent implements OnInit {
       this.professores = professores;
       this.dataSource = new MatTableDataSource<Professor>(this.professores);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   editar(professor: { name: string }): void {
@@ -69,7 +76,7 @@ export class GerenciaProfessorComponent implements OnInit {
   excluir(professor: Professor): void {
     this.service.getRegistrosUsandoProfessor(professor._id).subscribe(registros => {
       if (registros.length > 0) {
-        this.mostrarMensagemErro(registros); 
+        this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir este professor?');
         if (confirmacao) {
@@ -84,6 +91,7 @@ export class GerenciaProfessorComponent implements OnInit {
     });
   }
 
+
   mostrarMensagemErro(registros: any[]): void {
     let cont = 1;
 
@@ -97,10 +105,10 @@ export class GerenciaProfessorComponent implements OnInit {
     const dialogDataForm = {
       title: 'Erro ao Excluir Aluno',
       message: `
-    <div mat-dialog-content> 
+    <div mat-dialog-content>
       <p>Exclua os seguintes registros primeiramente:</p>
       <span>Total de aulas do professor: <strong>${itensLista.length}</strong></span>
-      <ul> 
+      <ul>
         ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
       </ul>
     </div>

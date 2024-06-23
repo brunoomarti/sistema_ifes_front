@@ -21,4 +21,8 @@ export class LoginService {
       })
     )
   }
+
+  changePassword(login: string, password: string){
+    //código aqui
+  }
 }

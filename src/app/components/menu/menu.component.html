@@ -7,10 +7,11 @@
         <div>
           <p class="userName">{{ firstName }}</p>
           <p class="userOccupation">{{ tipoUsuario }}</p>
+          <p class="passwordChange" (click)="passwordChange()">Alterar senha</p>
         </div>
       </div>
       <div class="menuButtonGroup">
-        
+
         <button class="menuButton" [class.clicked]="selectedButton === 1" routerLink="/home">
           <span class="material-symbols-outlined">home</span>Página inicial
         </button>
@@ -31,7 +32,7 @@
             <span class="material-symbols-outlined">school</span>Alocar
           </button>
         </ng-container>
-        
+
         <button class="menuButton" [class.clicked]="selectedButton === 5" routerLink="/horarios">
           <span class="material-symbols-outlined">schedule</span>Horários</button>
         <button (click)="logout()" class="menuButton" id="logout"><span class="material-symbols-outlined"  id="logout" >logout</span>Sair</button>

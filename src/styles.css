@@ -521,6 +521,7 @@ tr[mat-row].row-disabled {
 .password-container {
   position: relative;
   width: 100%;
+  margin-bottom: 15px; /* Adiciona espaço suficiente para a mensagem de erro */
 }
 
 .password-container input {
@@ -545,19 +546,27 @@ tr[mat-row].row-disabled {
 }
 
 .login-visibility {
-  font-variation-settings:
-  'opsz' 20,
-  'wght' 300;
+  font-variation-settings: 'opsz' 20, 'wght' 300;
   color: #9a9a9a;
-  font-size: 5px;
+  font-size: 20px;
 }
 
 .login-visibility.dark {
   color: #555;
 }
 
+.error {
+  position: absolute;
+  bottom: -20px; /* Ajuste conforme necessário */
+  left: 0;
+  color: red;
+  font-size: 12px;
+  width: 100%;
+  white-space: nowrap;
+}
+
 .addSpace {
-  margin: 0 0 10px 0;
+  margin: 0 0 5px 0;
 }
 
 #barcodeInput {

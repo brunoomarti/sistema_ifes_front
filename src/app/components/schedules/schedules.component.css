@@ -1,3 +1,8 @@
+.scheduleTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
 .scheduleTable th:not(.primary-cell),
 .scheduleTable td:not(.primary-cell) {
   padding: 8px;
@@ -10,6 +15,7 @@
 .scheduleTable .tableContent th,
 .scheduleTable .tableContent td {
   height: 27.5px;
+  text-align: center;
 }
 
 .scheduleTable .tableContent th,
@@ -19,18 +25,13 @@
   border: 1px solid var(--light-gray);
 }
 
-.scheduleTable {
-  border-collapse: collapse;
-  width: 100%;
-}
-
 .headerRow th:not(.primary-cell) {
   font-weight: 800;
   background-color: var(--primary-color);
   color: white;
 }
 
-.tableContent th:not(.weekDay) {
+.tableContent td:not(.weekDay) {
   font-weight: 400;
   font-size: var(--smallest-font-size);
   white-space: pre-line;
@@ -51,7 +52,7 @@
 }
 
 .headerRow th:nth-child(2),
-.headerRow th:nth-child(3){
+.headerRow th:nth-child(3) {
   border-right: white solid 1px;
 }
 
@@ -64,16 +65,18 @@
 }
 
 .scheduleRow th:nth-child(odd),
-.tableContent th:nth-child(even) {
+.tableContent th:nth-child(even),
+.scheduleRow td:nth-child(odd),
+.tableContent td:nth-child(even) {
   background-color: var(--tertiary-color);
 }
 
-.material-symbols-outlined{
+.material-symbols-outlined {
   font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 20;
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 20;
   padding: 0;
   font-size: 16px;
 }
