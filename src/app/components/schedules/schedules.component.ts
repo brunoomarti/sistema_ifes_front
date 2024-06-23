@@ -131,18 +131,6 @@ export class SchedulesComponent implements OnInit {
     });
   }
 
-<<<<<<< Updated upstream
-  onSubmit() {
-    let scheduleType = "";
-
-    if (this.userRole === 'STUDENT'){
-      scheduleType = 'Aluno';
-    } else  if (this.userRole === 'TEACHER'){
-      scheduleType = 'Professor'
-    } else {
-      scheduleType = this.form.get('scheduleType')?.value;
-    }
-=======
   openDialogOk(data: any): void {
     this.dialog.open(ModalDialogOkComponent, {
       data: data,
@@ -153,7 +141,6 @@ export class SchedulesComponent implements OnInit {
   onSubmit() {
     const scheduleType = this.form.get('scheduleType')?.value;
     const missingFields: string[] = [];
->>>>>>> Stashed changes
 
     console.log(scheduleType)
 
@@ -171,13 +158,6 @@ export class SchedulesComponent implements OnInit {
       }
     }
 
-<<<<<<< Updated upstream
-    if (scheduleType === 'Aluno') {
-      const code = this.form.get('scheduleStudent')?.value;
-      this.alunoService
-        .idByCode(code)
-        .subscribe(
-=======
     if (selectedSemester) {
       this.semesterId = selectedSemester._id;
     } else {
@@ -197,7 +177,6 @@ export class SchedulesComponent implements OnInit {
         const code = this.form.get('scheduleStudent')?.value;
 
         this.alunoService.idByCode(code).subscribe(
->>>>>>> Stashed changes
           (result) => {
             this.alunoSelecionado = result;
           },
@@ -206,35 +185,6 @@ export class SchedulesComponent implements OnInit {
           }
         );
 
-<<<<<<< Updated upstream
-      this.service
-        .findLessonsByStudentCodeAndSemesterId(code, this.semesterId)
-        .subscribe(
-          (result) => {
-            this.horarioIndividual = result;
-            this.onSuccess(scheduleType);
-          },
-          (error) => {
-            this.onFailed();
-          }
-        );
-    } else if (scheduleType === 'Professor') {
-      const code = this.form.get('scheduleTeacher')?.value;
-
-      console.log("p " + code) 
-
-      this.service
-        .findLessonsByTeacherCodeAndSemesterId(code, this.semesterId)
-        .subscribe(
-          (result) => {
-            this.horarioIndividual = result;
-            this.onSuccess(scheduleType);
-          },
-          (error) => {
-            this.onFailed();
-          }
-        );
-=======
         this.service
           .findLessonsByStudentCodeAndSemesterId(code, this.semesterId)
           .subscribe(
@@ -262,7 +212,6 @@ export class SchedulesComponent implements OnInit {
             }
           );
       }
->>>>>>> Stashed changes
     }
   }
 
@@ -346,7 +295,6 @@ export class SchedulesComponent implements OnInit {
     }
   }
 
-  preencheCelula(diaSemana: string, horario: string, i: number, j: number, tipo: string) {
   preencheCelula(
     diaSemana: string,
     horario: string,
@@ -360,7 +308,6 @@ export class SchedulesComponent implements OnInit {
           if (allocation.active) {
             allocation.selectedTimes.forEach((time) => {
               if (time.startTime === horario) {
-                if (tipo === 'Aluno'){
                 if (tipo === 'Aluno') {
                   const firstName = element.teacher.name.split(' ')[0];
                   this.tabela[i][j] =
