@@ -127,7 +127,7 @@ export class SchedulesComponent implements OnInit {
   }
 
   onSubmit() {
-    let scheduleType = this.form.get('scheduleType')?.value; 
+    let scheduleType = this.form.get('scheduleType')?.value;
 
     if (this.userRole === 'STUDENT' || this.userRole !== 'TEACHER'){
       scheduleType = 'Aluno';
@@ -142,7 +142,7 @@ export class SchedulesComponent implements OnInit {
     if (selectedSemester) {
       this.semesterId = selectedSemester._id;
     }
-    
+
     if (scheduleType === 'Aluno') {
       const code = this.form.get('scheduleStudent')?.value;
 
@@ -296,83 +296,203 @@ export class SchedulesComponent implements OnInit {
     const dataImpressao = new Date().toLocaleString();
 
     let printContent = `
+      <!DOCTYPE html>
       <html>
       <head>
         <title>Horário do Aluno</title>
         <style>
-          @media print {
-            @page {
-              size: 80mm 200mm;
+          @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
+          @import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+
+          .printBody {
+              border: solid black 1px;
+              border-radius: 10px;
+              width: 100%;
+              height: 100%;
               margin: 0;
-            }
-            body {
-              margin: 10px;
+              padding: 20px;
+              box-sizing: border-box;
+          }
+          body {
+              margin: 0;
+              padding: 0;
               font-family: Arial, sans-serif;
               font-size: 12px;
-            }
-            .header {
-              margin-bottom: 10px;
-            }
-            .foot {
-              margin-bottom: 10px;
-            }
-            .schedule {
-              margin-top: 10px;
-            }
-            .day {
-              font-weight: bold;
-              margin-top: 10px;
-            }
-            .lesson {
-              margin-left: 15px;
-            }
+              width: 80mm;
+              height: 297mm;
+              box-sizing: border-box;
+          }
+          h1 {
+              font-size: 16px;
+              margin: 0;
+              padding: 0;
+              font-family: "Space Mono", monospace;
+              font-weight: 700;
+              font-style: normal;
+          }
+          h2 {
+              font-size: 14px;
+              margin: 0;
+              padding: 0;
+              font-family: "Space Grotesk", sans-serif;
+              font-optical-sizing: auto;
+              font-weight: 600;
+              font-style: normal;
+          }
+          .logoIfes {
+              width: 100%;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+          }
+          .logoIfes img {
+              max-width: 100%;
+              height: auto;
+              object-fit: contain;
+              filter: invert(100%);
+              margin: 0 0 18px 0;
+          }
+          .separator {
+              width: 100%;
+              background-color: black;
+              height: 1px;
+              margin: 16px 0;
+          }
+          p {
+              font-family: "Space Grotesk", sans-serif;
+              font-optical-sizing: auto;
+              font-weight: 400;
+              font-style: normal;
+          }
+          .bodyText {
+              font-size: 12px;
+          }
+          .tabelaDia {
+              margin: 5px 0 0 0;
+          }
+          table {
+              width: 100%;
+              border-collapse: collapse;
+          }
+          td:not(:first-child), td:not(:last-child) {
+            border-top: 1px solid grey;
+          }
+          th:first-child, td:first-child {
+              border-right: 1px solid grey;
+          }
+          th:last-child, td:last-child {
+              border-left: 1px solid grey;
+          }
+          th {
+              text-align: left;
+              padding: 5px;
+          }
+          .tableHeader th {
+              font-family: "Space Grotesk", sans-serif;
+              font-optical-sizing: auto;
+              font-weight: 700;
+              font-style: normal;
+              font-size: 12px;
+          }
+          .tableBody th, .tableBody td {
+              font-family: "Space Grotesk", sans-serif;
+              font-optical-sizing: auto;
+              font-weight: 400;
+              font-style: normal;
+              font-size: 11px;
+              padding: 4px;
+          }
+          .horarioCol {
+              width: 10mm; /* Tamanho fixo para a coluna de horários */
+          }
+
+          @media print {
+              @page {
+                  size: 80mm 297mm;
+                  margin: 0;
+              }
+              body {
+                  margin: 0;
+                  padding: 0 20px 20px 20px;
+                  width: 80mm;
+                  height: fit-content;
+                  box-sizing: border-box;
+                  -webkit-print-color-adjust: exact;
+              }
+              .printBody {
+                  border: solid black 1px;
+                  border-radius: 10px;
+                  width: 100%;
+                  height: 100%;
+                  margin: 0;
+                  padding: 20px;
+                  box-sizing: border-box;
+              }
+              .logoIfes img {
+                  filter: invert(100%);
+              }
+              .separator {
+                  background-color: black;
+              }
           }
         </style>
       </head>
       <body>
-        <div class="header">
-          <p>Aluno: ${aluno}</p>
-          <p>Matrícula: ${matricula}</p>
-        </div>
-        <div class="schedule">
-          <p>Horário:</p>
+        <div class="printBody">
+          <div class="logoIfes">
+            <img src="./../../../assets/images/logo-ifes-branco-no-borders.png" alt="Logo IFES" />
+          </div>
+          <div class="header">
+            <h1>RELATÓRIO DE AULAS</h1>
+            <h2>Aluno: ${aluno}</h2>
+            <h2>Matrícula: ${matricula}</h2>
+          </div>
+          <div class="separator"></div>
+          <p class="bodyText">Data de requisição: ${dataImpressao}</p>
+          <div class="separator"></div>
     `;
 
-    const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-    const horarios = [
-      '07:00 - 07:50',
-      '07:50 - 08:40',
-      '08:40 - 09:30',
-      '09:50 - 10:40',
-      '10:40 - 11:30',
-      '11:30 - 12:20',
-      '13:00 - 13:50',
-      '13:50 - 14:40',
-      '14:40 - 15:30',
-      '15:50 - 16:40',
-      '16:40 - 17:30',
-      '17:30 - 18:20',
-      '18:50 - 19:35',
-      '19:35 - 20:20',
-      '20:30 - 21:15',
-      '21:15 - 22:00'
-    ];
+    const diasSemanaOrdenados = ['Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado', 'Domingo'];
 
-    diasSemana.forEach((dia, i) => {
-      const horariosDia = this.tabela[i].filter(h => h).map((h, j) => `${horarios[j]} - ${h}`).join('<br>');
+    diasSemanaOrdenados.forEach(dia => {
+        const aulasDoDia = this.horarioIndividual.filter(item =>
+            item.allocations.some(aula => aula.weekDay === dia)
+        );
 
-      if (horariosDia) {
-        printContent += `
-          <div class="day">${dia}:</div>
-          <div class="lesson">${horariosDia}</div>
-        `;
-      }
+        if (aulasDoDia.length > 0) {
+            printContent += `
+            <h2>${dia}</h2>
+            <div class="tabelaDia">
+              <table>
+                <tr class="tableHeader">
+                  <th class="horarioCol">Horário</th>
+                  <th>Disciplina</th>
+                  <th>Local</th>
+                </tr>
+            `;
+
+            aulasDoDia.forEach(item => {
+                item.allocations.forEach(aula => {
+                    const horarios = aula.selectedTimes.map(time =>
+                        `<tr class="tableBody">
+                          <td class="horarioCol">${time.startTime} - ${time.endTime}</td>
+                          <td>${item.discipline.name}</td>
+                          <td>${aula.location.name}</td>
+                        </tr>`
+                    ).join('');
+                    printContent += horarios;
+                });
+            });
+
+            printContent += `
+              </table>
+            </div>
+            <div class="separator"></div>
+            `;
+        }
     });
 
     printContent += `
-        </div>
-        <div class="foot">
-          <p>Data de impressão: ${dataImpressao}</p>
         </div>
       </body>
       </html>
@@ -383,7 +503,9 @@ export class SchedulesComponent implements OnInit {
     if (printWindow) {
       printWindow.document.write(printContent);
       printWindow.document.close();
-      printWindow.print();
+      setTimeout(() => {
+        printWindow?.print();
+      }, 500); // 500 milissegundos de atraso
     }
   }
 }

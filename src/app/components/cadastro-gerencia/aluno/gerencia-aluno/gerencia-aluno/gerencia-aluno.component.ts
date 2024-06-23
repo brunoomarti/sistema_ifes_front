@@ -15,6 +15,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input'; // Import MatInputModule
 import { catchError, tap, throwError } from 'rxjs';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-aluno',
@@ -26,7 +27,9 @@ import { catchError, tap, throwError } from 'rxjs';
     MatFormField,
     MatLabel,
     MatCheckboxModule,
-    MatInputModule // Add MatInputModule to imports
+    MatInputModule,
+    MatSort,
+    MatSortModule
   ],
   templateUrl: './gerencia-aluno.component.html',
   styleUrls: ['./gerencia-aluno.component.css']
@@ -42,6 +45,7 @@ export class GerenciaAlunoComponent implements OnInit {
   displayedColumns: string[] = ['select', 'name', 'course', 'studentCode', 'registrationYear', 'actions'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: AlunoService,
@@ -59,6 +63,7 @@ export class GerenciaAlunoComponent implements OnInit {
       this.alunos = alunos;
       this.dataSource = new MatTableDataSource<Aluno>(this.alunos);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     });
   }
 
@@ -101,7 +106,6 @@ export class GerenciaAlunoComponent implements OnInit {
           return throwError(() => new Error(error));
         })
       ).subscribe();
-
     }
   }
 

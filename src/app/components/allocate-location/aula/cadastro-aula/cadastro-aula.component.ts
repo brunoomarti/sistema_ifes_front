@@ -186,7 +186,7 @@ export class CadastroAulaComponent {
 
   onCancel() {
     if (confirm('Tem certeza que deseja cancelar?')) {
-      this.router.navigate(['/alocar-local']);
+      this.router.navigate(['/alocar-local/gerencia-aula']);
     }
   }
 

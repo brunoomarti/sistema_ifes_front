@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Aula } from '../../../../models/Aula';
-import { first, map, tap } from 'rxjs';
+import { Observable, first, map, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -44,13 +44,16 @@ export class AulaService {
     return this.httpClient.get<Aula>(`${this.API}/${id}`);
   }
 
-  remove(_id: number) {
-    return this.httpClient.delete(`${this.API}/${_id}`);
+  remove(ids: number[]) {
+    return this.httpClient.post(`${this.API}/delete-multiple`, ids);
   }
 
-  removerAlunoDaAula(studentId: number, lessonId: string) {
+
+  removerAlunoDaAula(studentIds: number[], lessonId: string): Observable<void> {
     let lessonIdInt: number = parseInt(lessonId);
-    return this.httpClient.delete(`${this.API}/removeStudent/${studentId}/${lessonIdInt}`);
+    return this.httpClient.delete<void>(`${this.API}/removeStudents/${lessonIdInt}`, {
+      body: studentIds
+    });
   }
 
   findLessonsByStudentCodeAndSemesterId(studentCode: number, semesterId: number) {

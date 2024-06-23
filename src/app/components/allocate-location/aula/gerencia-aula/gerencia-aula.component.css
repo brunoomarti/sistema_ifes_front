@@ -9,9 +9,13 @@
 }
 
 .mat-column-actions {
-  width: 120px;
+  width: 80px;
   height: fit-content;
   padding: 10px 0;
+}
+
+.mat-column-students {
+  padding: 10px 10px 10px 0;
 }
 
 .mat-column-weeklyQuantity {

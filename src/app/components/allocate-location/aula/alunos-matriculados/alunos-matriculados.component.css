@@ -52,3 +52,10 @@ mat-paginator {
   font-size: var(--normal-font-size);
 }
 
+.tableButton {
+  gap: 20px;
+}
+
+.mat-column-select {
+  width: 10px;
+}

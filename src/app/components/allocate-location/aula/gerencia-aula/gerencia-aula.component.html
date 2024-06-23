@@ -1,5 +1,4 @@
 <div class="componentContent">
-
   <div class="backTitle">
     <p class="pageTitle">Aulas cadastradas</p>
     <button class="backPage" (click)="backPage()">
@@ -9,32 +8,61 @@
   </div>
 
   <div class="boxSize">
+    <div class="buttonGroup addSpace">
+      <button class="button two" (click)="cadastrar()">
+        <span class="material-symbols-outlined table-button-icon">person_add</span>
+        Cadastrar Aula
+      </button>
+      <button mat-button (click)="excluirSelecionados()" class="button two delete-button">
+        <span class="material-symbols-outlined table-button-icon">delete</span>
+        Excluir Selecionados
+      </button>
+    </div>
 
-    <table mat-table [dataSource]="aulas">
+    <div class="newInput addSpace">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Pesquise pela disciplina ou professor">
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let aula">
+          <mat-checkbox (click)="$event.stopPropagation()"
+                        (change)="$event ? toggleSelection(aula) : null"
+                        [checked]="selection.isSelected(aula)"
+                        (keyup)="toggleSelection(aula)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
 
       <ng-container matColumnDef="discipline">
-        <th mat-header-cell *matHeaderCellDef>Disciplina</th>
-        <td mat-cell *matCellDef="let aula"> {{ aula.discipline.name }} <td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Disciplina</th>
+        <td mat-cell *matCellDef="let aula"> {{ aula.discipline.name }} </td>
       </ng-container>
 
       <ng-container matColumnDef="teacher">
-        <th mat-header-cell *matHeaderCellDef>Professor</th>
-        <td mat-cell *matCellDef="let aula"> {{ aula.teacher.name }} <td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Professor</th>
+        <td mat-cell *matCellDef="let aula"> {{ aula.teacher.name }} </td>
       </ng-container>
 
       <ng-container matColumnDef="semester">
-        <th mat-header-cell *matHeaderCellDef>Semestre</th>
-        <td mat-cell *matCellDef="let aula"> {{ aula.semester.semester }} <td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Semestre</th>
+        <td mat-cell *matCellDef="let aula"> {{ aula.semester.semester }} </td>
       </ng-container>
 
       <ng-container matColumnDef="weeklyQuantity">
         <th mat-header-cell *matHeaderCellDef>Aulas por semana</th>
-        <td mat-cell *matCellDef="let aula"> {{ aula.weeklyQuantity }} <td>
+        <td mat-cell *matCellDef="let aula"> {{ aula.weeklyQuantity }} </td>
       </ng-container>
 
       <ng-container matColumnDef="allocatedLessons">
         <th mat-header-cell *matHeaderCellDef>Aulas alocadas</th>
-        <td mat-cell *matCellDef="let aula">{{ aulasAlocadasPorAula.get(aula._id) || 0 }}<td>
+        <td mat-cell *matCellDef="let aula">{{ aulasAlocadasPorAula.get(aula._id) || 0 }} </td>
       </ng-container>
 
       <ng-container matColumnDef="allocated">
@@ -58,36 +86,26 @@
             <button mat-button
                     (click)="alunosAula(aula)"
                     class="button two">
-              Ver
+              Ver/Matricular
             </button>
           </ng-container>
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="actions" *ngIf="userRole === 'ADMIN' || userRole === 'COORDINATOR'">
-        <th mat-header-cell *matHeaderCellDef>
-          <div class="thButton">
-            <div>Ações</div>
-            <button class="subMenuButton newButton" (click)="cadastrar()">
-              <div class="subMenuButtonText">Cadastrar</div>
-            </button>
-          </div>
-        </th>
-        <td mat-cell *matCellDef="let equipamento" class="buttonGroupForm">
-          <button mat-button (click)="editar(equipamento)" class="button two">
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let aula" class="buttonGroupForm">
+          <button mat-button (click)="editar(aula)" class="button two">
             <span class="material-symbols-outlined table-button-icon">edit</span>
-          </button>
-          <button mat-button (click)="excluir(equipamento)" class="button two delete-button">
-            <span class="material-symbols-outlined table-button-icon">delete</span>
+            Editar
           </button>
         </td>
-      </ng-container> 
+      </ng-container>
 
-        <tr class="header-row" mat-header-row *matHeaderRowDef="userRole === 'ADMIN' || userRole === 'COORDINATOR' ? ['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students', 'actions'] : ['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students']"></tr>
-        <tr mat-row *matRowDef="let row; columns: userRole === 'ADMIN' || userRole === 'COORDINATOR' ? ['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students',  'actions'] : ['discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students'];"></tr>
+      <tr class="header-row" mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 
-    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
-
+    <mat-paginator [pageSize]="10" showFirstLastButtons></mat-paginator>
   </div>
 </div>
