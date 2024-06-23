@@ -127,13 +127,17 @@ export class SchedulesComponent implements OnInit {
   }
 
   onSubmit() {
-    let scheduleType = this.form.get('scheduleType')?.value;
+    let scheduleType = "";
 
-    if (this.userRole === 'STUDENT' || this.userRole !== 'TEACHER'){
+    if (this.userRole === 'STUDENT'){
       scheduleType = 'Aluno';
-    } else  if (this.userRole === 'TEACHER' || this.userRole !== 'STUDENT'){
+    } else  if (this.userRole === 'TEACHER'){
       scheduleType = 'Professor'
+    } else {
+      scheduleType = this.form.get('scheduleType')?.value;
     }
+
+    console.log(scheduleType)
 
     const selectedSemester = this.periodos.find(
       (obj) => obj._id == this.form.value.schedulePeriod
@@ -145,7 +149,6 @@ export class SchedulesComponent implements OnInit {
 
     if (scheduleType === 'Aluno') {
       const code = this.form.get('scheduleStudent')?.value;
-
       this.alunoService
         .idByCode(code)
         .subscribe(
@@ -170,8 +173,9 @@ export class SchedulesComponent implements OnInit {
         );
     } else if (scheduleType === 'Professor') {
       const code = this.form.get('scheduleTeacher')?.value;
-      console.log(code)
-      console.log(this.semesterId)
+
+      console.log("p " + code) 
+
       this.service
         .findLessonsByTeacherCodeAndSemesterId(code, this.semesterId)
         .subscribe(

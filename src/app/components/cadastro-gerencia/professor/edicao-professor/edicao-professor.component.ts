@@ -108,7 +108,7 @@ export class EdicaoProfessorComponent implements OnInit {
             };
             this.openOkDialog(dialogData);
           } else {
-            //this.save();
+            this.save();
           }
 
       } else {
