@@ -12,10 +12,14 @@
 
   <div class="boxSize">
 
-    <table mat-table [dataSource]="turmas">
+    <div class="newInput addSpace">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Pesquise pela disciplina ou professor">
+    </div>
+
+    <table mat-table [dataSource]="dataSource" matSort>
 
       <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef>Nome</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
         <td mat-cell *matCellDef="let turma"> {{ turma.name }} <td>
       </ng-container>
 
@@ -44,7 +48,7 @@
       <tr mat-row *matRowDef="let row; columns: ['name', 'actions']"></tr>
     </table>
 
-    <!-- <mat-paginator pageSize="5" showFirstLastButtons></mat-paginator> -->
+    <mat-paginator pageSize="10" showFirstLastButtons></mat-paginator>
 
   </div>
 </div>

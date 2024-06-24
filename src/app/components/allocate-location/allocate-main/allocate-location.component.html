@@ -222,7 +222,7 @@
         </ng-container>
 
         <ng-container matColumnDef="schedule">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>Horário</th>
+          <th mat-header-cell *matHeaderCellDef>Horário</th>
           <td mat-cell *matCellDef="let alocacao">
             <ng-container *ngIf="alocacao.type === 'Evento'">
               {{ alocacao.startTime }} ~ {{ alocacao.endTime }}

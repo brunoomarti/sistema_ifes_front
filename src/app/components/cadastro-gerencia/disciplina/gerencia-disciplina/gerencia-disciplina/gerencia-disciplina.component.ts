@@ -4,13 +4,13 @@ import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DisciplinaService } from '../../service/disciplina.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReloadService } from '../../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Disciplina } from '../../../../../models/Disciplina';
 import { EdicaoDisciplinaComponent } from '../../edicao-disciplina/edicao-disciplina.component';
 import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-disciplina',
@@ -19,26 +19,26 @@ import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatSortModule
   ],
   templateUrl: './gerencia-disciplina.component.html',
   styleUrl: './gerencia-disciplina.component.css'
 })
 export class GerenciaDisciplinaComponent implements OnInit {
 
-  disciplinas: any[] = [];
-  dataSource: any;
+  disciplinas: Disciplina[] = [];
+  dataSource = new MatTableDataSource<Disciplina>(this.disciplinas);
   mensagemSnackbarAcerto: string = 'Disciplina excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir disciplina.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: DisciplinaService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private reloadService: ReloadService,
     public dialog: MatDialog,
   ) { }
 
@@ -46,11 +46,33 @@ export class GerenciaDisciplinaComponent implements OnInit {
     this.atualizaTabela();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
   atualizaTabela() {
     this.service.listar().subscribe(disciplinas => {
       this.disciplinas = disciplinas;
       this.dataSource = new MatTableDataSource<Disciplina>(this.disciplinas);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (item: Disciplina, property: string) => {
+        switch (property) {
+          case 'discipline': return item.name.toLowerCase();
+          case 'course': return item.course.name.toLowerCase()
+          default: return (item as any)[property];
+        }
+      };
+
+      this.dataSource.filterPredicate = (data: Disciplina, filter: string) => {
+        return data.name.toLowerCase().includes(filter) ||
+                data.course.name.toLowerCase().includes(filter);
+      };
     });
   }
 
@@ -69,7 +91,7 @@ export class GerenciaDisciplinaComponent implements OnInit {
   excluir(disciplina: Disciplina): void {
     this.service.getRegistrosUsandoDisciplina(disciplina._id).subscribe(registros => {
       if (registros.length > 0) {
-        this.mostrarMensagemErro(registros); 
+        this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir este disciplina?');
         if (confirmacao) {
@@ -97,10 +119,10 @@ export class GerenciaDisciplinaComponent implements OnInit {
     const dialogDataForm = {
       title: 'Erro ao Excluir Horário',
       message: `
-    <div mat-dialog-content> 
+    <div mat-dialog-content>
       <p>Exclua os seguintes registros primeiramente:</p>
       <span>Total de Aula(s): <strong>${itensLista.length}</strong></span>
-      <ul> 
+      <ul>
         ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
       </ul>
     </div>

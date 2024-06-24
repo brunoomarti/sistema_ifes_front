@@ -14,6 +14,7 @@ import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/mo
 import { ProfessorService } from '../../professor/service/professor.service';
 import { CoordenadorService } from '../../coordenador/service/coordenador.service';
 import { Professor } from '../../../../models/Professor';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-coordenadoria',
@@ -22,26 +23,26 @@ import { Professor } from '../../../../models/Professor';
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatSortModule
   ],
   templateUrl: './gerencia-coordenadoria.component.html',
   styleUrl: './gerencia-coordenadoria.component.css'
 })
 export class GerenciaCoordenadoriaComponent implements OnInit {
 
-  coordenadorias: any[] = [];
+  coordenadorias: Coordenadoria[] = [];
   professores: Professor[] = [];
   coordenadores: any[] = [];
-  dataSource: any;
+  dataSource = new MatTableDataSource<Coordenadoria>(this.coordenadorias);
   mensagemSnackbarAcerto: string = 'Coordenadoria excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir coordenadoria.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: CoordenadoriaService,
-    private professorService: ProfessorService,
-    private coordenadorService: CoordenadorService,
     private router: Router,
     private snackBar: MatSnackBar,
     public dialog: MatDialog,
@@ -51,12 +52,32 @@ export class GerenciaCoordenadoriaComponent implements OnInit {
     this.atualizaTabela();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
   atualizaTabela() {
     this.service.listar().subscribe(coordenadorias => {
       this.coordenadorias = coordenadorias;
       this.dataSource = new MatTableDataSource<Coordenadoria>(this.coordenadorias);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (item: Coordenadoria, property: string) => {
+        switch (property) {
+          case 'name': return item.name.toLowerCase();
+          default: return (item as any)[property];
+        }
+      };
     });
+
+    this.dataSource.filterPredicate = (data: Coordenadoria, filter: string) => {
+      return data.name.toLowerCase().includes(filter);
+    };
   }
 
   editar(coordenadoria: { name: string }): void {

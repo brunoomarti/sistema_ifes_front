@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
 import { AllocateService } from '../service/allocate.service';
@@ -49,38 +49,36 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
     private snackBar: MatSnackBar,
     private reloadService: ReloadService,
     @Inject(MAT_DIALOG_DATA) public data: Alocar,
-  )
-
-  {
+  ) {
     this.form = this.formBuilder.group({
       _id: [0],
-      lesson: null,
-      classe: new FormControl(''),
-      startDate: null,
-      endDate: null,
-      selectedTimes:[],
-      location: null,
-      semester: null,
-      type: 'Aula',
-      weekDay: null,
-      active: true
+      lesson: [null, Validators.required],
+      classe: ['', Validators.required],
+      startDate: [null, Validators.required],
+      endDate: [null, Validators.required],
+      selectedTimes: [[], Validators.required],
+      location: [null, Validators.required],
+      semester: [null, Validators.required],
+      type: ['Aula'],
+      weekDay: [null, Validators.required],
+      active: [true]
     });
 
     this.formHistory = this.formBuilder.group({
-      _id: 0,
-      lesson: null,
-      classe: new FormControl(''),
-      startDate: null,
-      endDate: null,
-      selectedTimes:[],
-      location: null,
-      semester: null,
-      type: 'Aula',
-      weekDay: null,
-      allocation: null,
-      date: null,
-      authorName: 'Igor',
-      changeType: null,
+      _id: [0],
+      lesson: [null, Validators.required],
+      classe: ['', Validators.required],
+      startDate: [null, Validators.required],
+      endDate: [null, Validators.required],
+      selectedTimes: [[], Validators.required],
+      location: [null, Validators.required],
+      semester: [null, Validators.required],
+      type: ['Aula'],
+      weekDay: [null, Validators.required],
+      allocation: [null, Validators.required],
+      date: [null, Validators.required],
+      authorName: ['Igor', Validators.required],
+      changeType: [null, Validators.required],
     });
   }
 
@@ -95,9 +93,11 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
 
     this.listarHorarios();
 
+    console.log(this.data);
+
     const obj: Alocar = this.data;
     if (obj) {
-      this.form.setValue({
+      this.form.patchValue({
         _id: obj.alocacao._id,
         lesson: obj.alocacao.lesson,
         classe: obj.alocacao.classe,
@@ -106,7 +106,6 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
         selectedTimes: obj.alocacao.selectedTimes,
         semester: obj.alocacao.lesson.semester,
         location: obj.alocacao.location,
-        type: 'Aula',
         weekDay: obj.alocacao.weekDay,
         active: true
       });
@@ -114,40 +113,39 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
   }
 
   onSubmit() {
-
-    if (this.form.valid) {  
+    if (this.form.valid) {
       const obj: Alocar = this.data;
 
-      const selectedTimesAsString = obj.alocacao.selectedTimes.map(time => ({
-        _id: time._id,
-        startTime: time.startTime.toString(),
-        endTime: time.endTime.toString()
-      }));
+      const authorName = localStorage.getItem('username');
 
-      this.formHistory.setValue({
+      this.formHistory.patchValue({
         _id: 0,
         lesson: obj.alocacao.lesson,
+        event: obj.alocacao.event,
         classe: obj.alocacao.classe,
         startDate: obj.alocacao.startDate,
         endDate: obj.alocacao.endDate,
-        selectedTimes: JSON.stringify(selectedTimesAsString),
-        semester: obj.alocacao.lesson.semester,
+        startTime: obj.alocacao.startDate,
+        endTime: obj.alocacao.endTime,
+        selectedTimes: obj.alocacao.selectedTimes,
         location: obj.alocacao.location,
-        type: 'Aula',
+        type: obj.alocacao.type,
         weekDay: obj.alocacao.weekDay,
+        authorName: authorName,
         allocation: obj.alocacao,
         date: new Date(),
-        authorName: 'Igor',
         changeType: 'Edição',
       });
 
-      delete this.form.value.lesson.teacher.authorities;
-
-      this.form.value.lesson.students.forEach((x: { authorities: any; }) => {
-        delete x.authorities;
-      });
+      console.log(this.formHistory.value);
 
       this.historyService.save(this.formHistory.value).subscribe(result => this.onSucess(), error => this.onFailed());
+
+      const lesson = { ...this.form.value.lesson };
+      delete lesson.teacher.authorities;
+      lesson.students.forEach((student: any) => {
+        delete student.authorities;
+      });
 
       const selectedClasse = this.turmas.find(findObj => findObj._id == this.form.value.classe);
       const selectedLocation = this.locais.find(findObj => findObj._id == this.form.value.location);
@@ -157,29 +155,26 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
         if (selectedHour){
           this.selectedTimes.push(selectedHour);
         }
-      })
+      });
 
       if (selectedClasse && selectedLocation ) {
         this.form.patchValue({ classe: selectedClasse });
         this.form.patchValue({ location: selectedLocation });
-        this.form.patchValue({ selectedTimes: this.selectedTimes })
+        this.form.patchValue({ selectedTimes: this.selectedTimes });
       }
 
-      this.service.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
+      this.service.save(this.form.value).subscribe(
+        result => {
+          console.log('Allocation saved', result);
+          this.onSucess();
+        },
+        error => {
+          console.error('Error saving allocation', error);
+          this.onFailed();
+        }
+      );
     } else {
-        const missingFields = [];
-        
-        if (this.form.get('classe')?.hasError('required')) {
-          missingFields.push('<li>Selecione uma Classe</li>');
-        }
-  
-        if (this.form.get('location')?.hasError('required')) {
-          missingFields.push('<li>Selecione um Local</li>');
-        }
-     
-        if (this.form.get('weekDay')?.hasError('required')) {
-          missingFields.push('<li>Selecione o Dia da Semana</li>');
-        }
+
     }
   }
 
@@ -199,6 +194,8 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
   }
 
   onCheckboxChange(event: any, horario: any) {
+    const selectedTimesArray = this.form.get('selectedTimes') as FormControl;
+
     if (event.target.checked) {
       this.indexTimes.push(horario._id);
     } else {
@@ -207,6 +204,9 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
         this.indexTimes.splice(index, 1);
       }
     }
+
+    selectedTimesArray.setValue(this.indexTimes);
+    selectedTimesArray.updateValueAndValidity();
   }
 
   listarHorarios(): void {
@@ -218,5 +218,4 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
       }));
     });
   }
-
 }

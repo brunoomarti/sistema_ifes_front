@@ -5,12 +5,12 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Evento } from '../../../../models/Evento';
 import { EventoService } from '../service/evento.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReloadService } from '../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { EdicaoEventoComponent } from '../edicao-evento/edicao-evento.component';
 import { AlocaEventoComponent } from '../aloca-evento/aloca-evento.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-evento',
@@ -19,7 +19,8 @@ import { AlocaEventoComponent } from '../aloca-evento/aloca-evento.component';
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatSortModule
   ],
   templateUrl: './gerencia-evento.component.html',
   styleUrl: './gerencia-evento.component.css'
@@ -27,19 +28,18 @@ import { AlocaEventoComponent } from '../aloca-evento/aloca-evento.component';
 export class GerenciaEventoComponent implements OnInit {
 
   eventos: Evento[] = [];
-  dataSource: any;
+  dataSource = new MatTableDataSource<Evento>(this.eventos);
   mensagemSnackbarAcerto: string = 'Evento excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir evento.';
   hoverText: string = 'Não alocado';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: EventoService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private reloadService: ReloadService,
     public dialog: MatDialog,
   ) { }
 
@@ -47,11 +47,31 @@ export class GerenciaEventoComponent implements OnInit {
     this.atualizaTabela();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
   atualizaTabela() {
     this.service.listar().subscribe(eventos => {
       this.eventos = eventos;
       this.dataSource = new MatTableDataSource<Evento>(this.eventos);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (item: Evento, property: string) => {
+        switch (property) {
+          case 'name': return item.name.toLowerCase();
+          default: return (item as any)[property];
+        }
+      };
+
+      this.dataSource.filterPredicate = (data: Evento, filter: string) => {
+        return data.name.toLowerCase().includes(filter);
+      };
     });
   }
 
@@ -120,5 +140,4 @@ export class GerenciaEventoComponent implements OnInit {
       this.hoverText = text === 'alocar' ? 'Não alocado' : this.hoverText;
     }
   }
-
 }

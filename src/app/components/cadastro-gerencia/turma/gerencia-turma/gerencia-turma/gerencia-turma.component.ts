@@ -4,13 +4,13 @@ import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { TurmaService } from '../../service/turma.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReloadService } from '../../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Turma } from '../../../../../models/Turma';
 import { EdicaoTurmaComponent } from '../../edicao-turma/edicao-turma.component';
 import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-turma',
@@ -19,7 +19,8 @@ import { ModalDialogOkComponent } from '../../../../modal-dialog/modal-dialog-ok
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatSortModule
   ],
   templateUrl: './gerencia-turma.component.html',
   styleUrl: './gerencia-turma.component.css'
@@ -28,19 +29,18 @@ export class GerenciaTurmaComponent implements OnInit {
 
   readonly displayedColumns = ['name', 'actions'];
 
-  turmas: any[] = [];
-  dataSource: any;
+  turmas: Turma[] = [];
+  dataSource = new MatTableDataSource<Turma>(this.turmas);
   mensagemSnackbarAcerto: string = 'Turma excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir turma.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: TurmaService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private reloadService: ReloadService,
     public dialog: MatDialog,
   ) { }
 
@@ -48,11 +48,31 @@ export class GerenciaTurmaComponent implements OnInit {
     this.atualizaTabela();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
   atualizaTabela() {
     this.service.listar().subscribe(turmas => {
       this.turmas = turmas;
       this.dataSource = new MatTableDataSource<Turma>(this.turmas);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (item: Turma, property: string) => {
+        switch (property) {
+          case 'name': return item.name.toLowerCase();
+          default: return (item as any)[property];
+        }
+      };
+
+      this.dataSource.filterPredicate = (data: Turma, filter: string) => {
+        return data.name.toLowerCase().includes(filter);
+      };
     });
   }
 
@@ -71,7 +91,7 @@ export class GerenciaTurmaComponent implements OnInit {
   excluir(turma: Turma): void {
     this.service.getRegistrosUsandoTurma(turma._id).subscribe(registros => {
       if (registros.length > 0) {
-        this.mostrarMensagemErro(registros); 
+        this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir este turma?');
         if (confirmacao) {
@@ -99,10 +119,10 @@ export class GerenciaTurmaComponent implements OnInit {
     const dialogDataForm = {
       title: 'Erro ao Excluir Turma',
       message: `
-    <div mat-dialog-content> 
+    <div mat-dialog-content>
       <p>Exclua os seguintes registros primeiramente:</p>
       <span>Total de Alocações: <strong>${itensLista.length}</strong></span>
-      <ul> 
+      <ul>
         ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
       </ul>
     </div>

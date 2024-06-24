@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Curso } from '../../../../models/Curso';
 import { EdicaoCursoComponent } from '../edicao-curso/edicao-curso.component';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-curso',
@@ -18,19 +19,21 @@ import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/mo
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatSortModule
   ],
   templateUrl: './gerencia-curso.component.html',
   styleUrl: './gerencia-curso.component.css'
 })
 export class GerenciaCursoComponent implements OnInit {
 
-  cursos: any[] = [];
-  dataSource: any;
+  cursos: Curso[] = [];
+  dataSource = new MatTableDataSource<Curso>(this.cursos);
   mensagemSnackbarAcerto: string = 'Curso excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir curso.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: CursoService,
@@ -43,11 +46,31 @@ export class GerenciaCursoComponent implements OnInit {
     this.atualizaTabela();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
   atualizaTabela() {
     this.service.listar().subscribe(cursos => {
       this.cursos = cursos;
       this.dataSource = new MatTableDataSource<Curso>(this.cursos);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (item: Curso, property: string) => {
+        switch (property) {
+          case 'discipline': return item.name.toLowerCase();
+          default: return (item as any)[property];
+        }
+      };
+
+      this.dataSource.filterPredicate = (data: Curso, filter: string) => {
+        return data.name.toLowerCase().includes(filter);
+      };
     });
   }
 
@@ -64,22 +87,10 @@ export class GerenciaCursoComponent implements OnInit {
     });
   }
 
-  // excluir(obj: Curso): void {
-  //   const confirmacao = confirm('Tem certeza que deseja excluir este curso?');
-  //   if (confirmacao) {
-  //     this.service.remove(obj._id).subscribe(() => {
-  //       this.cursos = this.cursos.filter(e => e._id !== obj._id);
-  //       this.onSucess(true);
-  //     }, error => {
-  //       this.onFailed();
-  //     });
-  //   }
-  // }
-
   excluir(obj: Curso): void {
     this.service.getRegistrosUsandoCurso(obj._id).subscribe(registros => {
       if (registros.length > 0) {
-        this.mostrarMensagemErro(registros); 
+        this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir este curso?');
         if (confirmacao) {
@@ -94,16 +105,16 @@ export class GerenciaCursoComponent implements OnInit {
     });
   }
 
-  
+
   mostrarMensagemErro(registros: any[]): void {
     registros.map((a) => { console.log()})
-    
+
     const itensLista = registros.map(registro => {
       if (registro.acronym) {
         return `Disciplina: ${registro.name}`;
       } else{
         return `Aluno: ${registro.name} (${registro.studentCode})`;
-      } 
+      }
     });
 
     const dialogDataForm = {

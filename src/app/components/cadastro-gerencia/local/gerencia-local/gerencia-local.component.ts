@@ -4,14 +4,14 @@ import { MatIcon } from '@angular/material/icon';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { LocalService } from '../service/local.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ReloadService } from '../../../../shared-services/reload.service';
 import { MatDialog } from '@angular/material/dialog';
 import { Local } from '../../../../models/Local';
 import { EdicaoLocalComponent } from '../edicao-local/edicao-local.component';
 import { EquipamentoLocal } from '../../../../models/EquipamentoLocal';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-local',
@@ -22,7 +22,8 @@ import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/mo
     MatIcon,
     MatPaginator,
     NgIf,
-    NgFor
+    NgFor,
+    MatSortModule
   ],
   templateUrl: './gerencia-local.component.html',
   styleUrl: './gerencia-local.component.css'
@@ -30,25 +31,32 @@ import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/mo
 export class GerenciaLocalComponent implements OnInit {
 
   locais: Local[] = [];
-  dataSource: any;
+  dataSource = new MatTableDataSource<Local>(this.locais);
   itensInseridos: EquipamentoLocal[] = [];
   mensagemSnackbarAcerto: string = 'Local excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir local.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: LocalService,
     private router: Router,
     private snackBar: MatSnackBar,
-    private route: ActivatedRoute,
-    private reloadService: ReloadService,
     public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
     this.atualizaTabela();
+  }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 
   atualizaTabela() {
@@ -56,6 +64,17 @@ export class GerenciaLocalComponent implements OnInit {
       this.locais = locais;
       this.dataSource = new MatTableDataSource<Local>(this.locais);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (item: Local, property: string) => {
+        switch (property) {
+          case 'name': return item.name.toLowerCase();
+          default: return (item as any)[property];
+        }
+      };
+
+      this.dataSource.filterPredicate = (data: Local, filter: string) => {
+        return data.name.toLowerCase().includes(filter);
+      };
     });
 
   }
@@ -75,7 +94,7 @@ export class GerenciaLocalComponent implements OnInit {
   excluir(local: Local): void {
     this.service.getRegistrosUsandoLocal(local._id).subscribe(registros => {
       if (registros.length > 0) {
-        this.mostrarMensagemErro(registros); 
+        this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir este local?');
         if (confirmacao) {
@@ -107,7 +126,7 @@ export class GerenciaLocalComponent implements OnInit {
     <div mat-dialog-content>
       <p>Exclua os seguintes registros primeiramente:</p>
       <span>Total de Alocações: <strong>${itensLista.length}</strong></span>
-      <ul> 
+      <ul>
         ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
       </ul>
     </div>

@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Semestre } from '../../../../models/Semestre';
 import { EdicaoSemestreComponent } from '../edicao-semestre/edicao-semestre.component';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-semestre',
@@ -18,19 +19,21 @@ import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/mo
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatSortModule
   ],
   templateUrl: './gerencia-semestre.component.html',
   styleUrl: './gerencia-semestre.component.css'
 })
 export class GerenciaSemestreComponent implements OnInit {
 
-  semestres: any[] = [];
-  dataSource: any;
+  semestres: Semestre[] = [];
+  dataSource = new MatTableDataSource<Semestre>(this.semestres);
   mensagemSnackbarAcerto: string = 'Semestre excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir semestre.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private service: SemestreService,
@@ -43,11 +46,32 @@ export class GerenciaSemestreComponent implements OnInit {
     this.atualizaTabela();
   }
 
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
   atualizaTabela() {
     this.service.listar().subscribe(semestres => {
       this.semestres = semestres;
       this.dataSource = new MatTableDataSource<Semestre>(this.semestres);
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (item: Semestre, property: string) => {
+        switch (property) {
+          case 'semester': return item.semester.toLowerCase();
+          case 'start-date': return item.startDate;
+          default: return (item as any)[property];
+        }
+      };
+
+      this.dataSource.filterPredicate = (data: Semestre, filter: string) => {
+        return data.semester.toLowerCase().includes(filter);
+      };
     });
   }
 
@@ -78,7 +102,7 @@ export class GerenciaSemestreComponent implements OnInit {
   excluir(semestre: Semestre): void {
     this.service.getRegistrosUsandoSemestre(semestre._id).subscribe(registros => {
       if (registros.length > 0) {
-        this.mostrarMensagemErro(registros); 
+        this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir este semestre?');
         if (confirmacao) {
@@ -100,7 +124,7 @@ export class GerenciaSemestreComponent implements OnInit {
         return `<span>Aula ${cont++}</span> <br>
                 Disciplina: ${registro.discipline.name} - (${registro.discipline.course.name}) <br>
                 Professor(a): ${registro.teacher.name} <br>
-        
+
         `;
     });
 
@@ -110,10 +134,10 @@ export class GerenciaSemestreComponent implements OnInit {
     <div mat-dialog-content>
       <p>Exclua os seguintes registros primeiramente:</p>
       <span>Total de Aulas: ${itensLista.length}</span>
-      <ul> 
+      <ul>
 
         ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
-        
+
       </ul>
     </div>
   `,

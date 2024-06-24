@@ -93,7 +93,6 @@ export class GerenciaAulaComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.dataSource.sortingDataAccessor = (item: Aula, property: string) => {
-        console.log('Sorting', property, item);
         switch (property) {
           case 'discipline': return item.discipline.name.toLowerCase();
           case 'teacher': return item.teacher.name.toLowerCase();

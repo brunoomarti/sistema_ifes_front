@@ -35,10 +35,10 @@ export class AllocateLocationComponent implements OnInit {
 
   formHistoryAula: FormGroup;
   formHistoryEvento: FormGroup;
-  alocacoesAula: any[] = [];
-  alocacoesEvento: any[] = [];
-  dataSourceAula: any
-  dataSourceEvento: any;
+  alocacoesAula: Alocar[] = [];
+  alocacoesEvento: Alocar[] = [];
+  dataSourceAula = new MatTableDataSource<Alocar>(this.alocacoesAula);
+  dataSourceEvento = new MatTableDataSource<Alocar>(this.alocacoesEvento);
   mensagemSnackbarAcerto: string = 'Alocação excluída com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir alocação.';
   selectedFilter: string = 'Ambos';
@@ -46,7 +46,6 @@ export class AllocateLocationComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  @ViewChild(MatSort) sortEvento!: MatSort;
 
   constructor(
     private service: AllocateService,
@@ -146,14 +145,12 @@ export class AllocateLocationComponent implements OnInit {
       this.alocacoesEvento = alocacoes.filter(alocacao => alocacao.type === 'Evento');
       this.dataSourceEvento = new MatTableDataSource<Alocar>(this.alocacoesEvento);
       this.dataSourceEvento.paginator = this.paginator;
-      this.dataSourceEvento.sortEvento = this.sortEvento;
+      this.dataSourceEvento.sort = this.sort;
       this.dataSourceEvento.sortingDataAccessor = (item: Alocar, property: string) => {
-        console.log('Sorting', property, item);
         switch (property) {
           case 'event': return item.event.name.toLowerCase();
           case 'applicant': return item.applicant.toLowerCase();
           case 'location': return item.location.name.toLowerCase();
-          case 'schedule': return item.startTime;
           default: return (item as any)[property];
         }
       };

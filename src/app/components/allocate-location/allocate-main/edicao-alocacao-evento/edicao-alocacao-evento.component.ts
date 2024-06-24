@@ -108,6 +108,8 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
       endTime: time.endTime.toString()
     }));
 
+    const authorName = localStorage.getItem('username');
+
     this.formHistory.setValue({
       _id: 0,
       event: obj.alocacao.event,
@@ -120,7 +122,7 @@ export class EdicaoAlocacaoEventoComponent implements OnInit {
       type: 'Evento',
       allocation: obj.alocacao,
       date: new Date(),
-      authorName: 'Igor',
+      authorName: authorName,
       changeType: 'Edição',
     });
 
