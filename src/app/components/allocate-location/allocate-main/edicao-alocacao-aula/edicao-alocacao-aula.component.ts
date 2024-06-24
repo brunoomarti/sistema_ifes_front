@@ -136,16 +136,17 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
         date: new Date(),
         changeType: 'Edição',
       });
+ 
+      const lesson = { ...this.form.value.lesson };
+      delete lesson.teacher.authorities;
+      
+      lesson.students.forEach((student: any) => {
+        delete student.authorities;
+      });
 
       console.log(this.formHistory.value);
 
       this.historyService.save(this.formHistory.value).subscribe(result => this.onSucess(), error => this.onFailed());
-
-      const lesson = { ...this.form.value.lesson };
-      delete lesson.teacher.authorities;
-      lesson.students.forEach((student: any) => {
-        delete student.authorities;
-      });
 
       const selectedClasse = this.turmas.find(findObj => findObj._id == this.form.value.classe);
       const selectedLocation = this.locais.find(findObj => findObj._id == this.form.value.location);

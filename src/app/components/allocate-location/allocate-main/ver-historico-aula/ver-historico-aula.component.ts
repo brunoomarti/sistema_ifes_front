@@ -43,11 +43,13 @@ export class VerHistoricoAulaComponent implements OnInit {
     });
   }
 
-  formatSchedule(alocacao: any): string {
-    const selectedTimes = JSON.parse(alocacao.selectedTimes);
+  formatSchedule(alocacao: any): string { 
+    const strinToJson = JSON.stringify(alocacao.selectedTimes);
+    const selectedTimes = JSON.parse(strinToJson);
     if (selectedTimes.length === 0) {
       return '';
     }
+    
     const firstTime = selectedTimes[0];
     return `${firstTime.startTime} ~ ${firstTime.endTime}`;
   }

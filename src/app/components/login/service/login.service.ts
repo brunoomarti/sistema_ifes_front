@@ -23,6 +23,10 @@ export class LoginService {
   }
 
   changePassword(login: string, password: string){
-    //código aqui
+    return this.httpClient.post(this.API + "/resetPassword", { login, password }).pipe(
+      tap((response) => {
+        console.log("Ok")
+      })
+    );
   }
 }

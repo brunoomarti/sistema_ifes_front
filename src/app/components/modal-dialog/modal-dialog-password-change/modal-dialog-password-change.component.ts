@@ -25,21 +25,26 @@ export class ModalDialogPasswordChangeComponent {
     public dialogRef: MatDialogRef<ModalDialogPasswordChangeComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.form = this.formBuilder.group({
-      _id: [0],
-      login: ['', Validators.required],
+    this.form = this.formBuilder.group({ 
+      login: [''],
       passwordOne: ['', [Validators.required, Validators.minLength(6), Validators.pattern('^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{6,}$')]],
       passwordTwo: ['', Validators.required]
     });
+ 
   }
 
   cancel(): void {
     this.dialogRef.close();
   }
 
-  submit(): void {
+  submit(): void { 
+
+    if (typeof localStorage !== 'undefined') {
+      this.form.value.login = localStorage.getItem('user_code');
+    } 
+
     if (this.form.invalid) {
-      this.form.markAllAsTouched();
+      this.form.markAllAsTouched();  
       return;
     }
 
@@ -48,7 +53,7 @@ export class ModalDialogPasswordChangeComponent {
       return;
     }
 
-    this.loginService.login(this.form.value.login, this.form.value.passwordOne).subscribe({
+    this.loginService.changePassword(this.form.value.login, this.form.value.passwordOne).subscribe({
       next: (response: any) => {
         this.dialogRef.close();
         this.openModalOk('Senha alterada com sucesso!');

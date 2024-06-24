@@ -197,7 +197,7 @@ export class AllocateLocationComponent implements OnInit {
         classe: alocacao.classe,
         startDate: alocacao.startDate,
         endDate: alocacao.endDate,
-        selectedTimes: JSON.stringify(selectedTimesAsString),
+        selectedTimes: alocacao.selectedTimes,
         semester: alocacao.lesson.semester,
         location: alocacao.location,
         type: 'Aula',
@@ -209,6 +209,16 @@ export class AllocateLocationComponent implements OnInit {
       });
 
       alocacao.active = false;
+
+      const lesson = { ...this.formHistoryAula.value.lesson };
+      delete lesson.teacher.authorities;
+
+      lesson.students.forEach((student: any) => {
+        delete student.authorities;
+      });
+
+      console.log(this.formHistoryAula.value)
+
       this.historyService.save(this.formHistoryAula.value).subscribe(result => console.log('salvou historico'), error => console.log('não salvou historico'));
       this.service.save(alocacao).subscribe(result => this.deleteSuccess(), error => this.deleteFailed());
     }
@@ -236,6 +246,7 @@ export class AllocateLocationComponent implements OnInit {
 
       alocacao.event.allocated = false;
       alocacao.active = false;
+      
       this.historyService.save(this.formHistoryEvento.value).subscribe(result => console.log('salvou historico'), error => console.log('não salvou historico'));
       this.service.save(alocacao).subscribe(result => this.deleteSuccess(), error => this.deleteFailed());
       this.eventoService.save(alocacao.event).subscribe(result => this.deleteSuccess(), error => this.deleteFailed());
