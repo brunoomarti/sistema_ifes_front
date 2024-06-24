@@ -51,7 +51,7 @@ export class EdicaoLocalComponent implements OnInit {
       name: ['', Validators.required],
       capacity: ['', Validators.required],
       equipments: null,
-      amount: ['', Validators.required]
+      amount: ['']
     });
   }
 
@@ -143,10 +143,12 @@ export class EdicaoLocalComponent implements OnInit {
         missingFields.push('<li>Selecione um Capacidade maior que zero</li>');
       } 
 
-      if (this.relacaoQuantiadeCapacidade()){
-        if (this.form.get('amount')?.value < this.form.get('capacity')?.value) {
-          missingFields.push('<li>A capacidade do local não corresponde à quantidade de computadores ou carteiras.</li>');
-        } 
+      if (this.form.get('equipments')?.value.length > 0){
+        if (this.relacaoQuantiadeCapacidade()){
+          if (this.form.get('amount')?.value < this.form.get('capacity')?.value) {
+            missingFields.push('<li>A capacidade do local não corresponde à quantidade de computadores ou carteiras.</li>');
+          } 
+        }
       } 
 
       const dialogDataForm = {

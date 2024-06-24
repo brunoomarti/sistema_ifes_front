@@ -17,14 +17,14 @@
 
       <div class="selectGroup">
         <div class="newInput">
-          <label for="equipments">Equipamento Disponível: *</label>
+          <label for="equipments">Equipamento Disponível: </label>
           <select formControlName="equipments">
             <option *ngFor="let equipamento of equipamentos; let i = index" [value]="i">{{equipamento.name}}</option>
           </select>
         </div>
 
         <div class="newInput">
-          <label for="amount">Quantidade: *</label>
+          <label for="amount">Quantidade: </label>
           <input type="number" formControlName="amount" placeholder="Quantidade" min="1" max="99">
         </div>
 

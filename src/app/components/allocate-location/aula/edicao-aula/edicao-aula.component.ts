@@ -152,6 +152,7 @@ export class EdicaoAulaComponent implements OnInit {
             };
             this.openOkDialog(dialogData);
         } else {
+          
             this.save();
         }
       });
@@ -182,6 +183,12 @@ export class EdicaoAulaComponent implements OnInit {
       this.form.patchValue({ teacher: selectedTeacher });
       this.form.patchValue({ semester: selectedSemester });
     }
+
+    delete this.form.value.teacher.authorities;
+
+    this.form.value.students.forEach((student: any) => {
+      delete student.authorities;
+    });
 
     this.aulaService.save(this.form.value).subscribe(result => this.onSucess(), error => this.onFailed());
   }
