@@ -43,6 +43,7 @@ export class GerenciaAlunoComponent implements OnInit {
   showBarcodeModal: boolean = false; // Controla a exibição do modal de seleção de quantidade de etiquetas
   selection = new SelectionModel<Aluno>(true, []); // Permitir seleção múltipla
   displayedColumns: string[] = ['select', 'name', 'course', 'studentCode', 'registrationYear', 'actions'];
+  role: string | null = '';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -55,6 +56,9 @@ export class GerenciaAlunoComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if (typeof localStorage !== 'undefined') {
+      this.role = localStorage.getItem('role');
+    }
     this.atualizaTabela();
   }
 

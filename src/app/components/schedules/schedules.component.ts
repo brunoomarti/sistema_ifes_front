@@ -52,11 +52,11 @@ export class SchedulesComponent implements OnInit {
       this.periodos = periodos;
     });
 
-    this.formInit();
-
     if (typeof localStorage !== 'undefined') {
       this.userRole = localStorage.getItem('role');
     }
+
+    this.formInit();
   }
 
   formInit() {
@@ -68,7 +68,7 @@ export class SchedulesComponent implements OnInit {
         scheduleTeacher: null,
         schedulePeriod: null,
       });
-    } else if (this.userRole === 'STUDENT'){
+    } else if (this.userRole === 'STUDENT' || this.userRole === 'ADMIN'){
       this.form.setValue({
         _id: 0,
         scheduleType: 'Aluno',

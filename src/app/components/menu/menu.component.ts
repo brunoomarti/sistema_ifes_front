@@ -57,7 +57,7 @@ export class MenuComponent implements OnInit {
       } else if (this.role === 'TEACHER'){
         this.tipoUsuario = "Professor";
       } else {
-        this.tipoUsuario = "Coordenador de Curso";
+        this.tipoUsuario = "Coordenador";
       }
     }
 

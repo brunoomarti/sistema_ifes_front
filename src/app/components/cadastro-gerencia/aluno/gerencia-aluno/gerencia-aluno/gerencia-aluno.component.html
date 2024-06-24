@@ -11,10 +11,12 @@
 
   <div class="boxSize">
     <div class="buttonGroup addSpace">
-      <button class="button two" (click)="cadastrar()">
-        <span class="material-symbols-outlined table-button-icon">person_add</span>
-        Cadastrar Aluno
-      </button>
+      <ng-container *ngIf="role != 'TEACHER'">
+        <button class="button two" (click)="cadastrar()">
+          <span class="material-symbols-outlined table-button-icon">person_add</span>
+          Cadastrar Aluno
+        </button>
+      </ng-container>
       <button mat-button (click)="handleImprimirSelecionadosClick()" class="button two">
         <span class="material-symbols-outlined table-button-icon">print</span>
         Imprimir Etiquetas Selecionadas
