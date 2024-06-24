@@ -8,7 +8,7 @@
   </div>
 
   <div class="boxSize">
-    <div class="buttonGroup addSpace">
+    <div class="buttonGroup addSpace" *ngIf="userRole !== 'TEACHER'">
       <button class="button two" (click)="cadastrar()">
         <span class="material-symbols-outlined table-button-icon">person_add</span>
         Cadastrar Aula
