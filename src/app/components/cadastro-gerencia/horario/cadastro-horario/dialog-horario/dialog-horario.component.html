@@ -1,0 +1,14 @@
+<div>
+  <div class="dialog-container dialogOK">
+    <p class="pageTitle">{{ data.title }}</p>
+    <p class="pageBody" [innerHTML]="data.message"></p>
+
+    <div class="horarios-container">
+      <div class="horarios-list" [innerHTML]="data.horarios"></div>
+    </div>
+
+    <div class="buttonGroupForm">
+      <button class="button two" (click)="okButton()">OK</button>
+    </div>
+  </div>
+</div>

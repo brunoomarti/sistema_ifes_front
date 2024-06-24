@@ -569,7 +569,25 @@ tr[mat-row].row-disabled {
   margin: 0 0 5px 0;
 }
 
+.addMoreSpace {
+  margin: 0 0 10px 0;
+}
+
 #barcodeInput {
   position: absolute;
   top: -1000px;
+}
+
+.horarios-container {
+  height: 200px;
+  overflow-y: auto;
+  margin-bottom: 20px;
+  border: solid var(--medium-gray) 1px;
+  padding: 10px;
+  border-radius: var(--secondary-boxes-radius);
+}
+
+.horarios-list {
+  font-size: 12px;
+  line-height: 1.7;
 }

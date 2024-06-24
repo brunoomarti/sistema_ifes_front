@@ -136,6 +136,12 @@ export class AlocaAulaComponent implements OnInit {
         }
       })
 
+      this.selectedTimes.sort((a, b) => {
+        if (a.startTime < b.startTime) return -1;
+        if (a.startTime > b.startTime) return 1;
+        return 0;
+      });
+
       if (this.form.value.startDate === null || this.form.value.endDate === null){
         this.form.patchValue({startDate: this.form.value.lesson.semester.startDate});
         this.form.patchValue({endDate: this.form.value.lesson.semester.endDate});
@@ -290,7 +296,11 @@ export class AlocaAulaComponent implements OnInit {
         _id: horario._id,
         startTime: horario.startTime,
         endTime: horario.endTime
-      }));
+      })).sort((a, b) => {
+        if (a.startTime < b.startTime) return -1;
+        if (a.startTime > b.startTime) return 1;
+        return 0;
+      });
       console.log(this.horarios);
     });
   }

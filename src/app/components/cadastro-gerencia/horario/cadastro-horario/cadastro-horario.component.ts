@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Horario } from '../../../../models/Horario';
 import { ModalDialogComponent } from '../../../modal-dialog/modal-dialog.component';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { DialogConfirmacaoSaveComponent } from './dialog-confirmacao-save/dialog-confirmacao-save.component';
 
 @Component({
   selector: 'app-cadastro-horario',
@@ -189,4 +190,70 @@ export class CadastroHorarioComponent implements OnInit {
     });
   }
 
+  presetSave(): void {
+    const horariosPreSetados = [
+      { "_id": 0, "startTime": "07:00", "endTime": "07:49" },
+      { "_id": 0, "startTime": "07:50", "endTime": "08:39" },
+      { "_id": 0, "startTime": "08:40", "endTime": "09:29" },
+      { "_id": 0, "startTime": "09:50", "endTime": "10:39" },
+      { "_id": 0, "startTime": "10:40", "endTime": "11:29" },
+      { "_id": 0, "startTime": "11:30", "endTime": "12:19" },
+      { "_id": 0, "startTime": "13:00", "endTime": "13:49" },
+      { "_id": 0, "startTime": "13:50", "endTime": "14:39" },
+      { "_id": 0, "startTime": "14:40", "endTime": "15:29" },
+      { "_id": 0, "startTime": "15:50", "endTime": "16:39" },
+      { "_id": 0, "startTime": "16:40", "endTime": "17:29" },
+      { "_id": 0, "startTime": "17:30", "endTime": "18:19" },
+      { "_id": 0, "startTime": "18:50", "endTime": "19:34" },
+      { "_id": 0, "startTime": "19:35", "endTime": "20:19" },
+      { "_id": 0, "startTime": "20:30", "endTime": "21:14" },
+      { "_id": 0, "startTime": "21:15", "endTime": "22:00" }
+    ];
+
+    const dialogData = {
+      title: 'Confirmação de Cadastro',
+      message: 'Você está prestes a salvar 16 horários que foram pré-selecionados. Caso já exista algum dos seguintes horários no sistema, o mesmo não será salvo. Deseja continuar?',
+      horarios: horariosPreSetados.map(h => `${h.startTime} - ${h.endTime}`).join('<br>')
+    };
+
+    const dialogRef = this.dialog.open(DialogConfirmacaoSaveComponent, {
+      data: dialogData,
+      backdropClass: 'backdropTwo'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'sim') {
+        this.service.listar().subscribe((horariosExistentes: Horario[]) => {
+          const horariosNaoExistentes = horariosPreSetados.filter(hPreSetado =>
+            !horariosExistentes.some(hExistente =>
+              hExistente.startTime === hPreSetado.startTime && hExistente.endTime === hPreSetado.endTime
+            )
+          );
+
+          if (horariosNaoExistentes.length > 0) {
+            const horariosSalvos: Horario[] = [];
+            horariosNaoExistentes.forEach(horario => {
+              this.service.save(horario).subscribe(() => {
+                horariosSalvos.push(horario);
+                if (horariosSalvos.length === horariosNaoExistentes.length) {
+                  const horariosSalvosMensagem = horariosSalvos.map(h => `${h.startTime} - ${h.endTime}`).join('<br>');
+                  this.openOkDialog({
+                    title: 'Horários Salvos',
+                    message: `Os seguintes horários foram salvos:<br>${horariosSalvosMensagem}`
+                  });
+                }
+              }, error => {
+                this.snackBar.open(`Erro ao salvar o horário ${horario.startTime} - ${horario.endTime}.`, '', { duration: 5000, panelClass: ['errorSnackbar'] });
+              });
+            });
+          } else {
+            this.openOkDialog({
+              title: 'Horários Existentes',
+              message: 'Todos os horários já existem no sistema. Nenhum horário foi salvo.'
+            });
+          }
+        });
+      }
+    });
+  }
 }

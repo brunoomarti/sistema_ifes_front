@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Horario } from '../../../../models/Horario';
 import { EdicaoHorarioComponent } from '../edicao-horario/edicao-horario.component';
 import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/modal-dialog-ok.component';
+import { MatSort, MatSortModule } from '@angular/material/sort';
 
 @Component({
   selector: 'app-gerencia-horario',
@@ -18,19 +19,23 @@ import { ModalDialogOkComponent } from '../../../modal-dialog/modal-dialog-ok/mo
     CommonModule,
     MatTableModule,
     MatIcon,
-    MatPaginator
+    MatPaginator,
+    MatSortModule
   ],
   templateUrl: './gerencia-horario.component.html',
-  styleUrl: './gerencia-horario.component.css'
+  styleUrls: ['./gerencia-horario.component.css']
 })
 export class GerenciaHorarioComponent implements OnInit {
 
-  horarios: any[] = [];
-  dataSource: any;
+  horarios: Horario[] = [];
+  dataSource: MatTableDataSource<Horario> = new MatTableDataSource();
   mensagemSnackbarAcerto: string = 'Horário excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir horário.';
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+
+  displayedColumns: string[] = ['startTime', 'discipline', 'endTime', 'actions']; // Adicione as colunas que você tem no seu template
 
   constructor(
     private service: HorarioService,
@@ -46,8 +51,14 @@ export class GerenciaHorarioComponent implements OnInit {
   atualizaTabela() {
     this.service.listar().subscribe(horarios => {
       this.horarios = horarios;
-      this.dataSource = new MatTableDataSource<Horario>(this.horarios);
+      this.dataSource.data = this.horarios;
       this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+
+      // Defina a ordenação inicial
+      this.sort.active = 'startTime';
+      this.sort.direction = 'asc';
+      this.dataSource.sort = this.sort;
     });
   }
 
@@ -66,7 +77,7 @@ export class GerenciaHorarioComponent implements OnInit {
   excluir(horario: Horario): void {
     this.service.getRegistrosUsandoHorario(horario._id).subscribe(registros => {
       if (registros.length > 0) {
-        this.mostrarMensagemErro(registros); 
+        this.mostrarMensagemErro(registros);
       } else {
         const confirmacao = confirm('Tem certeza que deseja excluir este horario?');
         if (confirmacao) {
@@ -94,10 +105,10 @@ export class GerenciaHorarioComponent implements OnInit {
     const dialogDataForm = {
       title: 'Erro ao Excluir Horário',
       message: `
-    <div mat-dialog-content> 
+    <div mat-dialog-content>
       <p>Exclua os seguintes registros primeiramente:</p>
       <span>Total de Alocações: <strong>${itensLista.length}</strong></span>
-      <ul> 
+      <ul>
         ${itensLista.map(item => `<li>${item}</li><br>`).join('')}
       </ul>
     </div>
@@ -131,5 +142,4 @@ export class GerenciaHorarioComponent implements OnInit {
   cadastrar() {
     this.router.navigate(['/cadastro-gerencia/cadastro-horario']);
   }
-
 }

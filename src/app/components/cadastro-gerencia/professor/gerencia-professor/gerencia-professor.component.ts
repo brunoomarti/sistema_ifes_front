@@ -29,7 +29,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 export class GerenciaProfessorComponent implements OnInit {
 
   professores: Professor[] = [];
-  dataSource: any;
+  dataSource = new MatTableDataSource<Professor>(this.professores);
   mensagemSnackbarAcerto: string = 'Professor excluído com sucesso.';
   mensagemSnackbarErro: string = 'Erro ao excluir professor.';
 
@@ -53,6 +53,22 @@ export class GerenciaProfessorComponent implements OnInit {
       this.dataSource = new MatTableDataSource<Professor>(this.professores);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+      this.dataSource.sortingDataAccessor = (item: Professor, property: string) => {
+        switch (property) {
+          case 'name': return item.name.toLowerCase();
+          case 'educationLevel': return item.educationLevel.toLowerCase();
+          case 'teacherCode': return item.teacherCode.toLowerCase();
+          case 'coordination': return item.coordination.name.toLowerCase();
+          default: return (item as any)[property];
+        }
+      };
+
+      this.dataSource.filterPredicate = (data: Professor, filter: string) => {
+        return data.name.toLowerCase().includes(filter) ||
+                data.educationLevel.toLowerCase().includes(filter) ||
+                data.coordination.name.toLowerCase().includes(filter) ||
+                data.teacherCode.toLowerCase().includes(filter);
+      };
     });
   }
 

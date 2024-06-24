@@ -157,6 +157,12 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
         }
       });
 
+      this.selectedTimes.sort((a, b) => {
+        if (a.startTime < b.startTime) return -1;
+        if (a.startTime > b.startTime) return 1;
+        return 0;
+      });
+
       if (selectedClasse && selectedLocation ) {
         this.form.patchValue({ classe: selectedClasse });
         this.form.patchValue({ location: selectedLocation });
@@ -215,7 +221,12 @@ export class EdicaoAlocacaoAulaComponent implements OnInit {
         _id: horario._id,
         startTime: horario.startTime,
         endTime: horario.endTime
-      }));
+      })).sort((a, b) => {
+        if (a.startTime < b.startTime) return -1;
+        if (a.startTime > b.startTime) return 1;
+        return 0;
+      });
+      console.log(this.horarios);
     });
   }
 }
