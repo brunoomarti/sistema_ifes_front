@@ -3,9 +3,31 @@
     <app-calendar></app-calendar>
   </div>
   <div class="column">
-    <!-- Conteúdo da segunda coluna -->
-  </div>
-  <div class="column">
-    <!-- Conteúdo da terceira coluna -->
+
+    <ng-container *ngIf="role == 'STUDENT'">
+      <div class="boxSize">
+        <p class="specialBoxTitle addMoreSpace">Próxima aula:</p>
+        <div class="nextLesson">
+          <table class="scheduleTable">
+            <thead>
+              <tr>
+                <th class="pageTitle horarioCol">Horário</th>
+                <th class="pageTitle">Disciplina</th>
+                <th class="pageTitle">Professor</th>
+                <th class="pageTitle localCol">Local</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="pageText">{{ nextLesson.startTimeTs }}</td>
+                <td class="pageText">{{ nextLesson.completeDisciplineName }}</td>
+                <td class="pageText">{{ nextLesson.teacherName }}</td>
+                <td class="pageText">{{ nextLesson.localName }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </div>

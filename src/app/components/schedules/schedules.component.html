@@ -7,8 +7,8 @@
         <div class="newInput">
           <label for="scheduleType">Pesquisar por:</label>
           <select formControlName="scheduleType" (change)="onScheduleTypeChange($event)">
-            <option *ngIf="userRole === 'STUDENT' || userRole !== 'TEACHER'">Aluno</option>
-            <option *ngIf="userRole === 'TEACHER' || userRole !== 'STUDENT'">Professor</option>
+            <option value="Aluno">Aluno</option>
+            <option value="Professor">Professor</option>
           </select>
         </div>
 

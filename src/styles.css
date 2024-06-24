@@ -591,3 +591,18 @@ tr[mat-row].row-disabled {
   font-size: 12px;
   line-height: 1.7;
 }
+
+.nextLesson {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  text-align: left;
+  justify-content: space-between;
+}
+
+.specialBoxTitle {
+  color: var(--dark-gray);
+  font-weight: bold;
+  font-size: 16px;
+  padding: 0;
+}

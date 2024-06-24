@@ -1,5 +1,18 @@
 .container {
   display: grid;
-  grid-template-columns: 0.6fr 1fr 1fr;
+  grid-template-columns: 0.35fr 1fr;
   gap: 20px;
+}
+
+.scheduleTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.horarioCol {
+  width: 18%;
+}
+
+.localCol {
+  width: 12%;
 }

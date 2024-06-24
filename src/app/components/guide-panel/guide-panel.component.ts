@@ -14,6 +14,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 export class GuidePanelComponent {
 
   userName: string | null = '';
+  firstName: string | null = '';
   mainTitle: string = 'Olá, ';
   subTitle: string = 'O que deseja fazer hoje?';
   newMainTitle: string = '';
@@ -31,6 +32,8 @@ export class GuidePanelComponent {
       this.userName = localStorage.getItem('username');
     }
     this.mainTitle += this.userName;
+
+    this.firstName = this.userName?.split(' ')[0] ?? '';
 
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
@@ -88,7 +91,7 @@ export class GuidePanelComponent {
       this.newMainTitle = 'Consultar horário';
       this.newSubTitle = 'Fique por dentro dos horários de aula.';
     } else {
-      this.newMainTitle = `Olá, ${this.userName}`;
+      this.newMainTitle = `Olá, ${this.firstName}`;
       this.newSubTitle = 'O que deseja fazer hoje?';
     }
   }

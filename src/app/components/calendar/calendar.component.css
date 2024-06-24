@@ -93,21 +93,9 @@ button:hover .right-arrow {
   font-weight: bold;
 }
 
-.dayMonth {
-  color: var(--dark-gray);
-  font-weight: bold;
-  font-size: 16px;
-  padding: 0;
-  margin: 0;
-}
-
 .material-symbols-outlined {
   font-size: 20px;
   line-height: normal;
-}
-
-.holidayTab {
-
 }
 
 .separator {

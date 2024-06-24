@@ -60,13 +60,24 @@ export class SchedulesComponent implements OnInit {
   }
 
   formInit() {
-    this.form.setValue({
-      _id: 0,
-      scheduleType: 'Aluno',
-      scheduleStudent: null,
-      scheduleTeacher: null,
-      schedulePeriod: null,
-    });
+    if (this.userRole === 'TEACHER'){
+      this.form.setValue({
+        _id: 0,
+        scheduleType: 'Professor',
+        scheduleStudent: null,
+        scheduleTeacher: null,
+        schedulePeriod: null,
+      });
+    } else if (this.userRole === 'STUDENT'){
+      this.form.setValue({
+        _id: 0,
+        scheduleType: 'Aluno',
+        scheduleStudent: null,
+        scheduleTeacher: null,
+        schedulePeriod: null,
+      });
+    }
+
   }
 
   onScheduleTypeChange(event: any) {

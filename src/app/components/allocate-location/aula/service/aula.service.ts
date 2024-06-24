@@ -56,12 +56,16 @@ export class AulaService {
     });
   }
 
-  findLessonsByStudentCodeAndSemesterId(studentCode: number, semesterId: number) {
+  findLessonsByStudentCodeAndSemesterId(studentCode: String, semesterId: number) {
     return this.httpClient.get<any>(`${this.API}/getLessons/${studentCode}/${semesterId}`);
   }
 
   findLessonsByTeacherCodeAndSemesterId(teacherCode: number, semesterId: number) {
     return this.httpClient.get<any>(`${this.API}/getLessonsT/${teacherCode}/${semesterId}`);
+  }
+
+  findNextLessonByStudentCode(studentCode: string): Observable<any> {
+    return this.httpClient.get<any>(`${this.API}/getNextLesson/s/${studentCode}`).pipe(first());
   }
 
 }
