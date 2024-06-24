@@ -38,9 +38,12 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 export class GerenciaAulaComponent implements OnInit {
   aulas: Aula[] = [];
   dataSource = new MatTableDataSource<Aula>(this.aulas);
-  displayedColumns: string[] = ['select', 'discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students', 'actions'];
-  selection = new SelectionModel<Aula>(true, []);
   userRole: string | null = '';
+
+  displayedColumns: string[] = [];
+
+  selection = new SelectionModel<Aula>(true, []);
+  
   aulasAlocadasPorAula: Map<number, number> = new Map<number, number>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -55,6 +58,17 @@ export class GerenciaAulaComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    
+    if (typeof localStorage !== 'undefined') {
+      this.userRole = localStorage.getItem('role');
+    }
+
+    if (this.userRole === 'TEACHER'){
+      this.displayedColumns  = ['select', 'discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students'];
+    } else {
+      this.displayedColumns  = ['select', 'discipline', 'teacher', 'semester', 'weeklyQuantity', 'allocatedLessons', 'allocated', 'students', 'actions'];
+    }
+
     this.atualizaTabela();
   }
 
@@ -112,9 +126,6 @@ export class GerenciaAulaComponent implements OnInit {
       this.aulasAlocadasPorAula = this.calcularAulasAlocadas(alocacoes);
     });
 
-    if (typeof localStorage !== 'undefined') {
-      this.userRole = localStorage.getItem('role');
-    }
   }
 
   isLimiteMaximoAtingido(aula: Aula): boolean {

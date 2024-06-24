@@ -98,6 +98,8 @@ export class MatricularAlunoAulaComponent implements OnInit {
 
     delete this.form.value.teacher.authorities;
 
+    console.log(this.form.value)
+
     this.service.save(this.form.value).subscribe(
       result => this.onSucess(),
       error => this.onFailed()
